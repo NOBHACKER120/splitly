@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Splitly - Features</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body {
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .navbar {
+            background: #027aca;
+            padding: 15px;
+            text-align: left;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        .content {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-section {
+            text-align: left;
+            padding: 10px 0;
+        }
+
+        label, input, select, button {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        button {
+            background: #ff8c00;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #e07b00;
+        }
+
+        .footer {
+            margin-top: 20px;
+            background: #333;
+            color: white;
+            padding: 15px;
+        }
+
+        .footer a{
+            text-decoration: none;
+            color:#ffcc00 ;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="index.html">&#8592; Home</a>
+    </div>
+    
+    <div class="content">
+        <h1>Split Expenses Easily</h1>
+        <p>Choose how you want to split the bill and let Splitly do the math for you!</p>
+        
+        <div class="feature-section">
+            <label for="amount">Total Bill Amount:</label>
+            <input type="number" id="amount" placeholder="Enter amount" required>
+            
+            <label for="people">Number of People:</label>
+            <input type="number" id="people" placeholder="Enter number of people" required>
+            
+            <label for="method">Select Split Method:</label>
+            <select id="method">
+                <option value="equal">Equal Split</option>
+                <option value="custom">Custom Amounts</option>
+                <option value="fun">Fun Split (Random)</option>
+            </select>
+            
+            <div id="custom-split" style="display: none;">
+                <p>Enter the custom amounts for each person (comma separated)</p>
+                <input type="text" id="customAmounts" placeholder="e.g. 200, 300, 500">
+            </div>
+            
+            <button onclick="calculateSplit()">Calculate</button>
+        </div>
+        
+        <h2 id="result"></h2>
+    </div>
+
+    <div class="footer">
+        <p><a href="learn.html">Learn More</a> | <a href="contact.html">Contact Us</a> | 
+        <a href="https://www.instagram.com/splitlyofficial" target="_blank">Instagram</a> | 
+        <a href="https://twitter.com/splitlyofficial" target="_blank">Twitter</a></p>
+    </div>
+
+    <script>
+        function calculateSplit() {
+            let amount = parseFloat(document.getElementById("amount").value);
+            let people = parseInt(document.getElementById("people").value);
+            let method = document.getElementById("method").value;
+            let resultText = "";
+            
+            if (amount <= 0 || people <= 0) {
+                resultText = "Please enter valid values!";
+            } else {
+                if (method === "equal") {
+                    resultText = `Each person pays ₹${(amount / people).toFixed(2)}`;
+                } else if (method === "custom") {
+                    let customInput = document.getElementById("customAmounts").value;
+                    let customAmounts = customInput.split(",").map(num => parseFloat(num.trim()));
+                    let totalCustom = customAmounts.reduce((a, b) => a + b, 0);
+                    if (totalCustom === amount && customAmounts.length === people) {
+                        resultText = "Custom Split Applied: " + customAmounts.join(", ");
+                    } else {
+                        resultText = "Error: Custom amounts must match total bill and number of people!";
+                    }
+                } else if (method === "fun") {
+                    let remaining = amount;
+                    let splits = [];
+                    for (let i = 0; i < people - 1; i++) {
+                        let randomSplit = parseFloat((Math.random() * (remaining / 2)).toFixed(2));
+                        splits.push(randomSplit);
+                        remaining -= randomSplit;
+                    }
+                    splits.push(parseFloat(remaining.toFixed(2)));
+                    resultText = "Fun Split Applied: " + splits.join(", ");
+                }
+            }
+            
+            document.getElementById("result").innerText = resultText;
+        }
+
+        document.getElementById("method").addEventListener("change", function() {
+            if (this.value === "custom") {
+                document.getElementById("custom-split").style.display = "block";
+            } else {
+                document.getElementById("custom-split").style.display = "none";
+            }
+        });
+    </script>
+</body>
+</html>

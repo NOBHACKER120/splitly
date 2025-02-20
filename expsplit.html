@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill Splitter | Splitly</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb;
+            color: #333;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Navbar - Similar to Main Page */
+        .navbar {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center all items */
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 60px;
+    padding: 0 20px;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+}
+.navbar a {
+    position: absolute;
+    left: 20px;
+    color: #027aca;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+        .logo {
+            display: block;
+            height: 40px;
+
+           margin-right: 38px;
+           
+        }
+
+        /* Centered Container for Bill Splitter */
+        .container {
+            max-width: 420px;
+            margin: 100px auto 40px;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        #numPeople {
+    width: calc(100% - 24px); /* Adjust width to fit properly */
+    margin: 10px 0;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 18px;
+    text-align: center; /* Ensures number stays centered */
+}
+
+
+        /* Inputs & Buttons */
+        input, button {
+            margin: 10px 0;
+            padding: 12px;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            border-color: #027aca;
+            outline: none;
+            box-shadow: 0px 4px 10px rgba(0, 122, 202, 0.2);
+        }
+
+        .person-entry {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        /* Buttons */
+        button {
+            background: linear-gradient(45deg, #ff7e5f, #feb47b);
+            color: white;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0px 4px 10px rgba(255, 126, 95, 0.3);
+        }
+
+        button:hover {
+            background: linear-gradient(45deg, #feb47b, #ff7e5f);
+            transform: scale(1.05);
+            box-shadow: 0px 6px 15px rgba(255, 126, 95, 0.5);
+        }
+
+        /* Results Section */
+        .results-container {
+            text-align: left;
+            margin-top: 15px;
+        }
+
+        .result-item {
+            background: #d4edda;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 5px 0;
+            font-weight: 600;
+            transition: transform 0.3s ease;
+        }
+
+        .result-item:hover {
+            transform: scale(1.05);
+        }
+
+        /* Fade-in Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <a href="index.html">&#8592; Home</a>
+        <img src="SPLIT (4)-Photoroom (1)-Photoroom.png" alt="Splitly" class="logo">
+    </div>
+    
+    <!-- Bill Splitter Section -->
+    <div class="container">
+        <h2>Bill Splitter</h2>
+        <label>Number of People:</label>
+        <input type="number" id="numPeople" min="2" value="2">
+        <button onclick="createInputs()">Next</button>
+        <div id="inputs"></div>
+        <button onclick="calculateSplit()">Calculate</button>
+        <h3>Total Expense Per Person:</h3>
+        <div id="totalExpense"></div>
+        <h3>Results</h3>
+        <div id="results" class="results-container"></div>
+    </div>
+    
+    <!-- JavaScript for Split Logic -->
+    <script>
+        function createInputs() {
+            let num = document.getElementById("numPeople").value;
+            let inputsDiv = document.getElementById("inputs");
+            inputsDiv.innerHTML = "";
+            
+            for (let i = 0; i < num; i++) {
+                let div = document.createElement("div");
+                div.classList.add("person-entry");
+                div.innerHTML = `
+                    <input type="text" placeholder="Name" id="name${i}">
+                    <input type="number" placeholder="Amount Paid" id="paid${i}" min="0">
+                `;
+                inputsDiv.appendChild(div);
+            }
+        }
+
+        function calculateSplit() {
+            let num = document.getElementById("numPeople").value;
+            let people = [];
+            let totalPaid = 0;
+            
+            for (let i = 0; i < num; i++) {
+                let name = document.getElementById(`name${i}`).value;
+                let paid = parseFloat(document.getElementById(`paid${i}`).value) || 0;
+                people.push({ name, paid });
+                totalPaid += paid;
+            }
+            
+            let perPerson = totalPaid / num;
+            document.getElementById("totalExpense").innerHTML = `Each person should pay: ₹${perPerson.toFixed(2)}`;
+            
+            people.forEach(p => p.balance = p.paid - perPerson);
+            people.sort((a, b) => a.balance - b.balance);
+            
+            let resultsDiv = document.getElementById("results");
+            resultsDiv.innerHTML = "";
+            let i = 0, j = people.length - 1;
+            
+            while (i < j) {
+                let owe = -people[i].balance;
+                let receive = people[j].balance;
+                let amount = Math.min(owe, receive);
+                
+                resultsDiv.innerHTML += `<div class='result-item'><b>${people[i].name}</b> pays ₹${amount.toFixed(2)} to <b>${people[j].name}</b></div>`;
+                people[i].balance += amount;
+                people[j].balance -= amount;
+                
+                if (people[i].balance === 0) i++;
+                if (people[j].balance === 0) j--;
+            }
+        }
+    </script>
+
+</body>
+</html>
