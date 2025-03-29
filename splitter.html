@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill Splitter | Splitly</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <!-- FontAwesome Latest Version -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<link rel="stylesheet" href="splitter.css">
+</head>
+<body>
+    <script type="module">
+        import { auth } from "./firebaseauth.js";
+        window.auth = auth; // Make it globally accessible
+      </script>
+      
+      <script src="splitter.js"></script> 
+      
+    <!-- <script type="module" src="splitter.js"></script>  -->
+
+    <!-- Navbar -->
+    <!-- Navbar -->
+<!-- Navbar -->
+<!-- Navbar -->
+<div class="navbar">
+    <a href="index.html" class="back-link">&#8592; Go Back</a>
+    <img src="SPLIT (4)-Photoroom (1)-Photoroom.png" alt="Splitly" class="logo">
+    <!-- Profile Dropdown Container -->
+    <div class="profile-dropdown">
+      <button id="profileButton">
+        <i class="fa-solid fa-user"></i>
+      </button>
+      <div id="profileMenu" class="dropdown-content">
+        <a href="user-profile.html">Account</a>
+        <a href="settings.html">Settings</a>
+        <a href="contact.html">Contact Us</a>
+        <a href="#" id="logoutLink">Logout</a>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Rest of your HTML content ... -->
+  
+  <!-- Modal for non-signed up users -->
+  <!-- Sign-up Modal for non-signed-in users -->
+<div id="signupModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <p>Create an account to access exclusive features and personalized experiences. Sign up now and discover more!</p>
+      <button onclick="window.location.href='signup-login.html'" style="padding:10px 20px; background:orange; color:#fff; border:none; border-radius:4px; cursor:pointer;">Sign Up</button>
+    </div>
+  </div>
+  
+  
+  
+  
+    <div class="selector">
+        <ul>
+            <li onclick="showExpenseSplitter()">Expense Splitter</li>
+            <li onclick="showRandomSplitter()">Random Splitter</li>
+            <li onclick="showCreateGroup()">Create Group</li>
+        </ul>
+    </div>
+    <!-- Existing Expense Splitter -->
+    <div id="expenseSplitter" class="container">
+        <h2>Bill Splitter</h2>
+        <label>Number of People:</label>
+        <input type="number" id="numPeople" min="2" value="2">
+        <button onclick="createInputs()">Next</button>
+        <div id="inputs"></div>
+        <button id="calculateButton" onclick="calculateSplit()" style="display: none;">Calculate</button>
+        <h3>Total Expense Per Person:</h3>
+        <div id="totalExpense"></div>
+        <h3>Results</h3>
+        <div id="results" class="results-container"></div>
+    </div>
+    <!-- New Random Splitter Section -->
+    <div id="randomSplitter" class="container">
+        <h2>Random Splitter</h2>
+        <div class="input-group">
+            <span>₹</span>
+            <input type="number" id="totalAmount" min="1" placeholder="Enter Total Amount">
+        </div>
+        <div class="input-group">
+            <span>👥</span>
+            <input type="number" id="numPeopleRandom" min="2" placeholder="Number of People">
+        </div>
+        <button onclick="createRandomInputs()">Next</button>
+        <div id="randomInputs"></div>
+        <label>Choose Split Mode:</label>
+        <select id="splitMode" onchange="validateSplitSelection(); togglePercentageOptions();" style="display: none;">
+            <option value="random">Completely Random</option>
+            <option value="weighted">Weighted (High/Low Payers)</option>
+            <option value="percent">Percentage Based</option>
+             <!-- Added custom option if needed -->
+        </select>
+        <p id="splitModeError" style="color: red; display: none;">Enter amount & people first.</p>
+        <!-- Weighted Split Section -->
+        <div id="weightedOptions" style="display: none;">
+            <label style="font-size: 16px; font-weight: bold;">Choose Weighting for High & Low Payers:</label>
+            <p style="font-size: 14px; color: gray;">(People in 'High' group pay more, people in 'Low' group pay less)</p>
+            <div class="weighted-group">
+                <p style="font-size: 14px; font-weight: bold;">High Payers</p>
+                <label>Who should pay more?</label>
+                <select id="highPayers">
+                    <option value="1">1 Person Pays More</option>
+                    <option value="2">2 People Pay More</option>
+                </select>
+            </div>
+            <div class="weighted-group">
+                <p style="font-size: 14px; font-weight: bold;">Low Payers</p>
+                <label>Who should pay less?</label>
+                <select id="lowPayers">
+                    <option value="1">1 Person Pays Less</option>
+                    <option value="2">2 People Pay Less</option>
+                </select>
+            </div>
+        </div>
+        <div id="customOptions" style="display: none;">
+            <label>Assign Amounts Manually:</label>
+            <div id="customSplitInputs"></div>
+        </div>
+        <div id="percentOptions" style="display: none;">
+            <label style="font-size: 16px; font-weight: bold;">Select Fairness Range:</label>
+            <p style="font-size: 14px; color: gray;">
+                (This mode lets you set how much more the highest share can be compared to the lowest share.
+                For example, choosing 20-40 means the highest amount will be between 20% and 40% more than the lowest,
+                ensuring the payments are nearly equal.)
+            </p>
+            <select id="fixedPercent">
+                <option value="20-40">20-40%</option>
+                <option value="40-60">40-60%</option>
+                <option value="60-90">60-90%</option>
+                <!-- <option value="custom">Custom %</option> -->
+            </select>
+            <input type="text" id="customPercent" placeholder="Enter % range (e.g., 20-40)" style="display: none;">
+        </div>
+        <button id="randomCalculateButton" onclick="calculateRandomSplit()" style="display: none;">Split Now</button>
+        <h3>Results</h3>
+        <div id="randomResults" class="results-container"></div>
+    </div>
+    <!-- New Create Group Section -->
+    <!-- New Create Group Section -->
+<div id="createGroup" class="container" style="display: none;">
+    <button id="saveGroupButton" onclick="saveGroup()">Save Group</button>
+    <!-- The group creation form will be injected here by createGroupInputs() -->
+</div>
+    <footer class="footer">
+        <div class="footer-item active" id="homeButton" onclick="showHome()">
+            <i class="fa-solid fa-house"></i>
+            <span>Home</span>
+        </div>
+        <div class="footer-item" id="historyButton" onclick="showHistory()">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <span>History</span>
+        </div>
+    </footer>
+    <!-- History Section (Initially Hidden) -->
+    <div id="historySection" class="history-container" style="display: none;">
+        <h2>History</h2>
+        <button onclick="clearHistory()">Clear History</button>
+        <div id="historyResults"></div>
+    </div>
+    <!-- FontAwesome for Icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script>
+   
+      </script>
+</body>
+</html>

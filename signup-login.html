@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Splitly - Login &amp; Sign Up</title>
+  <link rel="stylesheet" href="signup-login.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <script type="module" src="firebaseauth.js"></script>
+</head>
+<body>
+  <div class="navbar">
+    <a href="index.html">&#8592; Home</a>
+  </div>
+  <div class="auth-container" id="authContainer">
+    <img src="SPLIT (4)-Photoroom (1)-Photoroom.png" alt="Splitly Logo" class="logo">
+    <div class="tab-buttons">
+      <button id="btn-login" class="active" onclick="switchTab('login')">Login</button>
+      <button id="btn-signup" onclick="switchTab('signup')">Sign Up</button>
+    </div>
+    <div class="forms-wrapper">
+      <!-- LOGIN FORM -->
+      <div id="login" class="form-container active">
+        <h2>Welcome Back!</h2>
+        <div class="input-group">
+          <i class="fa-solid fa-envelope"></i>
+          <input id="login-email" type="email" placeholder="Email" required>
+        </div>
+        <div class="input-group">
+          <i class="fa-solid fa-lock"></i>
+          <input id="login-password" type="password" placeholder="Password" required>
+<i class="fa-solid fa-eye toggle-password" data-target="login-password"></i>
+        </div>
+        <button class="auth-btn">Login</button>
+        <div class="form-text">
+          <p>Don't have an account? <a href="javascript:void(0)" onclick="switchTab('signup')">Sign Up</a></p>
+          <p><a href="forget.html">Forgot Password?</a></p>
+        </div>
+      </div>
+      
+      <!-- SIGNUP FORM -->
+      <div id="signup" class="form-container">
+        <h2>Create Your Account</h2>
+        <div class="input-group">
+          <i class="fa-solid fa-user"></i>
+          <input id="signup-name" type="text" placeholder="Full Name" required>
+        </div>
+        <div class="input-group">
+          <i class="fa-solid fa-envelope"></i>
+          <input id="signup-email" type="email" placeholder="Email" required>
+        </div>
+        <div class="input-group">
+          <i class="fa-solid fa-lock"></i>
+          <input id="signup-password" type="password" placeholder="Password" required>
+          <i class="fa-solid fa-eye toggle-password" data-target="signup-password"></i>          
+        </div>
+        <button class="auth-btn">Sign Up</button>
+        <div class="form-text">
+          <p>Already have an account? <a href="javascript:void(0)" onclick="switchTab('login')">Login</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    <a href="learn.html">Learn More</a> | 
+    <a href="contact.html">Contact Us</a>
+  </div>
+
+  <!-- Toast Popup -->
+  <div id="toast" class="toast">
+    <span class="icon">&#10004;</span><span id="toast-message"></span>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    // Toast message and form validation code
+    document.addEventListener("DOMContentLoaded", function () {
+      // Function to show a toast message
+      window.showToast = function(message, isError = false) {
+        const toast = document.getElementById("toast");
+        const toastMsg = document.getElementById("toast-message");
+        toastMsg.innerText = message;
+        if (isError) {
+          toast.classList.add("error");
+          toast.querySelector(".icon").innerHTML = "&#10006;";
+        } else {
+          toast.classList.remove("error");
+          toast.querySelector(".icon").innerHTML = "&#10004;";
+        }
+        toast.style.display = "flex";
+        setTimeout(() => {
+          toast.style.display = "none";
+        }, 3000);
+      };
+
+      // Validate active form inputs
+      window.validateActiveForm = function() {
+        const activeForm = document.querySelector(".form-container.active");
+        const inputs = activeForm.querySelectorAll("input");
+        let isValid = true;
+        inputs.forEach(input => {
+          if (!input.value.trim()) {
+            input.classList.add("error");
+            isValid = false;
+          } else {
+            if (input.type === "email" && !input.checkValidity()) {
+              input.classList.add("error");
+              isValid = false;
+            } else {
+              input.classList.remove("error");
+            }
+          }
+        });
+        // Additional check for password length on signup
+        if(activeForm.id === "signup"){
+          const pwd = document.getElementById("signup-password").value;
+          if(pwd.length < 8){
+            document.getElementById("signup-password").classList.add("error");
+            isValid = false;
+            showToast("Password must be at least 8 characters long.", true);
+          }
+        }
+        return isValid;
+      };
+
+      // Remove error class on user input
+      document.querySelectorAll(".input-group input").forEach(input => {
+        input.addEventListener("input", function () {
+          if (this.value.trim() && (this.type !== "email" || this.checkValidity())) {
+            this.classList.remove("error");
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

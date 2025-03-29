@@ -1,0 +1,645 @@
+/* General Styling */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f9fafb;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+/* Navbar - Fixed with Shadow */
+#navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    transition: all 0.3s ease;
+    /* Smooth transition */
+    z-index: 1000;
+    background: transparent;
+    /* Initially Transparent */
+    box-shadow: none;
+    /* No shadow initially */
+}
+/* When scrolled, apply white background and strong shadow */
+.navbar-scrolled {
+    background: white !important;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3) !important;
+    /* Stronger shadow */
+}
+#logo img {
+    height: 40px;
+}
+#btn {
+    display: flex;
+    gap: 10px;
+    margin-right: 20px;
+    /* Ensures buttons stay inside screen */
+}
+/* Fix Button Size & Spacing */
+#btn button {
+    height: 40px;
+    width: 100px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 15px;
+}
+#login-btn {
+    background-color: white;
+    color: #027aca;
+}
+#signup-btn {
+    background-color: #FF8C00;
+    color: white;
+    margin-right: 12px;
+}
+#login-btn:hover {
+    background-color: #d8e6f3;
+}
+#signup-btn:hover {
+    background-color: #e07b00;
+}
+
+/* #signup:hover {
+    background-color: #e07b00;
+} */
+#splitly {
+    position: relative;
+    background: linear-gradient(-45deg, #0044ff, #0088ff, #001b6b, #0029b2);
+    background-size: 400% 400%;
+    animation: gradientAnimation 6s ease-in-out infinite;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+    gap: 10px;
+    color: white;
+    font-size: 30px;
+    font-family: "Poppins", sans-serif;
+    font-weight: bold;
+    z-index: 1;
+    transition: background 0.5s ease-in-out;
+}
+/* Keyframes for a more dynamic and bold animation */
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+        filter: brightness(1);
+    }
+    25% {
+        background-position: 50% 100%;
+        filter: brightness(1.2);
+        /* Makes it glow slightly */
+    }
+    50% {
+        background-position: 100% 50%;
+        filter: brightness(0.9);
+        /* Slight dark effect */
+    }
+    75% {
+        background-position: 50% 0%;
+        filter: brightness(1.2);
+        /* Brightens again */
+    }
+    100% {
+        background-position: 0% 50%;
+        filter: brightness(1);
+    }
+}
+#punchline {
+    opacity: 0;
+    min-height: 70px;
+    /* Adjust this based on the longest punchline */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+    transform: translateY(20px) scale(0.95);
+    /* Starts slightly smaller */
+    animation: fadeInUp 1.5s ease-out forwards;
+    transition: opacity 1.5s ease-in-out, transform 1.5s ease-in-out;
+}
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+    60% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    100% {
+        opacity: 1;
+    }
+}
+/* Smooth fade out instead of instant disappearance */
+.fade-out {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+    /* Moves slightly up and shrinks */
+    transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+}
+.get-started-btn {
+    margin-top: 20px;
+    padding: 12px 24px;
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(45deg, #ff7e5f, #feb47b);
+    /* Gradient button */
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    box-shadow: 0px 4px 10px rgba(255, 126, 95, 0.3);
+    display: inline-block;
+    /* Ensure proper animation */
+    animation: bounceIn 1.5s ease-out;
+}
+/* Keyframes for a bounce effect without opacity changes */
+@keyframes bounceIn {
+    0% {
+        transform: scale(1);
+    }
+    20% {
+        transform: scale(1.1);
+    }
+    40% {
+        transform: scale(0.95);
+    }
+    60% {
+        transform: scale(1.05);
+    }
+    80% {
+        transform: scale(0.98);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+.get-started-btn:hover {
+    background: linear-gradient(45deg, #feb47b, #ff7e5f);
+    /* Reverse gradient on hover */
+    transform: scale(1.1);
+    box-shadow: 0px 6px 15px rgba(255, 126, 95, 0.5);
+}
+#splitly img {
+    height: 90px;
+    width: 180px;
+}
+#splitly h1 {
+    color: rgb(255, 255, 255);
+    font-family: "Poppins", sans-serif;
+    font-size: 33px;
+    opacity: 0;
+    /* Initially hidden */
+    transform: translateY(20px);
+    /* Slightly pushed down */
+    animation: fadeInUp 2.2s ease-out forwards;
+    animation-delay: 0.5s;
+}
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+/* Section Styling */
+h1 {
+    color: #3134db;
+    font-size: 30px;
+}
+p {
+    color: #333;
+    font-size: 18px;
+    line-height: 1.5;
+}
+/* Features List */
+/* Section Styling */
+/* ✅ General Section Styling - Makes Sections Mobile Friendly */
+#content {
+    max-width: 1200px;
+    margin: 40px auto 0 auto;
+    padding: 40px 20px;
+    background-color: #faf9f9;
+    border-radius: 30px 30px 0 0;
+    /* Rounded top border after blue header */
+    box-sizing: border-box;
+    text-align: left;
+    position: relative;
+    z-index: 10;
+}
+.section {
+    background: #ffffff;
+    padding: 50px 25px;
+    margin: 30px auto;
+    border-radius: 15px;
+    max-width: 1000px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.08);
+    text-align: left;
+}
+.section h1 {
+    font-size: 32px;
+    /* Increased font size */
+    margin-bottom: 15px;
+    text-align: center;
+}
+.section p {
+    font-size: 20px;
+    /* Increased font size */
+    line-height: 1.5;
+    margin-bottom: 15px;
+}
+.feature-list {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+.feature-list li {
+    display: block;
+    width: 100%;
+    padding: 14px 16px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    box-sizing: border-box;
+    background: #f9fafb;
+    /* Background restored */
+    overflow-wrap: break-word;
+    /* Prevent text overflow */
+}
+.feature-header {
+    display: inline-flex;
+    /* Keep icon and key point inline */
+    align-items: center;
+    /* Removed nowrap to allow wrapping if needed */
+}
+.feature-list li i {
+    font-size: 24px;
+    /* Increased icon size */
+    margin-right: 8px;
+    color: #ff8c00;
+}
+.feature-list li strong {
+    font-size: 18px;
+    /* Increased key point size */
+    margin-right: 4px;
+    color: #3134db;
+    /* Allow wrapping */
+    white-space: normal;
+}
+.feature-list li span {
+    display: block;
+    font-size: 16px;
+    /* Increased explanation size */
+    line-height: 1.4;
+    color: #555;
+    margin-top: 4px;
+}
+/* ✅ Call-to-Action Section */
+#btn-2 {
+    position: relative;
+    background: linear-gradient(-45deg, #0044ff, #0088ff, #001b6b, #0029b2);
+    background-size: 400% 400%;
+    animation: gradientAnimation 6s ease-in-out infinite;
+    min-height: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 30px;
+    color: white;
+    font-size: 22px;
+    font-family: "Poppins", sans-serif;
+    font-weight: bold;
+    z-index: 1;
+}
+/* ✅ Button Styling */
+#btn-2 button {
+    padding: 12px 24px;
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(45deg, #ff7e5f, #feb47b);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    box-shadow: 0px 4px 10px rgba(255, 126, 95, 0.3);
+}
+/* ✅ Mobile-Friendly Layout */
+@media (max-width: 768px) {
+    /* Main content container: use max-width and auto margins to prevent horizontal scrolling */
+    #content {
+        max-width: 95%;
+        margin: 20px auto;
+        padding: 20px 15px;
+        border-radius: 15px 15px 0 0;
+        /* Rounded top border */
+        box-sizing: border-box;
+    }
+    .section {
+        padding: 20px 15px;
+        margin: 15px auto;
+        max-width: 95%;
+        box-sizing: border-box;
+    }
+    .section h1 {
+        font-size: 24px;
+        /* Increased font size for mobile */
+        margin-bottom: 10px;
+        text-align: center;
+    }
+    .section p {
+        font-size: 18px;
+        /* Increased font size for mobile */
+        margin-bottom: 10px;
+    }
+    .feature-list li {
+        padding: 10px 12px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        box-sizing: border-box;
+        background: #f9fafb;
+    }
+    .feature-header {
+        display: inline-flex;
+        align-items: center;
+        /* Allow wrapping on mobile */
+        white-space: normal;
+    }
+    .feature-list li i {
+        font-size: 20px;
+        /* Mobile icon size */
+        margin-right: 8px;
+    }
+    .feature-list li strong {
+        font-size: 16px;
+        /* Maintain mobile key point size */
+        margin-right: 4px;
+        white-space: normal;
+        /* Allow wrapping */
+    }
+    .feature-list li span {
+        font-size: 16px;
+        /* Mobile explanation size */
+        margin-top: 4px;
+        padding-left: 28px;
+        padding-right: 14px;
+    }
+    /* Adjust call-to-action section */
+    #btn-2 {
+        padding: 15px;
+        min-height: 150px;
+        max-width: 100%;
+        margin: 15px auto;
+        box-sizing: border-box;
+    }
+    #btn-2 button {
+        font-size: 20px;
+        padding: 8px 16px;
+    }
+}
+#btn-2 button:hover {
+    background: linear-gradient(45deg, #feb47b, #ff7e5f);
+    /* Reverse gradient on hover */
+    transform: scale(1.1);
+    box-shadow: 0px 6px 15px rgba(255, 126, 95, 0.5);
+}
+#btn-2 p {
+    color: white;
+    font-size: 18px;
+    opacity: 0;
+    /* Initially hidden */
+    transform: translateY(20px);
+    /* Slightly pushed down */
+    animation: fadeInUp1 1.0s ease-out forwards;
+    animation-delay: 0.4s;
+}
+@keyframes fadeInUp1 {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+/* Footer */
+#last {
+    background-color: #222;
+    /* Darker background for a premium look */
+    padding: 20px;
+    color: white;
+    font-size: 16px;
+    text-align: center;
+}
+#last a {
+    text-decoration: none;
+    color: #ffcc00;
+    /* Gold for contrast */
+    font-size: 18px;
+    margin: 0 15px;
+}
+#last a:hover {
+    color: #ffd700;
+    /* Brighter gold on hover */
+    text-decoration: underline;
+}
+.animate-section {
+    opacity: 0;
+    transform: translateY(30px);
+    /* ✅ Reduced movement for better timing */
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+.animate-section.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+/* Make it more responsive */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 26px;
+    }
+    p {
+        font-size: 16px;
+        font-weight: 900;
+    }
+    #btn {
+        margin-right: 10px;
+    }
+    #btn button {
+        width: 85px;
+        font-size: 14px;
+        padding: 5px 10px;
+    }
+    #punchline {
+        font-size: 18px;
+        min-height: 55px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        margin-bottom: 102px;
+    }
+    .get-started-btn {
+        position: absolute;
+        bottom: 103px;
+    }
+}
+
+/* For popup */
+/* For popup */
+/* Popup Overlay */
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease, visibility 0.5s;
+    z-index: 10000;
+  }
+  .popup.show {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  /* Popup Content */
+  /* Popup Content */
+  .popup-content {
+    position: relative;
+    background: #fff;
+    border: 2px solid #FF8C00;
+    border-radius: 12px;
+    padding: 60px 50px 40px; /* Increased top padding to create space for close icon */
+    max-width: 500px;
+    width: 90%;
+    min-height: 350px;
+    text-align: center;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+    animation: scaleIn 0.5s ease;
+  }
+  
+  @keyframes scaleIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  
+  /* Close Icon */
+  .popup-close {
+    position: absolute;
+    top: 10px;    /* Adjusted to move it further from content */
+    right: 10px;  /* Adjusted to move it further from content */
+    font-size: 28px;
+    color: #aaa;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+  .popup-close:hover {
+    color: #555;
+  }
+  
+  /* Popup Header */
+  .popup-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .popup-header .icon {
+    font-size: 32px;  /* Reduced size for balance */
+  }
+  .popup-header h2 {
+    margin: 0;
+    font-size: 26px;
+    color: #333;
+  }
+  
+  /* Popup Text */
+  .popup-content p {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #545252;  /* Darker text for clarity */
+    margin: 20px 0;
+  }
+  
+  /* CTA Button */
+  .popup-cta {
+    background: linear-gradient(45deg, #FF8C00, #FFB347);
+    border: none;
+    color: #fff;
+    padding: 12px 28px;
+    font-size: 18px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-top: 10px;
+  }
+  .popup-cta:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(255, 140, 0, 0.5);
+  }
+  
+  /* Responsive Design */
+  /* Responsive Design for Mobile Screens */
+@media (max-width: 600px) {
+    .popup-content {
+      padding: 20px 25px;
+    }
+    .popup-close{
+        top: 5px;
+    right: 7px;
+    }
+    .popup-header {
+      /* Ensure elements stay on one line */
+      flex-wrap: nowrap;
+    }
+    .popup-header .icon {
+      font-size: 36px;  /* Increase icon size slightly on mobile */
+    }
+    .popup-header h2 {
+      font-size: 24px;  /* Increase header font size */
+      margin: 0;
+      white-space: nowrap; /* Prevent header from wrapping */
+    }
+    .popup-content p {
+      font-size: 16px;
+    }
+    .popup-cta {
+      font-size: 18px;
+      padding: 10px 20px;
+    }
+  }
+  
+  

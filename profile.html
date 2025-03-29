@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Splitly - User Profile</title>
+    <!-- Import Firebase modules -->
+    <script type="module" src="firebaseauth.js"></script>
+    <!-- Font Awesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+    <style>
+        /* Basic reset & styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f9fafb;
+            color: #333;
+        }
+
+        /* Navbar */
+        #navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        #logo img {
+            height: 40px;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .nav-menu a.active {
+            color: #ff8c00;
+            border-bottom: 2px solid #ff8c00;
+        }
+
+        .hamburger {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 60px;
+                right: 20px;
+                background: #fff;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                padding: 10px;
+            }
+
+            .nav-menu.active {
+                display: flex;
+            }
+
+            .hamburger {
+                display: block;
+            }
+        }
+
+        /* Profile Header */
+        .profile-header {
+            position: relative;
+            height: 250px;
+            background: #0044ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .profile-cover {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('profile-cover.jpg') center center/cover;
+            opacity: 0.5;
+        }
+
+        .profile-info {
+            position: relative;
+            text-align: center;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 5px solid white;
+        }
+
+        .profile-name {
+            font-size: 28px;
+            margin-top: 10px;
+        }
+
+        .profile-email {
+            font-size: 16px;
+            margin-top: 5px;
+        }
+
+        #editProfileBtn {
+            margin-top: 15px;
+            padding: 8px 12px;
+            background: #ff8c00;
+            border: none;
+            color: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #editProfileForm {
+            display: none;
+            margin: 20px auto;
+            max-width: 500px;
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        #editProfileForm input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        #editProfileForm button {
+            padding: 10px 15px;
+            background: #ff8c00;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* Profile Content */
+        .profile-content {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .profile-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+        }
+
+        .profile-stats .stat {
+            text-align: center;
+        }
+
+        .profile-stats .stat h2 {
+            font-size: 32px;
+            color: #ff8c00;
+        }
+
+        .profile-stats .stat p {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .profile-transactions {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-transactions h2 {
+            margin-bottom: 15px;
+        }
+
+        .transaction-list {
+            list-style: none;
+        }
+
+        .transaction-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .transaction-title {
+            font-weight: 500;
+        }
+
+        .transaction-date {
+            font-size: 12px;
+            color: #777;
+        }
+
+        .transaction-amount {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .transaction-amount.negative {
+            color: #e74c3c;
+        }
+
+        .transaction-amount.positive {
+            color: #2ecc71;
+        }
+
+        /* Footer */
+        #footer {
+            text-align: center;
+            padding: 15px;
+            background: #222;
+            color: #fff;
+            margin-top: 30px;
+        }
+
+        /* Navigation button to Splitter */
+        .nav-button {
+            margin-top: 20px;
+            padding: 10px 15px;
+            background: #027aca;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav id="navbar">
+        <div id="logo">
+            <img src="SPLIT (4)-Photoroom (1)-Photoroom.png" alt="Splitly Logo" />
+        </div>
+        <div class="hamburger" id="hamburger">
+            <i class="fa-solid fa-bars"></i>
+        </div>
+        <div id="menu" class="nav-menu">
+            <a href="index.html">Home</a>
+            <a href="user-profile.html" class="active">Profile</a>
+            <a href="signup-login.html">Logout</a>
+        </div>
+    </nav>
+
+    <!-- Profile Header -->
+    <header class="profile-header">
+        <div class="profile-cover"></div>
+        <div class="profile-info">
+            <img src="duy-pham-Cecb0_8Hx-o-unsplash.jpg" alt="User Avatar" class="profile-avatar" id="profileAvatar" />
+            <h1 class="profile-name" id="profileName">User Name</h1>
+            <p class="profile-email" id="profileEmail">user@example.com</p>
+            <button id="editProfileBtn">Edit Profile</button>
+        </div>
+    </header>
+
+    <!-- Edit Profile Form -->
+    <section id="editProfileForm">
+        <h2>Edit Your Profile</h2>
+        <input type="text" id="editName" placeholder="Enter new name" />
+        <input type="email" id="editEmail" placeholder="Email (cannot change)" disabled />
+        <button id="saveProfileBtn" onclick="updateUserProfile(document.getElementById('editName').value)">Save Changes</button>
+    </section>
+
+    <!-- Profile Content -->
+    <main class="profile-content">
+        <section class="profile-stats">
+            <div class="stat">
+                <h2 id="totalBills">0</h2>
+                <p>Total Bills</p>
+            </div>
+            <div class="stat">
+                <h2 id="totalSpent">$0</h2>
+                <p>Total Spent</p>
+            </div>
+            <div class="stat">
+                <h2 id="pendingSettlements">$0</h2>
+                <p>Pending Settlements</p>
+            </div>
+        </section>
+
+        <section class="profile-transactions">
+            <h2>Recent Transactions</h2>
+            <ul class="transaction-list">
+                <!-- Transactions loaded from Firestore -->
+            </ul>
+        </section>
+
+        <!-- Navigation button to Splitter -->
+        <button class="nav-button" onclick="window.location.href='splitter.html'">Go to Bill Splitter</button>
+    </main>
+
+    <!-- Footer -->
+    <footer id="footer">
+        <p>&copy; 2025 Splitly. All rights reserved.</p>
+    </footer>
+
+    <!-- Script to load user data -->
+    <script type="module">
+        import { auth, db } from "./firebaseauth.js";
+        import { doc, getDoc, collection, query, getDocs } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
+        import { updateProfile } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
+
+        // Load user profile and transactions from Firestore
+        async function loadUserData(user) {
+            try {
+                const userRef = doc(db, "users", user.uid);
+                const userSnap = await getDoc(userRef);
+                if (userSnap.exists()) {
+                    const userData = userSnap.data();
+                    // Use the fullName from Firestore (saved during sign-up)
+                    document.getElementById('profileName').innerText = userData.fullName || "No Name";
+                    document.getElementById('profileEmail').innerText = userData.email;
+                    document.getElementById('totalBills').innerText = userData.totalBills || 0;
+                    document.getElementById('totalSpent').innerText = "$" + (userData.totalSpent || 0);
+                    document.getElementById('pendingSettlements').innerText = "$" + (userData.pendingSettlements || 0);
+                } else {
+                    // Fallback to auth data if Firestore document doesn't exist
+                    document.getElementById('profileName').innerText = user.displayName || "No Name";
+                    document.getElementById('profileEmail').innerText = user.email || "No Email";
+                }
+                // Load transactions subcollection
+                const transQuery = query(collection(db, "users", user.uid, "transactions"));
+                const transSnap = await getDocs(transQuery);
+                let transHTML = "";
+                transSnap.forEach(docItem => {
+                    const data = docItem.data();
+                    transHTML += `<li>
+                        <div>
+                          <p class="transaction-title">${data.type === "split" ? "Bill Split" : "Other Transaction"}</p>
+                          <p class="transaction-date">${new Date(data.date).toLocaleString()}</p>
+                        </div>
+                        <p class="transaction-amount">${data.perPerson ? "$" + data.perPerson : ""}</p>
+                      </li>`;
+                });
+                document.querySelector(".transaction-list").innerHTML = transHTML;
+            } catch (error) {
+                console.error("Error loading user data:", error);
+            }
+        }
+
+        // Listen for auth state changes
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                loadUserData(user);
+            } else {
+                window.location.href = "signup-login.html";
+            }
+        });
+
+        // Expose updateUserProfile for the edit form button
+        window.updateUserProfile = function (newName) {
+            if (newName.trim() === "") {
+                alert("Name cannot be empty");
+                return;
+            }
+            updateProfile(auth.currentUser, { displayName: newName })
+                .then(() => {
+                    document.getElementById('profileName').innerText = newName;
+                    document.getElementById('editProfileForm').style.display = "none";
+                    alert("Profile updated successfully!");
+                })
+                .catch((error) => {
+                    console.error("Error updating profile:", error);
+                    alert("Failed to update profile. Please try again.");
+                });
+        };
+
+        // Toggle edit form display
+        document.getElementById('editProfileBtn').addEventListener('click', () => {
+            const form = document.getElementById('editProfileForm');
+            form.style.display = (form.style.display === "none" || form.style.display === "") ? "block" : "none";
+            document.getElementById('editName').value = document.getElementById('profileName').innerText;
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us - Splitly</title>
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <style>
+    * {
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box; 
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      background-color: #f4f4f4;
+      text-align: center;
+      padding-top: 60px; /* Space for fixed navbar */
+    }
+    /* Top Navbar */
+    .top-navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: white;
+      color: #333;
+      padding: 15px;
+      text-align: center;
+      font-size: 18px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .top-navbar a {
+      color: #333;
+      text-decoration: none;
+      font-size: 18px;
+      margin-left: 15px;
+      flex: 1;
+      text-align: left;
+    }
+    .top-navbar img {
+      height: 30px;
+      flex: none;
+      display: block;
+      margin: 0 auto;
+    }
+    .top-navbar .spacer {
+      flex: 1;
+    }
+    /* Main Content */
+    .content {
+      max-width: 800px;
+      margin: 40px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      text-align: left;
+    }
+    h1 {
+      text-align: center;
+      color: #0044ff;
+      margin-bottom: 10px;
+    }
+    p {
+      text-align: center;
+      font-size: 16px;
+      color: #666;
+      margin-bottom: 20px;
+    }
+    .contact-form {
+      margin-top: 20px;
+    }
+    /* Form fields with icons */
+    .form-group {
+      position: relative;
+      margin: 10px 0;
+    }
+    .form-group i {
+      position: absolute;
+      top: 50%;
+      left: 10px;
+      transform: translateY(-50%);
+      color: #999;
+      pointer-events: none;
+    }
+    .form-group {
+  position: relative;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center; /* Default: centers items */
+}
+.form-group textarea {
+  padding-top: 40px; /* Push placeholder text down */
+}
+/* Move the icon to the top-left for the textarea field */
+.form-group.textarea-group {
+  align-items: flex-start; /* Aligns icon to the top */
+}
+.form-group.textarea-group i {
+  top: 12px; /* Moves the icon closer to the top */
+  transform: none; /* Removes center alignment */
+}
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 12px 12px 12px 40px; /* extra left padding for icon space */
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 16px;
+      outline: none;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      border-color: #0044ff;
+    }
+    /* Custom select arrow */
+    .form-group select {
+      appearance: none;
+      background: url("data:image/svg+xml,%3Csvg fill='%23999' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5'/%3E%3C/svg%3E") no-repeat right 10px center;
+      background-color: #fff;
+    }
+    button {
+      background: #ff8c00;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      width: 100%;
+      margin-top: 10px;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #e07b00;
+    }
+    .footer {
+      margin-top: 20px;
+      background: #222;
+      color: rgb(255, 255, 255);
+      padding: 15px;
+      text-align: center;
+    }
+    .footer a {
+      color: #ffcc00;
+      /* text-decoration: none; */
+      margin: 0 10px;
+    }
+    #text{
+      color: white;
+    }
+    /* Popup Message */
+    .popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      z-index: 2000;
+    }
+    .popup button {
+      margin-top: 10px;
+      background: #0044ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="top-navbar">
+    <a href="index.html"><i class="fa-solid fa-arrow-left"></i> Home</a>
+    <img src="SPLIT (4)-Photoroom (1)-Photoroom.png" alt="Splitly">
+    <div class="spacer"></div>
+  </div>
+  <div class="content">
+    <h1>Contact Us</h1>
+    <p>Have questions or feedback? Reach out to us!</p>
+    <div class="contact-form">
+      <form id="contactForm" action="https://api.web3forms.com/submit" method="POST">
+        <input type="hidden" name="access_key" value="ee42ec2c-5d84-4f63-83ef-d8a49fe8d017">
+        <!-- Name field with user icon -->
+        <div class="form-group">
+          <i class="fa-solid fa-user"></i>
+          <input type="text" name="name" placeholder="Your Name" required>
+        </div>
+        <!-- Email field with envelope icon -->
+        <div class="form-group">
+          <i class="fa-solid fa-envelope"></i>
+          <input type="email" name="email" placeholder="Your Email" required>
+        </div>
+        <!-- Selector for Inquiry Type with list icon -->
+        <div class="form-group">
+          <i class="fa-solid fa-list"></i>
+          <select name="inquiry" required>
+            <option value="" disabled selected>Select an Inquiry Type</option>
+            <option value="general">General Inquiry</option>
+            <option value="billing">Billing Issue</option>
+            <option value="bug">Report a Bug</option>
+            <option value="feature">Feature Request</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <!-- Message field with comment icon aligned with placeholder text -->
+        <div class="form-group textarea-group">
+          <i class="fa-solid fa-comment-dots"></i>
+          <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
+        </div>
+        <button type="submit" id="submitBtn">Send Message</button>
+      </form>
+    </div>
+  </div>
+  <!-- Popup Message -->
+  <div id="popup" class="popup">
+    <p>Message sent successfully!</p>
+    <button onclick="closePopup()">OK</button>
+  </div>
+  <div class="footer">
+    <p id="text">Follow us on <a href="https://www.instagram.com/splitlyofficial" target="_blank">Instagram</a> & <a href="https://twitter.com/splitlyofficial" target="_blank">Twitter</a></p>
+  </div>
+  <script>
+    document.getElementById("contactForm").addEventListener("submit", function() {
+      let submitBtn = document.getElementById("submitBtn");
+      submitBtn.innerText = "Sending...";
+      submitBtn.disabled = true; // Disable button to prevent multiple clicks
+    });
+    function closePopup() {
+      document.getElementById("popup").style.display = "none";
+    }
+  </script>
+</body>
+</html>

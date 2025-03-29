@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Group Dashboard | Splitly</title>
+  <link rel="stylesheet" href="splitter.css">
+  <link rel="stylesheet" href="group.dashboard.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+</head>
+<script src="group_dashboard.js"></script>
+
+<body>
+  <!-- Main Navbar (Back and Logo) -->
+  <div class="main-navbar">
+    <a href="#" onclick="goBackToCreateGroup()">&#8592; Go Back</a>
+    <img src="SPLIT (4)-Photoroom (1)-Photoroom.png" alt="Splitly" class="logo">
+  </div>
+  
+  <!-- Second Navbar (Tabs) -->
+  <div class="navbar-tabs">
+    <button id="latestTab" class="active" onclick="showLatestGroup()">Latest Group</button>
+    <button id="myGroupsTab" onclick="showMyGroups()">My Groups</button>
+  </div>
+  
+  <div class="container">
+    <!-- Views for Tabs -->
+    <div id="latestGroupView"></div>
+    <div id="myGroupsView" style="display: none;"></div>
+    
+    <div class="back-container">
+      <p>Click below to go back to the Create Group page.</p>
+      <button onclick="goBackToCreateGroup()">Back to Create Group</button>
+    </div>
+  </div>
+
+<!-- Custom Modal Popup for Edit Error -->
+<div id="customModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="hideModal()">&times;</span>
+    <p id="modalMessage">Editing the latest group is not allowed.</p>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="modal">
+  <div class="modal-content">
+    <!-- Close (X) button in top-right corner -->
+    <span class="close" onclick="hideDeleteModal()">&times;</span>
+    
+    <!-- Red icon up top -->
+    <div class="modal-icon">
+      <i class="fas fa-times-circle"></i>
+    </div>
+    
+    <!-- Confirmation view (shown by default) -->
+    <div id="deleteConfirmView">
+      <h2>Are you sure?</h2>
+      <p class="modal-subtext">Do you really want to delete this group? This process cannot be undone.</p>
+      
+      <div class="modal-actions">
+        <button id="cancelDeleteBtn" class="btn-cancel" onclick="hideDeleteModal()">Cancel</button>   
+             <button id="confirmDeleteBtn" class="btn-delete">Delete</button>
+      </div>
+    </div>
+    
+    <!-- Success view (hidden by default) -->
+    <div id="deleteSuccessView" style="display: none;">
+      <h2>Deleted!</h2>
+      <p class="modal-subtext">The group has been deleted successfully.</p>
+      <button class="btn-ok" onclick="finalizeDelete()">OK</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
