@@ -5,23 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bill Splitter | Splitly</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap">
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <!-- <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> -->
     <!-- FontAwesome Latest Version -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <link rel="stylesheet" href="splitter.css">
 </head>
 <body>
-    <script type="module">
-        import { auth } from "./firebaseauth.js";
-        window.auth = auth; // Make it globally accessible
-      </script>
-      
-      <script src="splitter.js"></script>      
-    <!-- <script type="module" src="splitter.js"></script>  -->
+   <!-- Firebase must come first -->
+<script type="module">
+  import { auth } from "./firebaseauth.js";
+  window.auth = auth;
+</script>
+
+<!-- Your main JS logic last -->
+<script src="splitter.js"></script>
+    
 
     <!-- Navbar -->
 <div class="navbar">
     <a href="index.html" class="back-link"></a>
+    
     <img src="SPLIT (4)-Photoroom (1)-Photoroom.png" alt="Splitly" class="logo">
     <!-- Profile Dropdown Container -->
     <div class="profile-dropdown">
@@ -30,7 +33,7 @@
       </button>
       <div id="profileMenu" class="dropdown-content">
         <a href="profile.html">Account</a>
-        <a href="settings.html">Settings</a>
+        <a href="profile.html">Settings</a>
         <a href="contact.html">Contact Us</a>
         <a href="index.html" id="logoutLink">Logout</a>
       </div>
@@ -164,6 +167,42 @@
         <button onclick="clearHistory()">Clear History</button>
         <div id="historyResults"></div>
     </div>
+    <button id="syncHistoryBtn" style="display:none;">Sync History</button>
+    <!-- Confirmation Modal -->
+<div id="confirmationModal" class="confirm-overlay">
+  <div class="confirm-box">
+    <div class="confirm-header">
+      <i class="fas fa-exclamation-circle"></i>
+      <h2>Are You Sure?</h2>
+    </div>
+    <p id="confirmationText">Do you really want to continue?</p>
+    <div class="confirm-actions">
+      <button id="confirmYes">Yes</button>
+      <button id="confirmNo">Cancel</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- No History Modal -->
+<div id="noHistoryModal" class="confirm-overlay">
+  <div class="confirm-box">
+    <div class="confirm-header">
+      <i class="fas fa-folder-open"></i>
+      <h2>No History Found</h2>
+    </div>
+    <p>You haven't created any splits yet. Try splitting a bill — it's fun and easy!</p>
+    <div class="confirm-actions">
+      <button onclick="document.getElementById('noHistoryModal').style.display = 'none'">Got It</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div id="toastContainer" class="toast-container"></div>
+
+
+
     <!-- FontAwesome for Icons -->
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <script>

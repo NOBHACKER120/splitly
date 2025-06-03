@@ -10,6 +10,62 @@
   
 //   const db = getFirestore();
 
+// Uploads the entire local history array to Firestore under the current user
+async function syncHistoryToServer() {
+    if (!auth.currentUser) throw new Error("Must be signed in to sync.");
+    const history = JSON.parse(localStorage.getItem("splitHistory") || "[]");
+    const docRef = firebase.firestore()
+      .collection("userHistories")
+      .doc(auth.currentUser.uid);
+    // overwrite or merge
+    await docRef.set({ entries: history }, { merge: true });
+    console.log("History synced to server:", history);
+  }
+  
+  // Fetches history from Firestore, merges it with localStorage, and returns the merged array
+  async function loadHistoryFromServer() {
+    if (!auth.currentUser) return;  // no-op for anonymous
+    const docRef = firebase.firestore()
+      .collection("userHistories")
+      .doc(auth.currentUser.uid);
+    const snap = await docRef.get();
+    if (!snap.exists) return;       // no history on server yet
+  
+    const serverEntries = snap.data().entries || [];
+    const localEntries  = JSON.parse(localStorage.getItem("splitHistory") || "[]");
+  
+    // Merge strategy: keep local + server, dedupe by `id`
+    const all = [...localEntries, ...serverEntries];
+    const deduped = [];
+    const seenIds = new Set();
+    all.forEach(e => {
+      if (!seenIds.has(e.id)) {
+        seenIds.add(e.id);
+        deduped.push(e);
+      }
+    });
+  
+    // Save merged array back to localStorage
+    localStorage.setItem("splitHistory", JSON.stringify(deduped));
+    console.log("History loaded from server:", deduped);
+    return deduped;
+  }
+
+//   const syncBtn = document.getElementById("syncHistoryBtn");
+// syncBtn.addEventListener("click", async () => {
+//   try {
+//     await syncHistoryToServer();
+//     alert("✅ History successfully uploaded.");
+//   } catch (e) {
+//     console.error(e);
+//     alert("❌ Could not sync history. Please try again.");
+//   }
+// });
+
+// syncBtn.style.display = auth.currentUser ? "inline-block" : "none";
+
+  
+
 // Global variable to store the last active section.
 let lastActiveSection = "expenseSplitter";
 
@@ -36,25 +92,31 @@ document.addEventListener("DOMContentLoaded", () => {
   
     // Profile icon: if signed in, toggle dropdown; if not, open modal and disable scrolling
     auth.onAuthStateChanged(user => {
-      if (user) {
-        profileButton.onclick = () => profileMenu.classList.toggle("show");
-      } else {
-        profileButton.onclick = () => {
-          signupModal.style.display = "block";
-          document.body.style.overflow = "hidden"; // disable page scrolling
-        };
-      }
-    });
+        if (user) {
+          profileButton.onclick = () => profileMenu.classList.toggle("show");
+        } else {
+          profileButton.onclick = () => {
+            signupModal.style.display = "block";
+            document.body.style.overflow = "hidden"; // disable page scrolling
+          };
+        }
+      });
+      
+
   
     // Logout link: sign out & redirect
-    if (logoutLink) {
-      logoutLink.addEventListener("click", async (e) => {
-        e.preventDefault();
-        await auth.signOut();
-        window.location.href = "signup-login.html";
-      });
-    }
+   // Logout link: confirm before sign out
+if (logoutLink) {
+  logoutLink.addEventListener("click", (e) => {
+    e.preventDefault();
+    showConfirmation("Are you sure you want to log out?", async () => {
+      await auth.signOut();
+      persistToast("You’ve been logged out.");
+      window.location.href = "signup-login.html";
+    });
   });
+}
+});
   
 // for non signed up users
 
@@ -83,8 +145,28 @@ function createInputs() {
             <input type="number" placeholder="Amount Paid" id="paid${i}" min="0">
         `;
         inputsDiv.appendChild(div);
+      // expense splitter: after inputsDiv.appendChild(div) loop completes
+
+
     }
     document.getElementById("calculateButton").style.display = "block";
+    // --- Expense: Enter-to-next ---
+const expenseInputs = Array.from(
+  document.querySelectorAll("#inputs input")
+);
+expenseInputs.forEach((input, idx) => {
+  input.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (idx < expenseInputs.length - 1) {
+        expenseInputs[idx + 1].focus();
+      } else {
+        calculateSplit();
+      }
+    }
+  });
+});
+
     // Scroll to the name inputs
     inputsDiv.scrollIntoView({ behavior: "smooth", block: "start" });
 }
@@ -186,16 +268,9 @@ function hideAllSections() {
     document.getElementById("historySection").style.display = "none";
 }
 
+// === Show History Function ===
 function showHistory() {
-    // If not signed in, show signup modal and freeze background scroll
-    if (!auth.currentUser) {
-      const signupModal = document.getElementById("signupModal");
-      signupModal.style.display = "block";
-      document.body.style.overflow = "hidden";  // disable page scroll
-      return;
-    }
-  
-    // Otherwise, remember which splitter was active
+    // 1. Remember last active splitter section
     if (document.getElementById("expenseSplitter").style.display === "block") {
       lastActiveSection = "expenseSplitter";
     } else if (document.getElementById("randomSplitter").style.display === "block") {
@@ -204,14 +279,45 @@ function showHistory() {
       lastActiveSection = "createGroup";
     }
   
-    // Show the history section
+    // 2. Show History section
     hideAllSections();
     document.getElementById("historySection").style.display = "block";
     document.querySelector(".selector").style.display = "none";
-    loadHistory();
+  
+    // 3. Load from localStorage and render into #historyResults
+     const history = JSON.parse(localStorage.getItem("splitHistory")) || [];
+  if (history.length === 0) {
+    document.getElementById("noHistoryModal").style.display = "flex";
+    // NEW: switch footer active states
+    document.getElementById("historyButton").classList.add("active");
+    document.getElementById("homeButton").classList.remove("active");
+    return;
+  
+}
+ else {
+      history.forEach(entry => {
+        const cls = entry.type === "random" ? "random-history" : "history-card";
+        const title = entry.type === "random" 
+          ? "Random Split History" 
+          : "Expense Splitter History";
+  
+        const html = `
+          <div class="${cls}">
+            <h3>${title} (${entry.date})</h3>
+            <ul>
+              ${entry.transactions.map(t => `<li>${t}</li>`).join("")}
+            </ul>
+          </div>`;
+        historyResults.innerHTML += html;
+      });
+    }
+  
+    // 4. Update footer buttons
     document.getElementById("historyButton").classList.add("active");
     document.getElementById("homeButton").classList.remove("active");
   }
+  
+  
   
 
 function showHome() {
@@ -248,9 +354,26 @@ function loadHistory() {
 }
 
 function clearHistory() {
+  const history = JSON.parse(localStorage.getItem("splitHistory")) || [];
+  if (history.length === 0) {
+    // no history — show the friendly no-history modal
+    document.getElementById("noHistoryModal").style.display = "flex";
+    return;
+  }
+  // otherwise proceed as before:
+  showConfirmation("Do you want to clear all history?", () => {
     localStorage.removeItem("splitHistory");
-    loadHistory();
+    const historyResults = document.getElementById("historyResults");
+    historyResults.innerHTML = "<p>No history found.</p>";
+    // after clearing, update footer too:
+    document.getElementById("historyButton").classList.add("active");
+    document.getElementById("homeButton").classList.remove("active");
+    showToast("History cleared successfully!");
+  });
 }
+
+
+
 
 document.addEventListener("DOMContentLoaded", function () {
     let expenseTab = document.querySelector(".selector ul li:nth-child(1)");
@@ -423,6 +546,24 @@ function createRandomInputs() {
     document.getElementById("randomCalculateButton").style.display = "none";
     populateWeightedOptions();
     inputsDiv.scrollIntoView({ behavior: "smooth", block: "start" });
+    // --- Random: Enter-to-next ---
+const randomInputs = Array.from(
+  document.querySelectorAll("#randomInputs input")
+);
+const randomBtn = document.getElementById("randomCalculateButton");
+randomInputs.forEach((input, idx) => {
+  input.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (idx < randomInputs.length - 1) {
+        randomInputs[idx + 1].focus();
+      } else if (randomBtn.style.display !== "none") {
+        calculateRandomSplit();
+      }
+    }
+  });
+});
+
 }
 
 function checkNamesEntered() {
@@ -683,6 +824,29 @@ function generateGroupMemberInputs() {
         container.innerHTML += `<input type="text" placeholder="Member ${i+1} Name" id="memberName${i}" style="width:100%; padding:10px; margin:5px 0; border:1px solid #ccc; border-radius:6px;">`;
     }
     document.getElementById("saveGroupButton").style.display = "block";
+    // Scroll group-member inputs into view on “Next”
+document
+  .getElementById("groupMemberInputs")
+  .scrollIntoView({ behavior: "smooth", block: "start" });
+
+    // --- Group: Enter-to-next ---
+const groupInputs = Array.from(
+  document.querySelectorAll("#groupMemberInputs input")
+);
+const saveBtn = document.getElementById("saveGroupButton");
+groupInputs.forEach((input, idx) => {
+  input.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (idx < groupInputs.length - 1) {
+        groupInputs[idx + 1].focus();
+      } else {
+        saveBtn.click();
+      }
+    }
+  });
+});
+
 }
 
 // Save the group information and immediately redirect to the Group Dashboard.
@@ -755,7 +919,10 @@ function saveGroup() {
     document.getElementById("groupMessage").innerHTML = `<p style="color:green;">Group "${groupName}" created successfully!</p>`;
     
     // Immediately redirect to the Group Dashboard.
-    window.location.href = "group_dashboard.html";
+    // after localStorage.setItem(…)
+persistToast(`Group "${groupName}" created!`);
+window.location.href = "group_dashboard.html";
+
 }
 
 // to call user back from group dashboard
@@ -782,3 +949,72 @@ async function saveHistoryEntry(type, transactions) {
     }
     // TODO: render `history` into your #historyResults container
   }
+
+  document.getElementById("syncHistoryBtn")
+  .addEventListener("click", async () => {
+    const history = JSON.parse(localStorage.getItem("splitHistory") || "[]");
+    try {
+      // assume you have a Cloud Function or Firestore path for user histories:
+      await firebase.firestore()
+        .collection("userHistories")
+        .doc(auth.currentUser.uid)
+        .set({ entries: history }, { merge: true });
+      alert("History synced! ✅");
+    } catch (e) {
+      console.error("Sync failed:", e);
+      alert("Could not sync. Please try again.");
+    }
+  });
+
+  // === Reusable Confirmation Modal Logic ===
+function showConfirmation(message, onConfirm) {
+  const modal = document.getElementById("confirmationModal");
+  const text = document.getElementById("confirmationText");
+  const yes = document.getElementById("confirmYes");
+  const no = document.getElementById("confirmNo");
+
+  text.textContent = message;
+  modal.style.display = "flex";
+
+  const cleanUp = () => {
+modal.style.display = "none";  
+    yes.removeEventListener("click", confirmHandler);
+    no.removeEventListener("click", cancelHandler);
+  };
+
+  const confirmHandler = () => {
+    cleanUp();
+    onConfirm();
+  };
+
+  const cancelHandler = () => {
+    cleanUp();
+  };
+
+  yes.addEventListener("click", confirmHandler);
+  no.addEventListener("click", cancelHandler);
+}
+
+// Toast helper
+function showToast(message) {
+  const container = document.getElementById("toastContainer");
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.textContent = message;
+  container.appendChild(toast);
+  // auto-remove after anim
+  setTimeout(() => container.removeChild(toast), 3000);
+}
+
+// Persist-toast for redirects:
+function persistToast(message) {
+  sessionStorage.setItem("pendingToast", message);
+}
+// On page load, show pending toast:
+window.addEventListener("DOMContentLoaded", () => {
+  const msg = sessionStorage.getItem("pendingToast");
+  if (msg) {
+    showToast(msg);
+    sessionStorage.removeItem("pendingToast");
+  }
+});

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Improved Launch Popup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Using Poppins for a modern look -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4f4f4;
+    }
+    /* Popup Overlay */
+    .popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.4s ease, visibility 0.4s;
+      z-index: 1000;
+    }
+    .popup.show {
+      opacity: 1;
+      visibility: visible;
+    }
+    /* Popup Content */
+    .popup-content {
+      position: relative;
+      background: #fff;
+      border-radius: 16px;
+      padding: 40px 50px;
+      max-width: 500px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+      animation: scaleIn 0.5s ease;
+    }
+    @keyframes scaleIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    /* Close Icon */
+    .popup-close {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 28px;
+      color: #aaa;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+    .popup-close:hover {
+      color: #555;
+    }
+    /* Header */
+    .popup-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .popup-header .icon {
+      font-size: 40px;
+    }
+    .popup-header h2 {
+      margin: 0;
+      font-size: 26px;
+      color: #333;
+    }
+    /* Popup Text */
+    .popup-content p {
+      font-size: 16px;
+      line-height: 1.5;
+      color: #555;
+      margin: 20px 0;
+    }
+    /* CTA Button */
+    .popup-cta {
+      background: linear-gradient(45deg, #FF8C00, #FFB347);
+      border: none;
+      color: #fff;
+      padding: 12px 28px;
+      font-size: 18px;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      margin-top: 10px;
+    }
+    .popup-cta:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 12px rgba(255, 140, 0, 0.5);
+    }
+    /* Responsive Design */
+    @media (max-width: 600px) {
+      .popup-content {
+        padding: 20px 25px;
+      }
+      .popup-header h2 {
+        font-size: 22px;
+      }
+      .popup-content p {
+        font-size: 14px;
+      }
+      .popup-cta {
+        font-size: 16px;
+        padding: 10px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="launch-popup" class="popup">
+    <div class="popup-content">
+      <span id="popup-close" class="popup-close">&times;</span>
+      <div class="popup-header">
+        <span class="icon">🚀</span>
+        <h2>Launch Announcement!</h2>
+      </div>
+      <p>Welcome to our newly launched website! We're excited to introduce you to Splitly—your solution for hassle-free bill splitting.</p>
+      <p>Explore our features and share your feedback. Your input shapes our future!</p>
+      <button id="learn-more" class="popup-cta">Explore Now</button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const popup = document.getElementById('launch-popup');
+      const closeIcon = document.getElementById('popup-close');
+      const learnMoreButton = document.getElementById('learn-more');
+      const now = Date.now();
+      const expiryTime = 2* 60 * 60; // 30 days in ms
+      const lastShown = localStorage.getItem('launchPopupShownTime');
+
+      // Show popup if never shown or if the stored timestamp is older than expiryTime
+      if (!lastShown || now - lastShown > expiryTime) {
+        setTimeout(() => {
+          popup.classList.add('show');
+          localStorage.setItem('launchPopupShownTime', now);
+        }, 1000); // Delay for a smoother experience
+      }
+
+      // Close popup when clicking the close icon or outside the popup content
+      closeIcon.addEventListener('click', () => {
+        popup.classList.remove('show');
+      });
+      popup.addEventListener('click', (e) => {
+        if (e.target === popup) {
+          popup.classList.remove('show');
+        }
+      });
+
+      // Redirect when clicking the CTA button
+      learnMoreButton.addEventListener('click', () => {
+        window.location.href = 'signup-login.html?tab=signup';
+      });
+    });
+  </script>
+</body>
+</html>

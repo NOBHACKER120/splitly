@@ -10,6 +10,7 @@ import {
   signOut
 } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
 import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+import { getStorage } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-storage.js";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -25,6 +26,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);  // Initialize Firestore
+const storage = getStorage(app);
 
 // Optional: Log auth state changes for debugging
 onAuthStateChanged(auth, (user) => {
@@ -32,8 +34,7 @@ onAuthStateChanged(auth, (user) => {
 });
 
 // Export both auth and db so other files can use them
-export { auth, db };
-
+export { auth, db, storage };
 // Consolidated DOMContentLoaded event listener
 document.addEventListener("DOMContentLoaded", () => {
   // Check authentication state and update UI accordingly.
@@ -79,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
           }
           showToast("Login successful!");
-          window.location.href = "profile.html";
+          window.location.href = "splitter.html";
         })
         .catch((error) => {
           console.error("Login error:", error);

@@ -1,410 +1,384 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Splitly - User Profile</title>
-    <!-- Import Firebase modules -->
-    <script type="module" src="firebaseauth.js"></script>
-    <!-- Font Awesome & Google Fonts -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
-    <style>
-        /* Basic reset & styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <script>
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('preview') !== 'true') {
+    window.location.replace('maintenance.html');
+  }
+</script>
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: #f9fafb;
-            color: #333;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Splitly — User Profile</title>
+   
+    <!-- <script>
+    window.location.replace('maintenance.html');
+  </script> -->
+  <!-- Firebase Auth -->
+  <script type="module" src="firebaseauth.js"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Font Awesome & Google Fonts -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
 
-        /* Navbar */
-        #navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-            background: #fff;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
+  <style>
+    /* RESET & BASE */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { font-size: 16px; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f4f6f8;
+      color: #333;
+      line-height: 1.5;
+    }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+    button { background: none; border: none; cursor: pointer; }
 
-        #logo img {
-            height: 40px;
-        }
+    /* NAVBAR */
+    #navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 2rem;
+      background: #fff;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    #logo img { height: 40px; }
+    .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+    .nav-links a { padding: 0.5rem; font-weight: 500; color: #333; transition: color .2s; }
+    .nav-links a.active, .nav-links a:hover { color: #ff8c00; }
+    .hamburger { display: none; font-size: 1.5rem; color: #333; }
+    @media (max-width: 768px) {
+      .nav-links { display: none; position: absolute; top: 64px; right: 1rem; flex-direction: column; background: #fff; padding: 1rem; box-shadow: 0 2px 6px rgba(0,0,0,.15); border-radius: 4px; }
+      .nav-links.open { display: flex; }
+      .hamburger { display: block; }
+      #navbar{      padding: 0.6rem 1.3rem;}
+    }
 
-        .nav-menu {
-            display: flex;
-            gap: 20px;
-        }
+    /* PROFILE HEADER */
+    .profile-header {
+      position: relative;
+      height: 240px;
+      background: linear-gradient(135deg, #ff8c00 0%, #ffb347 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+    }
+    .profile-header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('profile-cover.jpg') center/cover no-repeat;
+      opacity: .2;
+    }
+    .profile-info {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #fff;
+      padding: 1rem;
+    }
+    .profile-avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 3px solid #fff;
+      object-fit: cover;
+      box-shadow: 0 2px 6px rgba(0,0,0,.2);
+    }
+    .profile-name { font-size: 1.6rem; margin-top: 0.5rem; font-weight: 600; }
+    .profile-email { font-size: 0.9rem; opacity: .85; margin-top: .25rem; }
+    #editProfileBtn {
+      margin-top: 0.75rem;
+      padding: .5rem 1rem;
+      background: #fff;
+      color: #ff8c00;
+      border-radius: 20px;
+      font-weight: 500;
+      transition: background .2s;
+      z-index: 2;
+    }
+    #editProfileBtn:hover { background: #ffe8cc; }
 
-        .nav-menu a {
-            text-decoration: none;
-            color: #333;
-            font-weight: 500;
-        }
+    /* MAIN LAYOUT */
+    .container {
+      max-width: 1000px;
+      margin: -50px auto 2rem;
+      padding: 0 1rem;
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 1.5rem;
+    }
+    @media (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr;
+        margin: -30px auto 2rem;
+      }
+    }
 
-        .nav-menu a.active {
-            color: #ff8c00;
-            border-bottom: 2px solid #ff8c00;
-        }
+    /* SIDEBAR */
+    .sidebar {
+      background: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,.1);
+      position: sticky;
+      /* top: 100px; */
+    }
+    .sidebar a { display: flex; align-items: center; gap: .75rem; padding: .75rem 1rem; border-radius: 4px; font-weight: 500; color: #555; transition: background .2s; }
+    .sidebar a.active, .sidebar a:hover { background: #ffeed8; color: #ff8c00; }
 
-        .hamburger {
-            display: none;
-            font-size: 24px;
-            cursor: pointer;
-        }
+    /* CONTENT SECTIONS */
+    section { margin-bottom: 1.5rem; }
+    section h2, section h3 { margin-bottom: .75rem; color: #333; }
 
-        @media (max-width: 768px) {
-            .nav-menu {
-                display: none;
-                flex-direction: column;
-                position: absolute;
-                top: 60px;
-                right: 20px;
-                background: #fff;
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-                padding: 10px;
-            }
+    /* STATS GRID */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+    .stat-card { background: #fff; padding: 1rem; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,.1); text-align: center; }
+    .stat-card h2 { font-size: 1.4rem; color: #ff8c00; }
+    .stat-card p { font-size: .85rem; opacity: .7; margin-top: .25rem; }
 
-            .nav-menu.active {
-                display: flex;
-            }
+    /* CARD LAYOUT */
+    .chart-card, .transactions { background: #fff; padding: 1rem; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,.1); }
+    .chart-card { margin-bottom: 1.5rem; }
+    .chart-card canvas { width: 100% !important; height: auto !important; }
+    .transactions h3 { margin-bottom: .75rem; text-align: center; }
+    .transaction-list li { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; padding: .6rem 0; border-bottom: 1px solid #eee; font-size: .9rem; }
+    .transaction-list .desc { flex: 2 1 100px; }
+    .transaction-list .date { flex: 1 1 80px; opacity: .6; text-align: right; }
+    .transaction-list .amount { flex: 1 1 80px; font-weight: 600; text-align: right; }
 
-            .hamburger {
-                display: block;
-            }
-        }
+    /* EDIT FORM */
+    #editProfileForm {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+    .edit-box { background: #fff; padding: 1.5rem; border-radius: 8px; width: 90%; max-width: 400px; box-shadow: 0 3px 8px rgba(0,0,0,.2); }
+    .edit-box h3 { margin-bottom: .75rem; text-align: center; }
+    .edit-box input { width: 100%; padding: .6rem; margin-bottom: .75rem; border: 1px solid #ccc; border-radius: 4px; }
+    .edit-box .actions { display: flex; justify-content: space-between; }
+    .edit-box button { padding: .6rem 1.2rem; border-radius: 4px; font-weight: 500; }
+    .btn-save { background: #ff8c00; color: #fff; }
+    .btn-cancel { background: #ddd; color: #333; }
 
-        /* Profile Header */
-        .profile-header {
-            position: relative;
-            height: 250px;
-            background: #0044ff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-        }
-
-        .profile-cover {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('profile-cover.jpg') center center/cover;
-            opacity: 0.5;
-        }
-
-        .profile-info {
-            position: relative;
-            text-align: center;
-        }
-
-        .profile-avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            border: 5px solid white;
-        }
-
-        .profile-name {
-            font-size: 28px;
-            margin-top: 10px;
-        }
-
-        .profile-email {
-            font-size: 16px;
-            margin-top: 5px;
-        }
-
-        #editProfileBtn {
-            margin-top: 15px;
-            padding: 8px 12px;
-            background: #ff8c00;
-            border: none;
-            color: #fff;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        #editProfileForm {
-            display: none;
-            margin: 20px auto;
-            max-width: 500px;
-            background: #fff;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        #editProfileForm input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-
-        #editProfileForm button {
-            padding: 10px 15px;
-            background: #ff8c00;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        /* Profile Content */
-        .profile-content {
-            max-width: 1000px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
-
-        .profile-stats {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 30px;
-        }
-
-        .profile-stats .stat {
-            text-align: center;
-        }
-
-        .profile-stats .stat h2 {
-            font-size: 32px;
-            color: #ff8c00;
-        }
-
-        .profile-stats .stat p {
-            font-size: 14px;
-            color: #555;
-        }
-
-        .profile-transactions {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .profile-transactions h2 {
-            margin-bottom: 15px;
-        }
-
-        .transaction-list {
-            list-style: none;
-        }
-
-        .transaction-list li {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .transaction-title {
-            font-weight: 500;
-        }
-
-        .transaction-date {
-            font-size: 12px;
-            color: #777;
-        }
-
-        .transaction-amount {
-            font-size: 16px;
-            font-weight: 600;
-        }
-
-        .transaction-amount.negative {
-            color: #e74c3c;
-        }
-
-        .transaction-amount.positive {
-            color: #2ecc71;
-        }
-
-        /* Footer */
-        #footer {
-            text-align: center;
-            padding: 15px;
-            background: #222;
-            color: #fff;
-            margin-top: 30px;
-        }
-
-        /* Navigation button to Splitter */
-        .nav-button {
-            margin-top: 20px;
-            padding: 10px 15px;
-            background: #027aca;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-    </style>
+    /* FOOTER */
+    footer { text-align: center; padding: 1rem; font-size: .85rem; opacity: .6; margin-top: 2rem; }
+  </style>
 </head>
-
 <body>
-    <!-- Navbar -->
-    <nav id="navbar">
-        <div id="logo">
-            <img src="SPLIT (4)-Photoroom (1)-Photoroom.png" alt="Splitly Logo" />
+  <!-- NAVBAR -->
+  <nav id="navbar">
+    <div id="logo"><a href="index.html"><img src="SPLIT (4)-Photoroom (1)-Photoroom.png" alt="Splitly"></a></div>
+    <div class="hamburger" id="hamburger"><i class="fa fa-bars"></i></div>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="profile.html" class="active">Profile</a>
+      <a href="signup-login.html">Logout</a>
+    </div>
+  </nav>
+
+  <!-- PROFILE HEADER -->
+  <section class="profile-header">
+    <div class="profile-info">
+      <img src="avatar-default.png" id="profileAvatar" class="profile-avatar" alt="Avatar">
+      <h1 class="profile-name" id="profileName">John Doe</h1>
+      <p class="profile-email" id="profileEmail">johndoe@example.com</p>
+      <button id="editProfileBtn">Edit Profile</button>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <div class="container">
+    <!-- SIDEBAR MENU -->
+    <aside class="sidebar">
+      <a href="#overview" class="active"><i class="fa fa-user"></i> Overview</a>
+      <a href="#stats"><i class="fa fa-chart-bar"></i> Stats</a>
+      <a href="#transactions"><i class="fa fa-list"></i> Transactions</a>
+      <a href="#settings"><i class="fa fa-cog"></i> Settings</a>
+    </aside>
+    <!-- SECTIONS -->
+    <div>
+      <section id="overview">
+        <h2>Welcome Back!</h2>
+        <p>Your recent activity and summary are below.</p>
+      </section>
+      <section id="stats" style="display:none;">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <h2 id="totalBills">0</h2>
+            <p>Total Bills</p>
+          </div>
+          <div class="stat-card">
+            <h2 id="totalSpent">$0</h2>
+            <p>Total Spent</p>
+          </div>
+          <div class="stat-card">
+            <h2 id="pendingSettlements">$0</h2>
+            <p>Pending</p>
+          </div>
         </div>
-        <div class="hamburger" id="hamburger">
-            <i class="fa-solid fa-bars"></i>
+        <div class="chart-card">
+          <h3>Spending Over Time</h3>
+          <canvas id="spendChart"></canvas>
         </div>
-        <div id="menu" class="nav-menu">
-            <a href="index.html">Home</a>
-            <a href="user-profile.html" class="active">Profile</a>
-            <a href="signup-login.html">Logout</a>
+      </section>
+      <section id="transactions" style="display:none;">
+        <div class="transactions">
+          <h3>Recent Transactions</h3>
+          <ul class="transaction-list" id="transactionList"></ul>
         </div>
-    </nav>
-
-    <!-- Profile Header -->
-    <header class="profile-header">
-        <div class="profile-cover"></div>
-        <div class="profile-info">
-            <img src="duy-pham-Cecb0_8Hx-o-unsplash.jpg" alt="User Avatar" class="profile-avatar" id="profileAvatar" />
-            <h1 class="profile-name" id="profileName">User Name</h1>
-            <p class="profile-email" id="profileEmail">user@example.com</p>
-            <button id="editProfileBtn">Edit Profile</button>
+      </section>
+      <section id="settings" style="display:none;">
+        <div class="transactions">
+          <h3>Account Settings</h3>
+          <button id="logoutBtn">Log Out</button>
         </div>
-    </header>
+      </section>
+    </div>
+  </div>
 
-    <!-- Edit Profile Form -->
-    <section id="editProfileForm">
-        <h2>Edit Your Profile</h2>
-        <input type="text" id="editName" placeholder="Enter new name" />
-        <input type="email" id="editEmail" placeholder="Email (cannot change)" disabled />
-        <button id="saveProfileBtn" onclick="updateUserProfile(document.getElementById('editName').value)">Save Changes</button>
-    </section>
+  <!-- EDIT PROFILE FORM -->
+ <!-- Replace this block in your original HTML -->
+<div id="editProfileForm">
+  <div class="edit-box">
+    <h3>Edit Profile</h3>
+    <input type="text" id="editName" placeholder="Full Name">
+    <!-- This line is updated -->
+    <input type="file" id="editAvatarFile" accept="image/*" capture>
+    <div class="actions">
+      <button class="btn-cancel" id="cancelEdit">Cancel</button>
+      <button class="btn-save" id="saveEdit">Save</button>
+    </div>
+  </div>
+</div>
 
-    <!-- Profile Content -->
-    <main class="profile-content">
-        <section class="profile-stats">
-            <div class="stat">
-                <h2 id="totalBills">0</h2>
-                <p>Total Bills</p>
-            </div>
-            <div class="stat">
-                <h2 id="totalSpent">$0</h2>
-                <p>Total Spent</p>
-            </div>
-            <div class="stat">
-                <h2 id="pendingSettlements">$0</h2>
-                <p>Pending Settlements</p>
-            </div>
-        </section>
 
-        <section class="profile-transactions">
-            <h2>Recent Transactions</h2>
-            <ul class="transaction-list">
-                <!-- Transactions loaded from Firestore -->
-            </ul>
-        </section>
+  <!-- FOOTER -->
+  <footer>&copy; 2025 Splitly. All rights reserved.</footer>
 
-        <!-- Navigation button to Splitter -->
-        <button class="nav-button" onclick="window.location.href='splitter.html'">Go to Bill Splitter</button>
-    </main>
+  <!-- SCRIPTS -->
+  <script type="module">
+    import { auth, db } from "./firebaseauth.js";
+    import { onAuthStateChanged, updateProfile, signOut } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
+    import { doc, getDoc, collection, query, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 
-    <!-- Footer -->
-    <footer id="footer">
-        <p>&copy; 2025 Splitly. All rights reserved.</p>
-    </footer>
+    // NAV TOGGLE
+    const hb = document.getElementById('hamburger'), nl = document.getElementById('navLinks');
+    hb.addEventListener('click', () => nl.classList.toggle('open'));
 
-    <!-- Script to load user data -->
-    <script type="module">
-        import { auth, db } from "./firebaseauth.js";
-        import { doc, getDoc, collection, query, getDocs } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
-        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
-        import { updateProfile } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
+    // SECTION NAVIGATION
+    document.querySelectorAll('.sidebar a').forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        document.querySelectorAll('.sidebar a').forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+        const target = link.getAttribute('href');
+        document.querySelectorAll('section[id]').forEach(s => s.style.display = 'none');
+        document.querySelector(target).style.display = 'block';
+      });
+    });
 
-        // Load user profile and transactions from Firestore
-        async function loadUserData(user) {
-            try {
-                const userRef = doc(db, "users", user.uid);
-                const userSnap = await getDoc(userRef);
-                if (userSnap.exists()) {
-                    const userData = userSnap.data();
-                    // Use the fullName from Firestore (saved during sign-up)
-                    document.getElementById('profileName').innerText = userData.fullName || "No Name";
-                    document.getElementById('profileEmail').innerText = userData.email;
-                    document.getElementById('totalBills').innerText = userData.totalBills || 0;
-                    document.getElementById('totalSpent').innerText = "$" + (userData.totalSpent || 0);
-                    document.getElementById('pendingSettlements').innerText = "$" + (userData.pendingSettlements || 0);
-                } else {
-                    // Fallback to auth data if Firestore document doesn't exist
-                    document.getElementById('profileName').innerText = user.displayName || "No Name";
-                    document.getElementById('profileEmail').innerText = user.email || "No Email";
-                }
-                // Load transactions subcollection
-                const transQuery = query(collection(db, "users", user.uid, "transactions"));
-                const transSnap = await getDocs(transQuery);
-                let transHTML = "";
-                transSnap.forEach(docItem => {
-                    const data = docItem.data();
-                    transHTML += `<li>
-                        <div>
-                          <p class="transaction-title">${data.type === "split" ? "Bill Split" : "Other Transaction"}</p>
-                          <p class="transaction-date">${new Date(data.date).toLocaleString()}</p>
-                        </div>
-                        <p class="transaction-amount">${data.perPerson ? "$" + data.perPerson : ""}</p>
-                      </li>`;
-                });
-                document.querySelector(".transaction-list").innerHTML = transHTML;
-            } catch (error) {
-                console.error("Error loading user data:", error);
-            }
-        }
+    // EDIT PROFILE FORM
+    const editBtn = document.getElementById('editProfileBtn'), form = document.getElementById('editProfileForm');
+    document.getElementById('cancelEdit').addEventListener('click', () => form.style.display = 'none');
+    editBtn.addEventListener('click', () => form.style.display = 'flex');
 
-        // Listen for auth state changes
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                loadUserData(user);
-            } else {
-                window.location.href = "signup-login.html";
-            }
-        });
+    // LOAD & RENDER USER DATA
+    async function loadUserData(u) {
+      const uref = doc(db,'users',u.uid), snap = await getDoc(uref), data = snap.exists() ? snap.data() : {};
+      document.getElementById('profileName').innerText = data.fullName || u.displayName || 'No Name';
+      document.getElementById('profileEmail').innerText = u.email;
+      document.getElementById('profileAvatar').src = data.avatarUrl || 'avatar-default.png';
+      document.getElementById('totalBills').innerText = data.totalBills || 0;
+      document.getElementById('totalSpent').innerText = '$' + (data.totalSpent || 0);
+      document.getElementById('pendingSettlements').innerText = '$' + (data.pendingSettlements || 0);
+      const txList = document.getElementById('transactionList'); txList.innerHTML = '';
+      const txSnap = await getDocs(query(collection(db,'users',u.uid,'transactions')));
+      let labels = [], vals = [];
+      txSnap.forEach(d => {
+        const t = d.data(), dt = new Date(t.date);
+        labels.push(dt.toLocaleDateString());
+        vals.push(t.perPerson || 0);
+        const li = document.createElement('li');
+        li.innerHTML = `<span class="desc">${t.type==='split'?'Bill Split':t.type}</span>` +
+                       `<span class="date">${dt.toLocaleTimeString()}</span>` +
+                       `<span class="amount">$${t.perPerson||0}</span>`;
+        txList.appendChild(li);
+      });
+      new Chart(document.getElementById('spendChart'), { type: 'bar', data: { labels, datasets: [{ label: 'Per Tx Spend', data: vals }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } } });
+    }
 
-        // Expose updateUserProfile for the edit form button
-        window.updateUserProfile = function (newName) {
-            if (newName.trim() === "") {
-                alert("Name cannot be empty");
-                return;
-            }
-            updateProfile(auth.currentUser, { displayName: newName })
-                .then(() => {
-                    document.getElementById('profileName').innerText = newName;
-                    document.getElementById('editProfileForm').style.display = "none";
-                    alert("Profile updated successfully!");
-                })
-                .catch((error) => {
-                    console.error("Error updating profile:", error);
-                    alert("Failed to update profile. Please try again.");
-                });
-        };
+    // AUTH LISTENER
+    onAuthStateChanged(auth, user => {
+      if (!user) return location.href = 'signup-login.html';
+      loadUserData(user);
+    });
 
-        // Toggle edit form display
-        document.getElementById('editProfileBtn').addEventListener('click', () => {
-            const form = document.getElementById('editProfileForm');
-            form.style.display = (form.style.display === "none" || form.style.display === "") ? "block" : "none";
-            document.getElementById('editName').value = document.getElementById('profileName').innerText;
-        });
-    </script>
+    // SAVE EDITS
+  import { getStorage, ref as sref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-storage.js";
+
+document.getElementById('saveEdit').addEventListener('click', async () => {
+  const name = document.getElementById('editName').value.trim();
+  const file = document.getElementById('editAvatarFile').files[0];
+
+  if (!name) return alert('Name required');
+
+  const user = auth.currentUser;
+
+  // 1. Update name in Firebase Auth
+  await updateProfile(user, { displayName: name });
+
+  // 2. Prepare data to update in Firestore
+  const updates = { fullName: name };
+
+  // 3. Upload image if selected
+  if (file) {
+    try {
+      const storageRef = sref(storage, `avatars/${user.uid}/${file.name}`);
+      await uploadBytes(storageRef, file);
+      const downloadURL = await getDownloadURL(storageRef);
+      updates.avatarUrl = downloadURL;
+      document.getElementById('profileAvatar').src = downloadURL;
+    } catch (error) {
+      console.error('Image upload failed:', error);
+      alert('Image upload failed. Try again.');
+    }
+  }
+
+  // 4. Update Firestore
+  await updateDoc(doc(db, 'users', user.uid), updates);
+
+  // 5. Update UI
+  document.getElementById('profileName').innerText = name;
+  document.getElementById('editProfileForm').style.display = 'none';
+});
+
+
+    // LOGOUT
+    document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
+  </script>
+
+
 </body>
-
 </html>

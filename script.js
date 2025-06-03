@@ -117,21 +117,6 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-// Validity check
-// document.querySelectorAll(".input-group input").forEach(input => {
-//   input.addEventListener("input", function () {
-//     if (this.value.trim() && (this.type !== "email" || this.checkValidity())) {
-//       this.classList.remove("error");
-//     }
-//   });
-
-//   input.addEventListener("blur", function () {
-//     if (!this.value.trim()) {
-//       this.classList.add("error");
-//     }
-//   });
-// });
-
 
 
 document.addEventListener("DOMContentLoaded", function () {
