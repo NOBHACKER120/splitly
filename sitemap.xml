@@ -1,52 +1,53 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset
-      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
-            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+<?xml version="1.0" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 
+                            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 
-
-<url>
-  <loc>https://splitly.fun/</loc>
-  <lastmod>2025-06-03T08:17:45+00:00</lastmod>
-  <priority>1.00</priority>
-</url>
-<url>
-  <loc>https://splitly.fun/splitter.html</loc>
-  <lastmod>2025-06-03T08:17:45+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://splitly.fun/Learn-more.html</loc>
-  <lastmod>2025-06-03T08:17:45+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://splitly.fun/contact.html</loc>
-  <lastmod>2025-06-03T08:17:45+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://splitly.fun/index.html</loc>
-  <lastmod>2025-06-03T08:17:45+00:00</lastmod>
-  <priority>0.64</priority>
-</url>
-<url>
-  <loc>https://splitly.fun/profile.html</loc>
-  <lastmod>2025-06-03T08:17:45+00:00</lastmod>
-  <priority>0.64</priority>
-</url>
-<url>
-  <loc>https://splitly.fun/signup-login.html</loc>
-  <lastmod>2025-06-03T08:17:45+00:00</lastmod>
-  <priority>0.64</priority>
-</url>
-<url>
-  <loc>https://splitly.fun/forget.html</loc>
-  <lastmod>2025-06-03T08:17:45+00:00</lastmod>
-  <priority>0.51</priority>
-</url>
-
+  <url>
+    <loc>https://splitly.fun/</loc>
+    <lastmod>2025-06-09T15:40:10+00:00</lastmod>
+    <priority>1.00</priority>
+  </url>
+  <url>
+    <loc>https://splitly.fun/index.html</loc>
+    <lastmod>2025-06-09T15:40:10+00:00</lastmod>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://splitly.fun/splitter.html</loc>
+    <lastmod>2025-06-09T15:40:10+00:00</lastmod>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://splitly.fun/Learn-more.html</loc>
+    <lastmod>2025-06-09T15:40:10+00:00</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://splitly.fun/contact.html</loc>
+    <lastmod>2025-06-09T15:40:10+00:00</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://splitly.fun/forget.html</loc>
+    <lastmod>2025-06-09T15:40:10+00:00</lastmod>
+    <priority>0.70</priority>
+  </url>
+  <url>
+    <loc>https://splitly.fun/profile.html</loc>
+    <lastmod>2025-06-09T15:40:10+00:00</lastmod>
+    <priority>0.70</priority>
+  </url>
+  <url>
+    <loc>https://splitly.fun/signup-login.html</loc>
+    <lastmod>2025-06-09T15:40:10+00:00</lastmod>
+    <priority>0.70</priority>
+  </url>
+  <url>
+    <loc>https://splitly.fun/group_dashboard.html</loc>
+    <lastmod>2025-06-09T15:40:10+00:00</lastmod>
+    <priority>0.75</priority>
+  </url>
 
 </urlset>
