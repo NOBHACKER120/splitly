@@ -1,0 +1,2 @@
+RewriteEngine On
+AddType application/xml .xml
