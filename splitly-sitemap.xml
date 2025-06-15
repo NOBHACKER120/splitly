@@ -41,6 +41,16 @@
     <priority>0.80</priority>
   </url>
   <url>
+  <loc>https://splitly.fun/privacy-policy.html</loc>
+  <lastmod>2025-06-15T12:00:00+00:00</lastmod>
+  <priority>0.5</priority>
+</url>
+<url>
+  <loc>https://splitly.fun/terms-of-service.html</loc>
+  <lastmod>2025-06-15T12:00:00+00:00</lastmod>
+  <priority>0.5</priority>
+</url>
+  <url>
     <loc>https://splitly.fun/forget.html</loc>
     <lastmod>2025-06-09T15:40:10+00:00</lastmod>
     <priority>0.70</priority>
