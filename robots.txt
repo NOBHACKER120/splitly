@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://splitly.fun/?sitemap=1.xml
+Sitemap: https://splitly.fun/splitly_sitemap.xml
