@@ -1,8 +1,4 @@
-# Allow all crawlers full access
 User-agent: *
+Allow: /
 
-# Allow everything
-Disallow:
-
-# Sitemap location
 Sitemap: https://splitly.fun/splitly-sitemap.xml
