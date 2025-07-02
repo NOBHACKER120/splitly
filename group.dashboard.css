@@ -84,6 +84,40 @@
     padding: 0 20px;
     font-family: Arial, sans-serif;
   }
+.seo-wrapper {
+  max-width: 800px;
+  margin: 30px auto 0;
+  padding: 0 20px;
+  text-align: center;
+}
+
+.seo-wrapper h1 {
+  font-size: 28px;
+  color: #0044ff;
+  margin-bottom: 10px;
+  padding-top: 20px;
+}
+
+.seo-wrapper p {
+  font-size: 15px;
+  color: #555;
+  line-height: 1.7;
+  margin-bottom: 25px;
+}
+
+/* Responsive improvements */
+@media (min-width: 768px) {
+  .seo-wrapper h1 {
+    font-size: 28px;
+      padding-top: 20px;
+
+  }
+
+  .seo-wrapper p {
+    font-size: 17px;
+  }
+}
+
 
 /* Delete Modal container (same as before) */
 /* General modal overlay */
