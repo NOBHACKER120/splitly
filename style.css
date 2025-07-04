@@ -227,7 +227,9 @@ body {
   color: #555;
   line-height: 1.8;
   max-width: 750px;
-  margin: 0 auto;
+      background: #f9fafb;
+    margin: 0 0 10px;
+    padding: 10px 12px;
 }
 
 /* 🎯 Match rest of the site style */
