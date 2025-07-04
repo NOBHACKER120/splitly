@@ -230,6 +230,7 @@ body {
       background: #f9fafb;
     margin: 0 0 10px;
     padding: 10px 12px;
+    text-align: justify;
 }
 
 /* 🎯 Match rest of the site style */
