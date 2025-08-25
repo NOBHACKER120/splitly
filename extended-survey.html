@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Extended Survey — Demo</title>
+<style>
+  body { font-family: Arial, Helvetica, sans-serif; margin:20px; background:#f7fafc; color:#0b1220; }
+  .card { background:#fff; padding:18px; border-radius:10px; box-shadow:0 6px 18px rgba(11,17,34,0.06); max-width:900px; margin:auto; }
+  h1 { margin-top:0; }
+  .row { display:flex; gap:12px; flex-wrap:wrap; }
+  .field { flex:1 1 300px; margin-bottom:12px; }
+  label { display:block; font-weight:700; margin-bottom:6px; }
+  input[type="text"], input[type="email"], input[type="tel"], select, textarea, input[type="date"], input[type="number"] {
+    width:100%; padding:9px 10px; border:1px solid #e6e9ef; border-radius:8px; box-sizing:border-box;
+  }
+  .options { display:flex; gap:8px; flex-wrap:wrap; }
+  .option { padding:6px 10px; border-radius:8px; background:#f1f5f9; border:1px solid #eef2f6; display:inline-flex; align-items:center; gap:6px; }
+  button { padding:10px 14px; border-radius:8px; border:0; background:#2563eb; color:white; cursor:pointer; font-weight:700; }
+  button.ghost { background:transparent; color:#2563eb; border:1px solid rgba(37,99,235,0.12); }
+  small { color:#55607a; }
+  .muted { color:#6b7280; }
+  .result { white-space:pre-wrap; background:#0b1220; color:#cfefff; padding:10px; border-radius:8px; font-family:monospace; font-size:13px; margin-top:12px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>Extended Survey — Demo Form</h1>
+    <p class="muted">This page contains many field types for testing automated filling. Use only for local testing.</p>
+    <form id="demoSurvey">
+      <div class="row">
+        <div class="field">
+          <label for="fullname">Full name</label>
+          <input id="fullname" name="fullname" type="text" placeholder="Aman Kumar">
+        </div>
+        <div class="field">
+          <label for="email">Email address</label>
+          <input id="email" name="email" type="email" placeholder="you@example.com">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label for="phone">Phone</label>
+          <input id="phone" name="phone" type="tel" placeholder="+91-XXXXXXXXXX">
+        </div>
+        <div class="field">
+          <label for="ageGroup">Age group</label>
+          <select id="ageGroup" name="ageGroup">
+            <option value="">-- choose --</option>
+            <option value="18-25">18–25</option>
+            <option value="26-35">26–35</option>
+            <option value="36-50">36–50</option>
+            <option value="50plus">50+</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label for="city">City</label>
+          <select id="city" name="city">
+            <option value="">-- choose city --</option>
+            <option value="Delhi">Delhi</option>
+            <option value="Mumbai">Mumbai</option>
+            <option value="Bengaluru">Bengaluru</option>
+            <option value="Pune">Pune</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>How did you hear about us?</label>
+          <div class="options">
+            <label class="option"><input type="radio" name="source" value="Google"> Google</label>
+            <label class="option"><input type="radio" name="source" value="Friend"> Friend</label>
+            <label class="option"><input type="radio" name="source" value="Instagram"> Instagram</label>
+            <label class="option"><input type="radio" name="source" value="Other"> Other</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Favorite brands (choose any)</label>
+        <div class="options">
+          <label class="option"><input type="checkbox" name="brands" value="Nike"> Nike</label>
+          <label class="option"><input type="checkbox" name="brands" value="Adidas"> Adidas</label>
+          <label class="option"><input type="checkbox" name="brands" value="Puma"> Puma</label>
+          <label class="option"><input type="checkbox" name="brands" value="Reebok"> Reebok</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="elementQ">Quality check: Please choose "Air"</label>
+        <div class="options">
+          <label class="option"><input type="radio" name="elementQ" value="Air"> Air</label>
+          <label class="option"><input type="radio" name="elementQ" value="Water"> Water</label>
+          <label class="option"><input type="radio" name="elementQ" value="Fire"> Fire</label>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label for="visitDate">Last visit date</label>
+          <input id="visitDate" name="visitDate" type="date">
+        </div>
+        <div class="field">
+          <label for="satisfaction">Satisfaction (1–5)</label>
+          <input id="satisfaction" name="satisfaction" type="range" min="1" max="5" value="3">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="topics">Topics of interest (multi-select)</label>
+        <select id="topics" name="topics" multiple size="5">
+          <option value="web">Web Development</option>
+          <option value="ml">Machine Learning</option>
+          <option value="design">Design</option>
+          <option value="seo">SEO</option>
+          <option value="biz">Business</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="comments">Comments</label>
+        <textarea id="comments" name="comments" placeholder="Type here..."></textarea>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label>Rate this demo</label>
+          <div class="options">
+            <label class="option"><input type="radio" name="rating" value="1">1</label>
+            <label class="option"><input type="radio" name="rating" value="2">2</label>
+            <label class="option"><input type="radio" name="rating" value="3">3</label>
+            <label class="option"><input type="radio" name="rating" value="4">4</label>
+            <label class="option"><input type="radio" name="rating" value="5">5</label>
+          </div>
+        </div>
+        <div class="field">
+          <label for="occupation">Occupation</label>
+          <input id="occupation" name="occupation" type="text" placeholder="Student / Developer / Teacher">
+        </div>
+      </div>
+
+      <div style="margin-top:12px; display:flex; gap:10px;">
+        <button type="submit">Submit (manual)</button>
+        <button id="resetBtn" type="button" class="ghost">Reset</button>
+      </div>
+    </form>
+
+    <div style="margin-top:14px;">
+      <div class="muted">Demo submission output:</div>
+      <div id="submitResult" class="result"></div>
+    </div>
+
+  </div>
+
+<script>
+  const form = document.getElementById('demoSurvey');
+  const result = document.getElementById('submitResult');
+  const resetBtn = document.getElementById('resetBtn');
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const fd = new FormData(form);
+    const obj = {};
+    // handle multi-field values properly
+    for (const [k, v] of fd.entries()) {
+      if (obj[k]) {
+        if (!Array.isArray(obj[k])) obj[k] = [obj[k]];
+        obj[k].push(v);
+      } else obj[k] = v;
+    }
+    // also collect unchecked checkboxes that were not in formData? already handled by entries
+    result.textContent = JSON.stringify(obj, null, 2);
+    alert('Form submitted (demo). See JSON below.');
+  });
+
+  resetBtn.addEventListener('click', () => {
+    form.reset();
+    result.textContent = '';
+  });
+</script>
+  <script src="/survey-bot-injector.js"></script>
+
+</body>
+</html>
