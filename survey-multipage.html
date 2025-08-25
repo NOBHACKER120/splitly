@@ -1,0 +1,338 @@
+<!-- SAVE AS: survey-multipage.html -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Professional Multi-Page Survey Demo</title>
+<style>
+  :root{
+    --bg:#f4f7fb; --card:#fff; --muted:#6b7280; --accent:#2563eb;
+  }
+  body{ margin:0; font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial; background:linear-gradient(180deg,#eef2ff 0%,var(--bg) 40%); color:#0b1220; }
+  .container{ max-width:900px; margin:30px auto; padding:20px; }
+  .card{ background:var(--card); border-radius:12px; padding:22px; box-shadow:0 6px 20px rgba(12,18,30,0.06); border:1px solid rgba(10,12,20,0.03); }
+  h1{ margin:0 0 8px 0; font-size:20px; }
+  p.lead{ margin:0 0 16px 0; color:var(--muted); }
+  .progress{ height:10px; background:#eef2f6; border-radius:999px; overflow:hidden; margin-bottom:16px; }
+  .progress > i{ display:block; height:100%; background:linear-gradient(90deg,#60a5fa,#2563eb); width:0%; transition:width .4s ease; }
+
+  .question-card{ padding:10px 6px; }
+  .question{ font-weight:700; margin-bottom:8px; font-size:1.02rem; }
+  label.help{ font-weight:600; display:block; margin-bottom:6px; color:#334155; }
+  .controls{ margin-top:18px; display:flex; gap:10px; align-items:center; }
+  button.btn{ background:var(--accent); color:white; padding:10px 14px; border-radius:8px; border:0; font-weight:700; cursor:pointer; }
+  button.btn.ghost{ background:transparent; border:1px solid rgba(37,99,235,0.12); color:var(--accent); }
+  .muted{ color:var(--muted); font-size:0.93rem; }
+
+  input[type="text"], input[type="email"], input[type="number"], select, textarea, input[type="date"] {
+    width:100%; padding:10px; border-radius:8px; border:1px solid #e7eef8; font-size:15px; box-sizing:border-box;
+  }
+  .options{ display:flex; gap:8px; flex-wrap:wrap; }
+  .opt{ padding:8px 10px; border-radius:8px; border:1px solid #eef4fb; background:#fbfdff; display:inline-flex; align-items:center; gap:6px; cursor:pointer; }
+  .opt input{ margin:0; }
+  .note{ font-size:0.9rem; color:var(--muted); margin-top:8px; }
+
+  .final-json{ background:#0b1220; color:#cfefff; padding:12px; border-radius:8px; font-family:monospace; font-size:13px; white-space:pre-wrap; margin-top:12px; }
+
+  .tiny{ font-size:0.88rem; color:var(--muted); }
+  .hidden{ display:none; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="card">
+    <h1>Professional Survey — Demo</h1>
+    <p class="lead">A single-question-per-page demo. Click "Agree & Start" to begin. Answers are collected and shown at the end.</p>
+
+    <div class="progress"><i id="progBar" style="width:0%"></i></div>
+
+    <div id="stage" class="question-card">
+      <!-- dynamic content injected here -->
+    </div>
+
+    <div class="tiny" style="margin-top:12px;">
+      <strong>Note:</strong> This demo simulates how many professional survey platforms present one question per page. Use it for local testing or host it on your domain.
+    </div>
+
+  </div>
+</div>
+
+<script>
+/*
+  Multi-page survey SPA (single-question-per-page).
+  - Use `questions` array to define the survey.
+  - Each step renders one question. When user submits, it pushes state and moves to next.
+  - Session answers stored in memory (sessionAnswers) and shown at the end.
+*/
+
+(function(){
+  const stage = document.getElementById('stage');
+  const prog = document.getElementById('progBar');
+
+  // --- Define questions array (professional, many types) ---
+  // Each item: {id, type, label, required, options, note}
+  const questions = [
+    { id: 'consent', type: 'consent', label: 'Do you agree to participate in this survey?', required:true,
+      note: 'Your responses are anonymous and used for research purposes only.' },
+
+    { id: 'q1', type:'radio', label:'How satisfied are you with our product overall?', required:true,
+      options: ['Very satisfied','Somewhat satisfied','Neutral','Somewhat dissatisfied','Very dissatisfied'] },
+
+    { id: 'q2', type:'select', label:'Which city do you currently live in?', required:true,
+      options: ['Delhi','Mumbai','Bengaluru','Chennai','Pune','Other'] },
+
+    { id: 'q3', type:'checkbox', label:'Which of these features do you use regularly? (choose all that apply)', required:false,
+      options: ['Dashboard','Analytics','Notifications','Reports','API'] },
+
+    { id: 'q4', type:'text', label:'What is your primary use case (brief)?', required:true, note: 'One-sentence answer is fine.' },
+
+    { id: 'q5', type:'number', label:'How many hours per week do you use the product?', required:true, note:'Approximate number' },
+
+    { id: 'q6', type:'rating', label:'Rate the likelihood of recommending us to a friend (1-5)', required:true },
+
+    { id: 'q7', type:'date', label:'When did you first start using our product?', required:false },
+
+    { id: 'q8', type:'longtext', label:'Please provide any suggestions for improvement:', required:false },
+
+    { id: 'q9', type:'radio', label:'Which brand do you associate us with most?', required:false,
+      options: ['Innovative','Reliable','Affordable','Premium','Other'] },
+
+    { id: 'q10', type:'multi', label:'Which topics would you like to see in our learning center?', required:false,
+      options: ['Web Dev','Machine Learning','Design','Marketing','Business'] },
+
+    // Add more to reach realistic length (repeat pattern)
+    { id: 'q11', type:'radio', label:'Do you use integrations with third-party services?', required:true,
+      options:['Yes','No'] },
+
+    { id: 'q12', type:'text', label:'If yes, which integrations do you use?', required:false },
+
+    { id: 'q13', type:'text', label:'What device do you primarily use to access the product?', required:true },
+
+    { id: 'q14', type:'radio', label:'Do you feel the pricing is fair?', required:true,
+      options: ['Yes','No'] },
+
+    { id: 'q15', type:'number', label:'How many team members use the product in your organization?', required:false },
+
+    { id: 'q16', type:'checkbox', label:'Which communication channels do you prefer for support?', required:false,
+      options: ['Email','Phone','Chat','Docs','Community Forum'] },
+
+    { id: 'q17', type:'text', label:'Any additional comments or feedback?', required:false },
+
+    { id: 'q18', type:'consent', label:'Final consent: I confirm the answers are accurate to the best of my knowledge', required:true },
+
+    // final summary placeholder (not a question)
+  ];
+
+  // session answers collected here
+  const sessionAnswers = {};
+
+  // step pointer - when not started stepIndex= -1 for consent start
+  let stepIndex = 0; // starts at consent (index 0)
+  const totalSteps = questions.length;
+
+  // --- Router: render current step ---
+  function renderStep(){
+    if(stepIndex < 0) stepIndex = 0;
+    if(stepIndex >= totalSteps){ renderSummary(); return; }
+
+    const q = questions[stepIndex];
+    prog.style.width = ((stepIndex) / totalSteps * 100) + '%';
+
+    // Build HTML for the question
+    let html = `<div>`;
+    html += `<div class="question">${escapeHtml(q.label)} ${q.required?'<span style="color:#ef4444">*</span>':''}</div>`;
+    if(q.note) html += `<div class="note">${escapeHtml(q.note)}</div>`;
+
+    // content area
+    html += `<div style="margin-top:12px;">`;
+    if(q.type === 'consent'){
+      html += `<div style="display:flex;gap:12px;"><label class="opt"><input type="radio" name="answer" value="agree"> I agree</label><label class="opt"><input type="radio" name="answer" value="disagree"> I do not agree</label></div>`;
+    } else if(q.type === 'text'){
+      html += `<input id="answer" name="answer" type="text" placeholder="Your answer...">`;
+    } else if(q.type === 'number'){
+      html += `<input id="answer" name="answer" type="number" placeholder="Number...">`;
+    } else if(q.type === 'date'){
+      html += `<input id="answer" name="answer" type="date">`;
+    } else if(q.type === 'longtext'){
+      html += `<textarea id="answer" name="answer" rows="6" placeholder="Write your thoughts..."></textarea>`;
+    } else if(q.type === 'rating'){
+      html += `<div class="options">` + [1,2,3,4,5].map(v=>`<label class="opt"><input type="radio" name="answer" value="${v}">${v}</label>`).join('') + `</div>`;
+    } else if(q.type === 'radio' || q.type === 'select'){
+      // radio if 'radio', select for select
+      if(q.type === 'radio'){
+        html += `<div class="options">` + q.options.map((o,i)=>`<label class="opt"><input type="radio" name="answer" value="${escapeHtml(o)}">${escapeHtml(o)}</label>`).join('') + `</div>`;
+      } else {
+        html += `<select id="answer" name="answer"><option value="">-- choose --</option>` + q.options.map(o=>`<option value="${escapeHtml(o)}">${escapeHtml(o)}</option>`).join('') + `</select>`;
+      }
+    } else if(q.type === 'checkbox'){
+      html += `<div class="options">` + q.options.map((o,i)=>`<label class="opt"><input type="checkbox" name="answer" value="${escapeHtml(o)}">${escapeHtml(o)}</label>`).join('') + `</div>`;
+    } else if(q.type === 'multi'){
+      html += `<select id="answer" name="answer" multiple size="5">` + q.options.map(o=>`<option value="${escapeHtml(o)}">${escapeHtml(o)}</option>`).join('') + `</select>`;
+    } else {
+      html += `<input id="answer" name="answer" type="text">`;
+    }
+
+    html += `</div>`; // content area
+
+    // controls (Prev disabled on first; Next/Submit on final)
+    html += `<div class="controls">`;
+    if(stepIndex > 0) html += `<button id="prevBtn" class="btn ghost">Previous</button>`;
+    if(stepIndex < totalSteps - 1) html += `<button id="nextBtn" class="btn">Continue</button>`;
+    else html += `<button id="finishBtn" class="btn">Finish & Submit</button>`;
+    html += `</div>`;
+
+    html += `</div>`; // wrapper
+
+    stage.innerHTML = html;
+
+    // restore previous answer if any
+    const prev = sessionAnswers[q.id];
+    if(prev !== undefined){
+      if(q.type === 'checkbox'){
+        // prev is array
+        if(Array.isArray(prev)){
+          prev.forEach(v=>{
+            const cb = stage.querySelector(`input[type="checkbox"][value="${cssEscape(v)}"]`);
+            if(cb) cb.checked = true;
+          });
+        }
+      } else if(q.type === 'multi'){
+        const sel = stage.querySelector('#answer');
+        if(sel && Array.isArray(prev)){
+          for(const opt of sel.options) opt.selected = prev.includes(opt.value);
+        }
+      } else if(q.type === 'radio' || q.type === 'rating'){
+        const r = stage.querySelector(`input[type="radio"][value="${cssEscape(prev)}"]`);
+        if(r) r.checked = true;
+      } else {
+        const inp = stage.querySelector('#answer');
+        if(inp) inp.value = prev;
+      }
+    }
+
+    // listeners
+    if(stepIndex > 0){
+      stage.querySelector('#prevBtn').addEventListener('click', ()=>{
+        stepIndex--;
+        history.pushState({step:stepIndex}, '', '?q='+stepIndex);
+        renderStep();
+      });
+    }
+
+    function gatherAnswer(){
+      const qEl = questions[stepIndex];
+      if(qEl.type === 'checkbox'){
+        const cbs = Array.from(stage.querySelectorAll('input[type="checkbox"][name="answer"]:checked'));
+        return cbs.map(cb=>cb.value);
+      } else if(qEl.type === 'multi'){
+        const s = stage.querySelector('#answer');
+        if(!s) return null;
+        return Array.from(s.selectedOptions).map(o=>o.value);
+      } else if(qEl.type === 'radio' || qEl.type === 'rating' || qEl.type === 'consent'){
+        const r = stage.querySelector('input[type="radio"][name="answer"]:checked');
+        return r ? r.value : null;
+      } else {
+        const inp = stage.querySelector('#answer');
+        return inp ? inp.value : null;
+      }
+    }
+
+    if(stepIndex < totalSteps - 1){
+      stage.querySelector('#nextBtn').addEventListener('click', ()=>{
+        const val = gatherAnswer();
+        // validation
+        if(questions[stepIndex].required && (val === null || val === '' || (Array.isArray(val) && val.length===0))){
+          alert('Please answer the required question before continuing.');
+          return;
+        }
+        // store
+        sessionAnswers[questions[stepIndex].id] = val;
+        stepIndex++;
+        history.pushState({step:stepIndex}, '', '?q='+stepIndex);
+        renderStep();
+      });
+    } else {
+      stage.querySelector('#finishBtn').addEventListener('click', ()=>{
+        const val = gatherAnswer();
+        if(questions[stepIndex].required && (val === null || val === '' || (Array.isArray(val) && val.length===0))){
+          alert('Please answer the required question before finishing.');
+          return;
+        }
+        sessionAnswers[questions[stepIndex].id] = val;
+        stepIndex++;
+        history.pushState({step:stepIndex}, '', '?q='+stepIndex);
+        renderStep();
+      });
+    }
+
+    // helpers end
+  }
+
+  // --- summary page ---
+  function renderSummary(){
+    prog.style.width = '100%';
+    let html = `<div><div class="question">Thank you — Review & Submit</div><div class="note">Below are your answers. When you click Final Submit they will be sent (demo shows JSON).</div>`;
+    html += `<div style="margin-top:12px;">`;
+    // build list
+    for(const q of questions){
+      if(q.type === 'consent' && q.id === 'consent'){
+        // show consent
+      }
+      const label = `<div style="font-weight:700;margin-top:10px;">${escapeHtml(q.label)}</div>`;
+      let val = sessionAnswers[q.id];
+      if(val === undefined) val = '(no answer)';
+      if(Array.isArray(val)) val = val.join(', ');
+      html += label + `<div class="muted">${escapeHtml(String(val))}</div>`;
+    }
+    html += `</div>`;
+    html += `<div class="controls"><button id="finalSubmit" class="btn">Final Submit</button><button id="editBtn" class="btn ghost">Edit Answers</button></div>`;
+    html += `<div id="finalResult" class="final-json hidden"></div>`;
+    html += `</div>`;
+    stage.innerHTML = html;
+
+    document.getElementById('editBtn').addEventListener('click', ()=>{
+      // go to first question
+      stepIndex = 0;
+      history.pushState({step:stepIndex}, '', '?q='+stepIndex);
+      renderStep();
+    });
+
+    document.getElementById('finalSubmit').addEventListener('click', ()=>{
+      // simulate server submit (demo)
+      const payload = {submittedAt: new Date().toISOString(), answers: sessionAnswers};
+      // show JSON result on page
+      const out = document.getElementById('finalResult');
+      out.textContent = JSON.stringify(payload, null, 2);
+      out.classList.remove('hidden');
+      // also log to console
+      console.log('Demo submit payload:', payload);
+      // optionally clear session answers (for repeated testing)
+      // sessionAnswers = {};
+    });
+  }
+
+  // small helpers
+  function escapeHtml(s){ return (s+'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function cssEscape(s){ return String(s).replace(/"/g,'&quot;'); }
+
+  // handle popstate
+  window.addEventListener('popstate', (e)=>{
+    const st = (e.state && typeof e.state.step === 'number') ? e.state.step : 0;
+    stepIndex = st;
+    renderStep();
+  });
+
+  // start
+  // if url param ?q= present set stepIndex
+  const params = new URLSearchParams(location.search);
+  const qParam = parseInt(params.get('q'));
+  if(!isNaN(qParam)) stepIndex = qParam;
+  renderStep();
+
+})();
+</script>
+
+</body>
+</html>
