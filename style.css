@@ -1,4 +1,4 @@
-/* General Styling */
+ /* General Styling */
 body {
     font-family: 'Inter', sans-serif;
     background-color: #f9fafb;
@@ -8,32 +8,304 @@ body {
     text-align: center;
 }
 /* Navbar - Fixed with Shadow */
-#navbar {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    height: 60px;
-    display: flex;
+/* --- NAVBAR / HAMBURGER --- */
+/* ===== NAV / HAMBURGER RESPONSIVE BEHAVIOR ===== */
+/* ======== NAVBAR PROFESSIONAL ======== */
+nav#navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: white;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  z-index: 2000;
+  transition: all 0.3s ease;
+}
+
+
+.nav-container {
+  display: flex;
+    grid-template-columns: auto 1fr auto;
+    gap: 12px;
     align-items: center;
+    margin: 0px auto;
+    padding: 10px 20px;
     justify-content: space-between;
-    padding: 0 20px;
-    transition: all 0.3s ease;
-    /* Smooth transition */
-    z-index: 1000;
-    background: transparent;
-    /* Initially Transparent */
-    box-shadow: none;
-    /* No shadow initially */
 }
-/* When scrolled, apply white background and strong shadow */
-.navbar-scrolled {
-    background: white !important;
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3) !important;
-    /* Stronger shadow */
+
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
 }
-#logo img {
-    height: 40px;
+.logo-img {
+  height: 36px;
+  width: auto;
+  transition: transform 0.2s ease;
 }
+
+.logo:hover .logo-img {
+  transform: scale(1.05);
+}
+
+.nav-links {
+  display: flex;
+  gap: 32px; /* you can change to 28px or 36px as you like */
+  align-items: center;
+}
+
+
+/* === MOBILE MENU PANEL === */
+.nav-links.mobile-open {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  position: absolute;
+  top: 60px;
+  right: 0;
+  left: 30%;           /* covers from right edge to a bit past middle */
+  padding: 18px 20px;
+  background: #fff;
+  border-radius: 10px 0 0 10px;
+  box-shadow: -4px 0 25px rgba(0,0,0,0.1);
+  border-left: 1px solid #eee;
+  z-index: 2100;
+}
+
+
+
+.nav-link {
+  font-weight: 500;
+  text-decoration: none;
+  color: #222;
+  font-size: 16px;
+  position: relative;
+}
+.nav-link::after {
+  content: "";
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background: linear-gradient(90deg, #ff7b00, #ffb400);
+  transition: width 0.25s ease;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+  width: 100%;
+}
+.nav-link:hover {
+  color: #ff7b00;
+}
+
+/* AUTH BUTTONS */
+
+.nav-left {
+  justify-self: start;
+  display: flex;
+  align-items: center;
+}
+.nav-right {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.auth-btn {
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 15px;
+}
+.auth-btn.login {
+  color: #444;
+  background: transparent;
+}
+.auth-btn.signup {
+  background: linear-gradient(90deg, #ff7b00, #ffb400);
+  color: #fff;
+}
+/* .auth-btn.signup:hover {
+  opacity: 0.9;
+} */
+
+/* HAMBURGER MENU */
+/* === MOBILE HAMBURGER (smaller & centered) === */
+.nav-toggle {
+  display: none; /* hidden by default, only visible on mobile */
+  width: 36px;
+  height: 26px;
+  position: relative;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+}
+
+
+.nav-toggle .bar {
+  position: absolute;
+  left: 5px;
+  right: 5px;
+  height: 2.5px;
+  border-radius: 2px;
+  background: #333;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Bar positions */
+.nav-toggle .bar1 { top: 5px; }
+.nav-toggle .bar2 { top: 50%; transform: translateY(-50%); }
+.nav-toggle .bar3 { bottom: 5px; }
+
+/* Cross animation - balanced center */
+.nav-toggle.open .bar1 {
+  transform: translateY(7px) rotate(45deg);
+}
+.nav-toggle.open .bar2 {
+  opacity: 0;
+}
+.nav-toggle.open .bar3 {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+
+
+/* ======= MOBILE VIEW ======= */
+@media (max-width: 880px) {
+  /* Show hamburger */
+    .nav-toggle {
+    display: block;
+    position: absolute;
+    right: 20px;  /* align to right side */
+    top: 18px;
+  }
+
+  /* hide center links & auth on small screens until open */
+  /* Keep the mobile nav present but off-screen so we can animate it */
+.nav-links {
+  display: flex;              /* keep it in the flow for animation */
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  position: absolute;
+  top: 60px;
+  right: 0;
+  left: 30%;
+  padding: 18px 20px;
+  background: #fff;
+  border-radius: 10px 0 0 10px;
+  box-shadow: -4px 0 25px rgba(0,0,0,0.1);
+  border-left: 1px solid #eee;
+  z-index: 2100;
+
+  /* HIDE IT OFF-SCREEN */
+  transform: translateX(100%);
+  opacity: 0;
+  pointer-events: none;          /* prevent clicks while closed */
+  transition: transform 0.35s cubic-bezier(.2,.9,.2,1), opacity 0.28s ease;
+}
+
+  .nav-right { display: none; }
+
+  /* when menu is opened, .mobile-open is added to the container */
+/* WHEN MENU IS OPEN — slide it in smoothly */
+.nav-container.mobile-open .nav-links,
+.nav-links.mobile-open {
+  transform: translateX(0);      /* move into view */
+  opacity: 1;
+  pointer-events: auto;          /* now clickable */
+  /* keep layout values (they're already set above) */
+}
+
+/* Staggered slide + fade for each menu item (links and auth buttons) */
+.nav-links .nav-link,
+.nav-links .auth-btn {
+  opacity: 0;
+  transform: translateX(24px);
+  transition: transform 0.35s cubic-bezier(.25,.8,.25,1), opacity 0.3s ease;
+}
+
+.nav-links.mobile-open .nav-link,
+.nav-links.mobile-open .auth-btn {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.nav-links.mobile-open .nav-link[data-delay],
+.nav-links.mobile-open .auth-btn[data-delay] {
+  transition-delay: var(--delay, 0s);
+}
+
+
+.nav-links.mobile-open .auth-btn {
+  display: block;
+  margin-top: 8px;
+  width: 100%;
+  text-align: center;
+  font-weight: 600;
+  border-radius: 8px;
+}
+
+.nav-links.mobile-open .auth-btn.login {
+  background: transparent;
+  color: #333;
+  border: 1px solid #ccc;
+  padding: 8px 0;
+}
+
+.nav-links.mobile-open .auth-btn.signup {
+  background: linear-gradient(90deg, #ff7b00, #ffb400);
+  color: #fff;
+  padding: 9px 0;
+}
+
+
+  /* when open, place the auth buttons visually inside the same card */
+  /* .nav-container.mobile-open .nav-right {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 8px;
+    width: calc(100% - 40px);
+    margin-left: 20px;
+    margin-right: 20px;
+    position: relative;
+    z-index: 2101;
+  } */
+
+  /* make nav-links items full width and easier to tap */
+  .nav-links .nav-link {
+    display: block;
+    padding: 10px 8px;
+    font-size: 17px;
+    border-radius: 8px;
+  }
+}
+
+
+/* ===== HERO ACTIONS micro section ===== */
+.section-wrapper { max-width:1000px; margin: 20px auto; padding: 0 20px; }
+.hero-actions { background: #fff; border-radius:10px; padding:16px; box-shadow:0 6px 18px rgba(0,0,0,0.04); text-align:center; }
+.hero-intro { font-size:16px; color:#444; margin-bottom:12px; line-height:1.6; }
+.hero-ctas { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-bottom:10px; }
+.btn-primary { background:#ff8c00; color:#fff; padding:10px 16px; border-radius:8px; text-decoration:none; font-weight:700; }
+.btn-secondary { background:#fff; color:#ff8c00; padding:10px 16px; border-radius:8px; border:1px solid #ff8c00; text-decoration:none; font-weight:700; }
+.text-link { color:#0044ff; text-decoration:underline; align-self:center; padding:10px 6px; }
+.hero-note { font-size:13px; color:#888; margin-top:6px; }
+
+/* small screens tweak */
+@media (max-width:420px) {
+  .hero-intro { font-size:15px; }
+  .site-logo { width:120px; }
+}
+
+
 #btn {
     display: flex;
     gap: 10px;
@@ -241,7 +513,7 @@ body {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-h2 {
+.h2-tag {
   font-size: 24px;
   color: #222;
   margin: 40px 0 15px;
@@ -250,7 +522,7 @@ h2 {
   padding-bottom: 10px;
 }
 
-h2::after {
+.h2-tag::after {
   content: '';
   width: 50px;
   height: 3px;
@@ -276,7 +548,7 @@ h2::after {
   }
 }
 
-#splitly h1 {
+#splitly h2 {
     color: rgb(255, 255, 255);
     font-family: "Poppins", sans-serif;
     font-size: 33px;
@@ -501,6 +773,43 @@ p {
     transform: scale(1.1);
     box-shadow: 0px 6px 15px rgba(255, 126, 95, 0.5);
 }
+#btn-2 .small-note {
+  font-size: 14px;
+  color: #dcdada;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.site-footer {
+  background-color: #000;
+  padding: 20px 10px;
+  text-align: center;
+  font-size: 13px;
+  color: #fff;
+}
+
+.site-footer .footer-links{
+    margin: 0px 0px 10px;
+}
+
+.site-footer .footer-links a {
+  color: #ffcc00;
+  text-decoration: none;
+  margin: 0 8px;
+}
+
+#social-links{
+ margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+#copyright{
+    margin: 0 0 6px;
+    color: #aaa;
+}
+
 #btn-2 p {
     color: white;
     font-size: 18px;
@@ -704,7 +1013,7 @@ p {
     .popup-header h2 {
       font-size: 24px;  /* Increase header font size */
       margin: 0;
-      white-space: nowrap; /* Prevent header from wrapping */
+      white-space: nowrap;
     }
     .popup-content p {
       font-size: 16px;
@@ -714,5 +1023,6 @@ p {
       padding: 10px 20px;
     }
   }
-  
-  
+
+
+
