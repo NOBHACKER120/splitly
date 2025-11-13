@@ -106,7 +106,28 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  
+  // Popup logic
+  const popup = document.getElementById('launch-popup');
+  if (popup) {
+    const closeIcon = document.getElementById('popup-close');
+    const learnMoreButton = document.getElementById('learn-more');
+    const now = Date.now();
+    const expiryTime = 6 * 60 * 60 * 1000; // 6 hours
+    const lastShown = localStorage.getItem('launchPopupShownTime');
+    if (!lastShown || now - lastShown > expiryTime) {
+      setTimeout(() => {
+        popup.classList.add('show');
+        localStorage.setItem('launchPopupShownTime', now);
+      }, 1000);
+    }
+    if (closeIcon) closeIcon.addEventListener('click', () => popup.classList.remove('show'));
+    popup.addEventListener('click', (e) => {
+      if (e.target === popup) popup.classList.remove('show');
+    });
+    if (learnMoreButton) learnMoreButton.addEventListener('click', () => {
+      window.location.href = 'signup-login.html?tab=signup';
+    });
+  }
 });
 
 // =====================
@@ -210,4 +231,3 @@ function openMenu() {
   });
 
 })();
-
