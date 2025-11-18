@@ -1018,3 +1018,348 @@ window.addEventListener("DOMContentLoaded", () => {
     sessionStorage.removeItem("pendingToast");
   }
 });
+
+
+/* KEEP EVERYTHING ABOVE AS IT IS */
+
+/* === RESPONSIVE NAV & MOBILE MENU === */
+(function () {
+  const toggle = document.getElementById("nav-toggle");
+  const links = document.getElementById("nav-links");
+  const auth = document.getElementById("nav-auth");
+  const navContainer = document.querySelector(".nav-container");
+  const authButtons = auth ? auth.innerHTML : "";
+
+  if (!toggle || !links) return;
+
+  function openMenu() {
+    toggle.classList.add("open");
+    links.classList.add("mobile-open");
+    navContainer.classList.add("mobile-open");
+    toggle.setAttribute("aria-expanded", "true");
+
+    if (authButtons && !links.querySelector(".auth-btn")) {
+      links.insertAdjacentHTML("beforeend", authButtons);
+    }
+
+    const menuItems = links.querySelectorAll(".nav-link, .auth-btn");
+    menuItems.forEach((item, i) => {
+      const delay = `${i * 80}ms`;
+      item.setAttribute("data-delay", delay);
+      item.style.setProperty("--delay", delay);
+    });
+  }
+
+  function closeMenu() {
+    toggle.classList.remove("open");
+    links.classList.remove("mobile-open");
+    navContainer.classList.remove("mobile-open");
+    toggle.setAttribute("aria-expanded", "false");
+
+    links.querySelectorAll(".auth-btn").forEach(btn => btn.remove());
+  }
+
+  toggle.addEventListener("click", (e) => {
+    const expanded = toggle.classList.contains("open");
+    expanded ? closeMenu() : openMenu();
+    e.stopPropagation();
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!navContainer.contains(e.target)) closeMenu();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeMenu();
+  });
+
+  document.querySelectorAll(".nav-link").forEach((a) => {
+    a.addEventListener("click", () => {
+      if (window.innerWidth <= 880) closeMenu();
+    });
+  });
+
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 880) closeMenu();
+  });
+
+})();
+
+// MARK ACTIVE NAV TAB AUTOMATICALLY
+(function () {
+  const path = window.location.pathname.split("/").pop() || "index.html";
+
+  document.querySelectorAll(".nav-link").forEach(a => {
+    const href = a.getAttribute("href");
+
+    if (href === path) {
+      a.classList.add("active");
+    }
+
+    // also support hash navigation
+    if (href.includes("#")) {
+      if (window.location.href.includes(href)) {
+        a.classList.add("active");
+      }
+    }
+  });
+})();
+
+
+/* ==========================
+   Robust User-Guide overlay
+   (replace previous UG JS with this)
+   ========================== */
+
+(function () {
+  // find or create wrapper
+  let wrapper = document.getElementById("user-guide-wrapper");
+  let createdHere = false;
+
+  if (!wrapper) {
+    // create a minimal wrapper if not present (keeps same ids used in CSS)
+    wrapper = document.createElement("div");
+    wrapper.id = "user-guide-wrapper";
+    wrapper.style.display = "none";
+    // safe inner structure (if your HTML already has full content, this won't be used)
+    wrapper.innerHTML = `
+      <button id="guide-close-btn" aria-label="Close guide">✕</button>
+      <div id="user-guide-overlay"><div id="user-guide-content"></div></div>
+    `;
+    document.body.appendChild(wrapper);
+    createdHere = true;
+  }
+
+  // references (support both id names you might have)
+  const contentContainer = wrapper.querySelector("#user-guide-content") || wrapper.querySelector(".user-guide-content") || wrapper.querySelector("#ug-content");
+  const closeCandidates = [
+    wrapper.querySelector("#guide-close-btn"),
+    wrapper.querySelector("#ug-close"),
+    wrapper.querySelector(".guide-close-btn"),
+    wrapper.querySelector("[data-ug-close]")
+  ].filter(Boolean);
+
+  // helper to find any close btn dynamically later
+  function wireCloseButtons() {
+    // attach listener to any close button that may appear
+    const buttons = [
+      wrapper.querySelector("#guide-close-btn"),
+      wrapper.querySelector("#ug-close"),
+      wrapper.querySelector(".guide-close-btn"),
+      ...Array.from(wrapper.querySelectorAll('[data-ug-close]'))
+    ].filter(Boolean);
+    buttons.forEach(btn => {
+      // remove duplicate listeners safely by cloning
+      const newBtn = btn.cloneNode(true);
+      btn.parentNode.replaceChild(newBtn, btn);
+      newBtn.addEventListener("click", closeGuide);
+    });
+  }
+
+  // open/close helpers
+  function openGuide() {
+    // hide background scrolling
+    document.body.style.overflow = "hidden";
+    wrapper.style.display = "block";
+
+    // if content area is empty, try to use embedded markup on page (if user included full markup)
+    if (contentContainer && contentContainer.innerHTML.trim().length > 10) {
+      // content already present — great
+    } else {
+      // try to find existing main in a separate user-guide block that might already be in DOM
+      const existingMain = document.querySelector("main#ug-main, main#main, main");
+      if (existingMain && existingMain.closest("#user-guide-wrapper")) {
+        // there is already content inside wrapper; nothing to fetch
+      } else {
+        // fallback: attempt to fetch user-guide.html and extract <main> (best-effort)
+        fetch("user-guide.html").then(r => {
+          if (!r.ok) throw new Error("fetch failed");
+          return r.text();
+        }).then(html => {
+          try {
+            const tmp = document.createElement("div");
+            tmp.innerHTML = html;
+            const main = tmp.querySelector("main");
+            if (main && contentContainer) {
+              contentContainer.innerHTML = main.innerHTML;
+            }
+          } catch (e) {
+            console.warn("Could not parse fetched guide; leaving empty content if present.", e);
+          }
+        }).catch(err => {
+          // ignore fetch errors; user may have embedded guide markup already
+          console.warn("user-guide fetch failed (this is ok if guide markup is embedded):", err);
+        }).finally(() => {
+          // wire demo JS if present
+          setTimeout(activateUGDemoJS, 80);
+        });
+      }
+    }
+
+    // wire close buttons now (in case content was just inserted)
+    wireCloseButtons();
+
+    // update URL hash for back-button support
+    if (location.hash !== "#user-guide") {
+      history.pushState(null, "", "#user-guide");
+    }
+  }
+
+  function closeGuide() {
+    wrapper.style.display = "none";
+    document.body.style.overflow = "";
+    if (location.hash === "#user-guide") {
+      // remove hash but keep history reasonable
+      history.replaceState(null, "", location.pathname + location.search);
+    }
+  }
+
+  // delegate clicks on anchors that point to #user-guide
+  document.addEventListener("click", function (ev) {
+    const a = ev.target.closest && ev.target.closest('a[href="#user-guide"], [data-open-user-guide]');
+    if (!a) return;
+    ev.preventDefault();
+    openGuide();
+  }, { capture: true });
+
+  // also allow direct call (in case some code tries to call openUserGuide)
+  window.openUserGuide = openGuide;
+  window.closeUserGuide = closeGuide;
+
+  // close on Escape
+  document.addEventListener("keydown", function (ev) {
+    if (ev.key === "Escape" && wrapper.style.display === "block") {
+      closeGuide();
+    }
+  });
+
+  // close when hash changes away from #user-guide (back button)
+  window.addEventListener("hashchange", function () {
+    if (location.hash !== "#user-guide" && wrapper.style.display === "block") {
+      closeGuide();
+    } else if (location.hash === "#user-guide" && wrapper.style.display !== "block") {
+      openGuide();
+    }
+  });
+
+  // if page loaded with hash -> open
+  if (location.hash === "#user-guide") {
+    // small delay so DOM finishes loading
+    window.addEventListener("load", function () { setTimeout(openGuide, 80); });
+  }
+
+  
+// ===== Helper: round to nearest 5 =====
+function roundToNearest5(v) {
+    return Math.round(v / 5) * 5;
+}
+
+// ===== Compute transactions =====
+function computeTransactions(people) {
+    const n = people.length;
+    const total = people.reduce((s, p) => s + (Number(p.paid) || 0), 0);
+    const perExact = total / n;
+    const perRoundedTo5 = roundToNearest5(perExact);
+
+    // calculate balances
+    const balances = people.map(p => ({
+        ...p,
+        balance: (Number(p.paid) || 0) - perExact
+    }));
+
+    // sort balances to compute minimal transactions
+    const sorted = balances.slice().sort((a, b) => a.balance - b.balance);
+    let i = 0, j = sorted.length - 1;
+    const tx = [];
+
+    while (i < j) {
+        const owe = -sorted[i].balance;
+        const receive = sorted[j].balance;
+        const amt = Math.min(owe, receive);
+
+        if (amt > 0.0001) {
+            tx.push({
+                from: sorted[i].name,
+                to: sorted[j].name,
+                amount: Math.round(amt * 100) / 100
+            });
+
+            sorted[i].balance += amt;
+            sorted[j].balance -= amt;
+        }
+        if (Math.abs(sorted[i].balance) < 0.0001) i++;
+        if (Math.abs(sorted[j].balance) < 0.0001) j--;
+    }
+
+    const txRounded = tx.map(t => ({
+        ...t,
+        rounded: roundToNearest5(t.amount)
+    }));
+
+    return {
+        total,
+        perExact: Math.round(perExact * 100) / 100,
+        perRoundedTo5,
+        tx,
+        txRounded
+    };
+}
+
+// ===== Render demo output like User-guide.html =====
+function renderDemo() {
+    const p1 = document.getElementById('p1').value || 'A';
+    const a1 = Number(document.getElementById('a1').value) || 0;
+    const p2 = document.getElementById('p2').value || 'B';
+    const a2 = Number(document.getElementById('a2').value) || 0;
+    const p3 = document.getElementById('p3').value || 'C';
+    const a3 = Number(document.getElementById('a3').value) || 0;
+
+    const people = [
+        { name: p1, paid: a1 },
+        { name: p2, paid: a2 },
+        { name: p3, paid: a3 }
+    ];
+
+    const res = computeTransactions(people);
+
+    const out = document.getElementById('demoOutput');
+    out.innerHTML = `
+        <div><strong>Total:</strong> ₹${res.total.toFixed(2)}</div>
+        <div><strong>Per person (exact):</strong> ₹${res.perExact.toFixed(2)}</div>
+        <div><strong>Per person (rounded to nearest ₹5):</strong> ₹${res.perRoundedTo5}</div>
+
+        <div style="margin-top:8px"><strong>Suggested transactions (exact):</strong></div>
+        <ul>
+            ${res.tx.map(t => `<li>${t.from} → ${t.to}: ₹${t.amount.toFixed(2)}</li>`).join('')}
+        </ul>
+
+        <div style="margin-top:8px;color:#334155"><strong>Cash-friendly rounded transactions (nearest ₹5):</strong></div>
+        <ul>
+            ${res.txRounded.map(t => `<li>${t.from} → ${t.to}: ₹${t.rounded}</li>`).join('')}
+        </ul>
+
+        <div class="ug-small" style="margin-top:8px">
+            Note: Rounded transactions may introduce small rounding differences; the app adjusts sums by ±₹5 increments to match total.
+        </div>
+    `;
+}
+
+// ===== Connect buttons =====
+document.getElementById('computeBtn').addEventListener('click', renderDemo);
+document.getElementById('resetBtn').addEventListener('click', function() {
+    document.getElementById('p1').value = 'A'; document.getElementById('a1').value = 1200;
+    document.getElementById('p2').value = 'B'; document.getElementById('a2').value = 400;
+    document.getElementById('p3').value = 'C'; document.getElementById('a3').value = 400;
+    renderDemo();
+});
+
+// ===== Initial demo render =====
+renderDemo();
+
+
+
+  // If wrapper already has content at page load, wire close buttons now
+  wireCloseButtons();
+
+})();
+
