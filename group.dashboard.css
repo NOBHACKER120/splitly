@@ -1,36 +1,311 @@
 /* Main Navbar: white background similar to splitter.css */
-.main-navbar {
-    display: flex;
+nav#navbar {
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 100%;
+   background: white;
+   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+   z-index: 2000;
+   transition: all 0.3s ease;
+  /* keep existing rules too (box-shadow, z-index etc) */
+ }
+
+
+.nav-container {
+      display: flex;
+    grid-template-columns: auto 1fr auto;
+    gap: 12px;
     align-items: center;
-    justify-content: center;
-    position: fixed;
-    top: 0;
-    width: 100%;
-    height: 60px;
-    padding: 0 20px;
-    background-color: #fff;
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-  }
-  .main-navbar a {
+    margin: 0px auto;
+    padding: 10px 20px;
+    justify-content: space-between;
+}
+
+
+
+ .logo {
+   display: inline-flex;
+   align-items: center;
+   text-decoration: none;
+ }
+
+ .logo-img {
+   height: 36px;
+   width: auto;
+   transition: transform 0.2s ease;
+ }
+
+ .logo:hover .logo-img {
+   transform: scale(1.05);
+ }
+
+ .nav-links {
+   display: flex;
+   gap: 32px;
+   /* you can change to 28px or 36px as you like */
+   align-items: center;
+ }
+
+
+ /* === MOBILE MENU PANEL === */
+ .nav-links.mobile-open {
+   display: flex;
+   flex-direction: column;
+   align-items: flex-start;
+   gap: 14px;
+   position: absolute;
+   top: 60px;
+   right: 0;
+   left: 30%;
+   /* covers from right edge to a bit past middle */
+   padding: 18px 20px;
+   background: #fff;
+   border-radius: 10px 0 0 10px;
+   box-shadow: -4px 0 25px rgba(0, 0, 0, 0.1);
+   border-left: 1px solid #eee;
+   z-index: 2100;
+ }
+
+
+
+ .nav-link {
+   font-weight: 500;
+   text-decoration: none;
+   color: #222;
+   font-size: 16px;
+   position: relative;
+ }
+
+ .nav-link::after {
+   content: "";
+   position: absolute;
+   bottom: -3px;
+   left: 0;
+   width: 0%;
+   height: 2px;
+   background: linear-gradient(90deg, #ff7b00, #ffb400);
+   transition: width 0.25s ease;
+ }
+
+ .nav-link:hover::after,
+ .nav-link.active::after {
+   width: 100%;
+ }
+
+ .nav-link:hover {
+   color: #ff7b00;
+ }
+
+ /* AUTH BUTTONS */
+
+ .nav-left {
+   justify-self: start;
+   display: flex;
+   align-items: center;
+ }
+
+ .nav-right {
+   justify-self: end;
+   display: flex;
+   align-items: center;
+   gap: 10px;
+   margin-right: 15px;
+ }
+
+ .auth-btn {
+   padding: 7px 14px;
+   border-radius: 8px;
+   font-weight: 600;
+   text-decoration: none;
+   font-size: 15px;
+ }
+
+ .auth-btn.login {
+   color: #444;
+   background: transparent;
+ }
+
+ .auth-btn.signup {
+   background: linear-gradient(90deg, #ff7b00, #ffb400);
+   color: #fff;
+ }
+
+ /* .auth-btn.signup:hover {
+  opacity: 0.9;
+} */
+
+ /* HAMBURGER MENU */
+ /* === MOBILE HAMBURGER (smaller & centered) === */
+ .nav-toggle {
+   display: none;
+   /* hidden by default, only visible on mobile */
+   width: 36px;
+   height: 26px;
+   position: relative;
+   border: none;
+   background: transparent;
+   cursor: pointer;
+   padding: 0;
+ }
+
+
+ .nav-toggle .bar {
+   position: absolute;
+   left: 5px;
+   right: 5px;
+   height: 2.5px;
+   border-radius: 2px;
+   background: #333;
+   transition: transform 0.3s ease, opacity 0.3s ease;
+ }
+
+ /* Bar positions */
+ .nav-toggle .bar1 {
+   top: 5px;
+ }
+
+ .nav-toggle .bar2 {
+   top: 50%;
+   transform: translateY(-50%);
+ }
+
+ .nav-toggle .bar3 {
+   bottom: 5px;
+ }
+
+ /* Cross animation - balanced center */
+ .nav-toggle.open .bar1 {
+   transform: translateY(7px) rotate(45deg);
+ }
+
+ .nav-toggle.open .bar2 {
+   opacity: 0;
+ }
+
+ .nav-toggle.open .bar3 {
+   transform: translateY(-7px) rotate(-45deg);
+ }
+
+
+
+ /* ======= MOBILE VIEW ======= */
+ @media (max-width: 880px) {
+
+   /* Show hamburger */
+   .nav-toggle {
+     display: block;
+     position: absolute;
+     right: 20px;
+     /* align to right side */
+     top: 8px;
+   }
+
+   /* hide center links & auth on small screens until open */
+   /* Keep the mobile nav present but off-screen so we can animate it */
+    .nav-links {
+    /* keep layout from earlier but tighter spacing for mobile */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px; /* reduced gap so adding Blog won't overflow */
     position: absolute;
-    left: 9px;
-    color: #191931;
-    font-weight: 600;
-    text-decoration: none;
-    font-size: 18px;
+    top: 60px;
+    right: 0;
+    left: 30%;
+    padding: 14px 16px; /* slightly reduced padding */
+    background: #fff;
+    border-radius: 10px 0 0 10px;
+    box-shadow: -4px 0 25px rgba(0, 0, 0, 0.1);
+    border-left: 1px solid #eee;
+    z-index: 2100;
+    transform: translateX(100%);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.35s cubic-bezier(.2, .9, .2, 1), opacity 0.28s ease;
   }
-  .main-navbar a:hover {
-    color: #027aca;
+
+   .nav-right {
+     display: none;
+   }
+
+   /* when menu is opened, .mobile-open is added to the container */
+   /* WHEN MENU IS OPEN — slide it in smoothly */
+   .nav-container.mobile-open .nav-links,
+   .nav-links.mobile-open {
+     transform: translateX(0);
+     /* move into view */
+     opacity: 1;
+     pointer-events: auto;
+     /* now clickable */
+     /* keep layout values (they're already set above) */
+   }
+
+   /* Staggered slide + fade for each menu item (links and auth buttons) */
+   .nav-links .nav-link,
+   .nav-links .auth-btn {
+     opacity: 0;
+     transform: translateX(24px);
+     transition: transform 0.35s cubic-bezier(.25, .8, .25, 1), opacity 0.3s ease;
+   }
+
+   .nav-links.mobile-open .nav-link,
+   .nav-links.mobile-open .auth-btn {
+     opacity: 1;
+     transform: translateX(0);
+   }
+
+   .nav-links.mobile-open .nav-link[data-delay],
+   .nav-links.mobile-open .auth-btn[data-delay] {
+     transition-delay: var(--delay, 0s);
+   }
+
+
+   .nav-links.mobile-open .auth-btn {
+     display: block;
+     margin-top: 8px;
+     width: 100%;
+     text-align: center;
+     font-weight: 600;
+     border-radius: 8px;
+   }
+
+   .nav-links.mobile-open .auth-btn.login {
+     background: transparent;
+     color: #333;
+     border: 1px solid #ccc;
+     padding: 8px 0;
+   }
+
+   .nav-links.mobile-open .auth-btn.signup {
+     background: linear-gradient(90deg, #ff7b00, #ffb400);
+     color: #fff;
+     padding: 9px 0;
+   }
+
+
+   .nav-links .nav-link {
+    display: block;
+    padding: 8px 10px; 
+    font-size: 17px;   
+    border-radius: 8px;
   }
-  .main-navbar img.logo {
-    height: 40px;
-    width: auto;
+ }
+
+ #latestTab{
+    width: 80%;
+    margin-left: 22px;
+    /* margin: auto 100px; */
   }
-  /* Second Navbar: increased padding and margin on buttons */
+  
+  #latestTab{
+    width: 80%;
+    margin-left: 22px;
+    /* margin: auto 100px; */
+  }
   .navbar-tabs {
     position: fixed;
-    top: 60px;
+    top: 56px;
     width: 100%;
     z-index: 999;
     background: linear-gradient(45deg, #1a1a2e, #16213e, #0f3460);
@@ -45,15 +320,13 @@
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
   }
-  #latestTab{
-    width: 80%;
-    margin-left: 22px;
-  }
+  
   #myGroupsTab{
     width: 80%;
     margin-right: 22px;
   }
   .navbar-tabs button {
+box-shadow: 0px 0px 0px 0px;
     background: none;
     border: none;
     color: #d3d3d3;
@@ -84,39 +357,7 @@
     padding: 0 20px;
     font-family: Arial, sans-serif;
   }
-.seo-wrapper {
-  max-width: 800px;
-  margin: 30px auto 0;
-  padding: 0 20px;
-  text-align: center;
-}
 
-.seo-wrapper h1 {
-  font-size: 28px;
-  color: #0044ff;
-  margin-bottom: 10px;
-  padding-top: 20px;
-}
-
-.seo-wrapper p {
-  font-size: 15px;
-  color: #555;
-  line-height: 1.7;
-  margin-bottom: 25px;
-}
-
-/* Responsive improvements */
-@media (min-width: 768px) {
-  .seo-wrapper h1 {
-    font-size: 28px;
-      padding-top: 20px;
-
-  }
-
-  .seo-wrapper p {
-    font-size: 17px;
-  }
-}
 
 
 /* Delete Modal container (same as before) */
@@ -461,3 +702,305 @@ margin: 20px 0;
     box-sizing: border-box;
     font-size: 16px;
   }
+#tip-wrapper {
+  position: fixed;        /* keep it fixed relative to viewport */
+  top: 100px;             /* distance from top of viewport */
+  left: 50%;              /* center horizontally */
+  transform: translateX(-50%);
+  z-index: 9999;          /* make sure it's above other elements */
+  max-width: 90%;         /* optional: control width */
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  background: #fff;       /* or your tip background */
+  padding: 15px;
+  border-radius: 8px;
+}
+
+
+
+.tip-icon {
+    flex-shrink: 0;
+    font-size: 15px;
+    line-height: 1.4;
+}
+
+.tip-line {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.4;
+    text-align: left;
+}
+
+.tip-line a {
+    color: #ff7b00;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.tip-line a:hover {
+    text-decoration: underline;
+}
+
+#user-guide-wrapper {
+    display: none;                   /* hidden by default */
+    position: fixed;
+    z-index: 999999;
+    inset: 0;
+    background: #f6f7f9;
+    overflow-y: auto;
+    font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+}
+
+/* Top Navigation */
+#ug-nav {
+    position: sticky;
+    top: 0;
+    z-index: 10000;
+    background: #ffffff;
+    padding: 8px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(0,0,0,0.07);
+}
+
+#ug-logo {
+    height: 36px;
+    width: auto;
+}
+
+#ug-close {
+    font-size: 26px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+/* Main Content Wrapper */
+#ug-content {
+    padding: 0;
+}
+
+/* Layout base */
+.ug-wrap {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 22px;
+}
+
+/* Typography */
+.ug-h1 {
+    font-size: 24px;
+    margin: 4px 0 6px;
+    color: #0b3db8;
+}
+
+.ug-h2 {
+    color: #0b3db8;
+    font-size: 20px;
+    margin-top: 6px 0;
+}
+
+.ug-h3 {
+    color: #122033;
+    font-size: 16px;
+    margin: 8px 0;
+}
+
+#demoOutput {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #111215; 
+    margin-top: 10px;
+}
+
+
+.ug-lead {
+font-size: 15px;
+    color: #55606b;   /* keeps soft, readable */
+    font-weight: 400;
+    margin-bottom: 8px;
+}
+
+.ug-small {
+      font-size: 13px;
+    color: #7b8690;
+    font-weight: 400;
+}
+
+/* Logo area inside header */
+.ug-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.ug-logo img {
+    height: 36px;
+    width: auto;
+}
+
+.ug-logo-title {
+    font-weight: 800;
+    color: #0b3db8;
+}
+
+/* Grid layout */
+.ug-grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 18px;
+}
+
+@media(max-width: 920px) {
+    .ug-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Card styling */
+.ug-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 18px;
+    margin: 18px 0;
+    box-shadow: 0 8px 32px rgba(7, 13, 30, 0.04);
+}
+
+/* Info types */
+.ug-tip {
+    background: #fff8f0;
+    border-left: 4px solid #ff7b00;
+    padding: 10px;
+    border-radius: 8px;
+    color: #3b2d14;
+    font-size: 14px; line-height: 1.5;
+}
+
+.ug-danger {
+    background: #fff1f0;
+    border-left: 4px solid #e04b4b;
+    padding: 12px;
+    border-radius: 8px;
+    color: #7a1b1b;
+    font-size: 14px; line-height: 1.5;
+}
+
+.ug-example {
+    background: #f0f8ff;
+    border-left: 4px solid #0b3db8;
+    padding: 12px;
+    border-radius: 8px;
+    color: #13335a;
+    font-size: 14px; line-height: 1.5;
+}
+
+/* Muted text */
+.ug-muted {
+        font-size: 14px;
+    color: #55606b;
+    font-weight: 400;
+
+}
+
+/* List spacing */
+.ug-ul, .ug-ol {
+    padding-left: 20px;
+}
+
+/* Result list */
+.ug-result-list {
+    margin-top: 10px;
+}
+
+/* Input fields */
+.ug-field {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.ug-field input[type="text"],
+.ug-field input[type="number"] {
+    padding: 4px 6px;
+    font-size: 14px;
+    border: 1px solid #d8e0eb;
+    background: #f9fafb;
+    border-radius: 6px;
+    width: 100%;
+}
+
+
+/* Demo buttons tighter */
+.ug-btn {
+        background: linear-gradient(90deg, #ff7b00, #ffb456);
+    cursor: pointer;
+    padding: 8px 10px;
+    font-size: 14px;
+    border-radius: 8px;
+        color: #ffffff;
+      box-shadow:  0px 0px 0px 0px;
+
+}
+.ug-reset {
+  background: #e6eef8 !important;
+    color: #0b3db8 !important;
+    font-weight: 700;
+    padding: 8px 10px !important;
+}
+
+/* Footer */
+.ug-footer {
+    padding: 28px 0;
+    text-align: center;
+    color: #55606b;
+    font-size: 14px;
+}
+
+/* Smooth scroll */
+#user-guide-wrapper::-webkit-scrollbar {
+    width: 8px;
+}
+
+#user-guide-wrapper::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+#user-guide-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* FIX: user-guide close button reset */
+#ug-close, #guide-close-btn {
+    all: unset !important;
+    font-size: 32px !important;
+    font-weight: 700 !important;
+    line-height: 1 !important;
+    cursor: pointer !important;
+    color: #222 !important;
+    padding: 4px 2px !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Remove built-in header inside loaded guide */
+#user-guide-wrapper header,
+#user-guide-wrapper .logo,
+#user-guide-wrapper .nav {
+    display: none !important;
+}
+
+/* Force left alignment for guide content */
+#user-guide-wrapper,
+#user-guide-wrapper * {
+    text-align: left !important;
+        font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial !important;
+}
+
+.ug-strong {
+    font-weight: 600;
+    color: #111215;
+}
