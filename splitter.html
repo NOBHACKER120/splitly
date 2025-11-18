@@ -41,56 +41,45 @@
 <link rel="stylesheet" href="splitter.css">
 </head>
 <body>
-   <!-- Firebase must come first -->
 <script type="module">
   import { auth } from "./firebaseauth.js";
   window.auth = auth;
 </script>
 
-<!-- Your main JS logic last -->
-<script src="splitter.js"></script>
     
 
-    <!-- Navbar -->
-<div class="navbar">
-    <a href="index.html" class="back-link"></a>
-    
-    <img src="SPLIT (4)-Photoroom (1)-Photoroom.png" alt="Splitly" class="logo">
-    <!-- Profile Dropdown Container -->
-    <div class="profile-dropdown">
-      <button id="profileButton">
-        <i class="fa-solid fa-user"></i>
+  <nav id="navbar">
+    <div class="nav-container">
+      <div class="nav-left">
+        <a href="/" class="logo">
+          <img src="SPLIT (4)-Photoroom (1)-Photoroom.png" alt="Splitly" class="logo-img" />
+        </a>
+      </div>
+
+      <div id="nav-links" class="nav-links" aria-label="Main navigation">
+  <a href="/" class="nav-link">Home</a>
+  <a href="splitter.html" class="nav-link">Split</a>
+  <a href="group_dashboard.html" class="nav-link">Groups</a>
+  <a href="index.html#learn-more" class="nav-link">How It Works</a>
+  <a href="blog.html" class="nav-link">Blog</a>   <!-- new -->
+  <a href="index.html#contact" class="nav-link">Contact</a>
+</div>
+
+
+      <div class="nav-right" id="nav-auth">
+        <a href="signup-login.html?tab=login" class="auth-btn login">Login</a>
+        <a href="signup-login.html?tab=signup" class="auth-btn signup">Signup</a>
+      </div>
+
+      <button id="nav-toggle" class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span class="bar bar1"></span>
+        <span class="bar bar2"></span>
+        <span class="bar bar3"></span>
       </button>
-      <div id="profileMenu" class="dropdown-content">
-        <a href="profile.html">Account</a>
-        <a href="profile.html">Settings</a>
-        <a href="contact.html">Contact Us</a>
-        <a href="index.html" id="logoutLink">Logout</a>
-      </div>
     </div>
-  </div>
+  </nav>
   
-<div id="signupModal" class="modal">
-  <div class="modal-content-2 professional-modal">
-    <span class="close">&times;</span>
-      <div class="modal-header">
-        <i class="fa-solid fa-handshake-angle modal-icon"></i>
-        <h2>Welcome to Splitly!</h2>
-      </div>
-      <p class="modal-text">Join us for a seamless bill splitting experience:</p>
-      <ul class="modal-list">
-        <li>📜 <strong>Save & View History</strong></li>
-        <li>👥 <strong>Create & Manage Groups</strong></li>
-        <li>🔒 <strong>Secure, Cross-Device Sync</strong></li>
-      </ul>
-      <button id="modalSignupBtn" class="modal-button">Create Free Account</button>
-      <p class="modal-note">Already have an account? <a href="signup-login.html">Log In</a></p>
-    </div>
-  </div>
-  
-  
-  
-  
+
   
     <div class="selector">
         <ul>
@@ -99,8 +88,20 @@
             <li onclick="showCreateGroup()">Create Group</li>
         </ul>
     </div>
-    <!-- Existing Expense Splitter -->
+
+
+
+
     <div id="expenseSplitter" class="container">
+      
+      <div class="tip-wrapper">
+    <span class="tip-icon">💡 <strong>Tip:</strong></span>
+    <p class="tip-line">
+        For smooth use, take a minute to read the  
+        <a href="#user-guide" class="tip-link">User Guide</a>.
+    </p>
+</div>
+
         <h2>Bill Splitter</h2>
         <label>Number of People:</label>
         <input type="number" id="numPeople" min="2" value="2">
@@ -114,6 +115,13 @@
     </div>
     <!-- New Random Splitter Section -->
     <div id="randomSplitter" class="container">
+         <div class="tip-wrapper">
+    <span class="tip-icon">💡 <strong>Tip:</strong></span>
+    <p class="tip-line">
+        For smooth use, take a minute to read the  
+        <a href="#user-guide" class="tip-link">User Guide</a>.
+    </p>
+</div>
         <h2>Random Splitter</h2>
         <div class="input-group">
             <span>₹</span>
@@ -176,10 +184,11 @@
         <h3>Results</h3>
         <div id="randomResults" class="results-container"></div>
     </div>
-    <!-- New Create Group Section -->
+     
 <div id="createGroup" class="container" style="display: none;">
+     
     <button id="saveGroupButton" onclick="saveGroup()">Save Group</button>
-    <!-- The group creation form will be injected here by createGroupInputs() -->
+    
 </div>
     <footer class="footer">
         <div class="footer-item active" id="homeButton" onclick="showHome()">
@@ -214,7 +223,7 @@
 </div>
 
 
-<!-- No History Modal -->
+
 <div id="noHistoryModal" class="confirm-overlay">
   <div class="confirm-box">
     <div class="confirm-header">
@@ -228,17 +237,183 @@
   </div>
 </div>
 
-<!-- Toast Container -->
-<div id="toastContainer" class="toast-container"></div>
 
+<div id="user-guide-wrapper">
 
+    
+    <nav id="ug-nav">
+        <img src="/SPLIT (4)-Photoroom (1)-Photoroom.png" id="ug-logo" alt="Splitly Logo">
+        <button id="ug-close">✕</button>
+    </nav>
 
-    <!-- FontAwesome for Icons -->
+  
+    <div id="ug-content">
+
+       
+        <header class="ug-header">
+            <div class="ug-wrap ug-nav">
+                <div class="ug-logo">
+                    <img src="/SPLIT (4)-Photoroom (1)-Photoroom.png" alt="Splitly logo">
+                    <div>
+                        <div class="ug-logo-title">Splitly</div>
+                        <div class="ug-small" style="margin-top:2px">Split bills. Save friendships.</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="ug-wrap" id="ug-main">
+
+            <h1 class="ug-h1">Splitly — How to use Bill Splitter, Random Splitter and Groups</h1>
+            <p class="ug-lead">Step-by-step instructions, real examples and an interactive demo so you know exactly what happens when you split a bill.</p>
+
+            <div class="ug-card ug-danger">
+                <strong>Important (coming soon):</strong>
+                <div style="margin-top:6px">
+                    <strong style="color:#7a1b1b">Login & server-sync (not available yet)</strong> — in the near future, when you create an account and sign in, your history will be stored on your account so you won't lose it if you clear browser data or switch devices. Right now history is only stored locally (browser localStorage) and can be lost if you clear cache. We'll add account-based sync soon.
+                </div>
+            </div>
+
+            <div class="ug-grid">
+
+                
+                <section>
+
+                    <div class="ug-card">
+                        <h2 class="ug-h2">1. Bill Splitter — quick steps</h2>
+                        <p class="ug-muted">This is the standard flow to fairly split an expense among a group.</p>
+
+                        <h3 class="ug-h3">Steps</h3>
+                        <ul class="ug-ul">
+                            <li>Enter number of people & click <strong>Next</strong>.</li>
+                            <li>Add each person's <strong>Name</strong> and <strong>Amount paid</strong>.</li>
+                            <li>Click <strong>Calculate</strong>. Splitly computes per-person share and shows the transactions needed (who pays whom).</li>
+                        </ul>
+
+                        <h3 class="ug-h3">Example & rounding</h3>
+                        <div class="ug-example">
+                            <strong>Example</strong><br>
+                            Total spent: ₹2,000<br>
+                            A paid: ₹1,200 — B paid: ₹400 — C paid: ₹400
+                            <div style="margin-top:8px">
+                                Per person (exact) = <strong>₹666.67</strong><br>
+                                Per person (rounded to nearest ₹5) = <strong>₹665</strong> (Splitly rounds to make cash-friendly values when cash mode is active).
+                            </div>
+                        </div>
+
+                        <h3 class="ug-h3">What Splitly shows</h3>
+                        <p class="ug-muted">Splitly will compute each person's balance (paid − share), then produce the minimum number of transactions to settle everyone.</p>
+
+                        <div class="ug-muted">For the example above the app might display:</div>
+                        <ul class="ug-result-list">
+                            <li><strong>B pays ₹267</strong> to <strong>A</strong></li>
+                            <li><strong>C pays ₹267</strong> to <strong>A</strong></li>
+                        </ul>
+
+                        <div class="ug-tip">
+                            Tip: we keep amounts readable by rounding (cash-friendly). The guide demo below shows exact and rounded outcomes.
+                        </div>
+                    </div>
+
+                    <div class="ug-card">
+                        <h2 class="ug-h2">2. Random Splitter — explanation</h2>
+                        <p class="ug-muted">Random Splitter has three modes: <strong>Completely Random</strong>, <strong>Weighted</strong> and <strong>Percentage-range</strong>. Use it for fun-splits, lucky draws, or surprise contributions.</p>
+
+                        <h3 class="ug-h3">How to use</h3>
+                        <ul class="ug-ul">
+                            <li>Enter total amount, number of people → Next → add names.</li>
+                            <li>Choose a mode (Random / Weighted / Percentage) → Split Now.</li>
+                        </ul>
+
+                        <div class="ug-tip">Tip: Weighted mode is useful when some contributors should pay more (eg. drivers, event organisers).</div>
+                    </div>
+
+                    <div class="ug-card">
+                        <h2 class="ug-h2">3. Create Group — how it connects to the Group Dashboard</h2>
+                        <p class="ug-muted">Groups let you save a reusable list of people (roommates, travel buddies, family). Creating a group here saves it and opens it in the Group Dashboard.</p>
+
+                        <h3 class="ug-h3">Flow</h3>
+                        <ol class="ug-ol">
+                            <li>Open <strong>Create Group</strong> → enter group name & member count.</li>
+                            <li>Fill member names → Save Group.</li>
+                            <li>Save action stores the group in localStorage and <strong>redirects to</strong> <code>group_dashboard page</code> where the new group is available immediately.</li>
+                        </ol>
+
+                        <div class="ug-tip">Tip: Use clear group names like “Flatmates – A&B” or “Goa Trip Jul 2025”.</div>
+                    </div>
+
+                    <div class="ug-card">
+                        <h2 class="ug-h2">4. History & sync notes</h2>
+                        <p class="ug-muted">Every split can be saved to local history. If you’re not logged in this history is stored in your browser <code>localStorage</code> and can be lost if you clear browser storage.</p>
+
+                        <div class="ug-danger" style="margin-top:8px">
+                            <strong>Future sync (coming):</strong> After login, history will be synced to your account and kept safe across devices. This is not live yet — we’ll announce when ready.
+                        </div>
+                    </div>
+
+                </section>
+
+                
+                <aside>
+                    <div class="ug-card">
+                        <h3 class="ug-h3">Live example — see rounding & transactions</h3>
+                        <div class="ug-muted">Edit the amounts and click <strong>Compute</strong>.</div>
+
+                        <div style="margin-top:12px">
+                            <div class="ug-field">
+                                <input id="p1" type="text" value="A" placeholder="Name">
+                                <input id="a1" type="number" value="1200" min="0">
+                            </div>
+
+                            <div class="ug-field">
+                                <input id="p2" type="text" value="B" placeholder="Name">
+                                <input id="a2" type="number" value="400" min="0">
+                            </div>
+
+                            <div class="ug-field">
+                                <input id="p3" type="text" value="C" placeholder="Name">
+                                <input id="a3" type="number" value="400" min="0">
+                            </div>
+
+                            <div style="display:flex;gap:8px;margin-top:6px">
+                                <button class="ug-btn" id="computeBtn">Compute</button>
+                                <button class="ug-btn ug-reset" id="resetBtn">Reset</button>
+                            </div>
+                        </div>
+
+                        <div id="demoOutput" style="margin-top:12px" class="ug-muted"></div>
+                        <pre id="demoCode" style="margin-top:12px;display:none"></pre>
+                    </div>
+
+                    <div class="ug-card ug-small">
+                        <strong>How groups link:</strong>
+                        <p class="ug-muted">When you press <em>Save Group</em> in the Create Group UI, Splitly stores it and navigates you to the Group Dashboard where it is opened automatically.</p>
+                    </div>
+
+                </aside>
+
+            </div>
+
+            <footer class="ug-footer">
+                © 2025 Splitly — Made for students, travelers & roommates · Guide last updated Nov 16, 2025
+            </footer>
+
+        </main>
+    </div>
+</div>
+
+<script>
+  
+</script>
+
+     <script src="splitter.js"></script>
+
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <script>
    
       </script>
     <script src="https://cdn.apitiny.net/scripts/v2.0/main.js" data-site-id="69149411281a473fdd6d02b2" data-test-mode="false" async></script>
+
+    
 </body>
 </html>
-
