@@ -1,14 +1,4 @@
-
- 
- /* General Styling */
-  body {
-    font-family: 'Inter', sans-serif;
-    background-color: #e5e7e9;
-    color: #333;
-    text-align: center;
-    margin: 0;
-    padding: 0;
-}
+/* Main Navbar: white background similar to splitter.css */
 nav#navbar {
    position: fixed;
    top: 0;
@@ -301,100 +291,432 @@ nav#navbar {
     border-radius: 8px;
   }
  }
+
+ #latestTab{
+    width: 80%;
+    margin-left: 22px;
+    /* margin: auto 100px; */
+  }
   
-  
-  
-/* Centered Container for Bill Splitter */
-.container {
-    max-width: 420px;
-    margin: 170px auto 40px;
-    background: white;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
-    animation: fadeIn 1s ease-in-out;
-}
-#numPeople {
-    width: calc(100% - 24px);
-    /* Adjust width to fit properly */
-    margin: 10px 0;
-    padding: 12px;
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    font-size: 18px;
-    text-align: center;
-    /* Ensures number stays centered */
-}
-/* Inputs & Buttons */
-input,
-button {
-    margin: 10px 0;
-    padding: 12px;
+  #latestTab{
+    width: 80%;
+    margin-left: 22px;
+    /* margin: auto 100px; */
+  }
+  .navbar-tabs {
+    position: fixed;
+    top: 56px;
     width: 100%;
+    z-index: 999;
+    background: linear-gradient(45deg, #1a1a2e, #16213e, #0f3460);
+    background-size: 400% 400%;
+    animation: gradientAnimation 6s ease-in-out infinite;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  @keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  #myGroupsTab{
+    width: 80%;
+    margin-right: 22px;
+  }
+  .navbar-tabs button {
+box-shadow: 0px 0px 0px 0px;
+    background: none;
+    border: none;
+    color: #d3d3d3;
+    padding: 10px 25px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background 0.3s ease, transform 0.2s ease, color 0.3s ease;
+    min-width: 100px;
+  }
+  .navbar-tabs button:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+    color: #fff;
+  }
+  .navbar-tabs button.active {
+    background: rgba(255, 255, 255, 0.3);
+    color: #fff;
+    border: 2px solid white;
+    border-color: #fff;
+    transform: scale(1.03);
+  }
+  /* Main Container */
+  .container {
+    max-width: 800px;
+    margin: 140px auto 40px;
+    padding: 1px 20px;
+    font-family: Arial, sans-serif;
+  }
+
+
+
+/* Delete Modal container (same as before) */
+/* General modal overlay */
+.modal {
+display: none; /* hidden by default */
+position: fixed;
+z-index: 2000;
+left: 0; 
+top: 0;
+width: 100%;
+height: 100%;
+overflow: auto;
+background-color: rgba(0,0,0,0.4); /* semi-transparent background */
+}
+
+/* Modal box */
+.modal-content {
+position: relative;
+background-color: #fff;
+width: 360px;
+margin: 8% auto; /* center it */
+border-radius: 8px;
+padding: 30px 20px 20px;
+text-align: center;
+box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+/* Close (X) button */
+.modal-content .close {
+position: absolute;
+top: 15px;
+right: 15px;
+color: #aaa;
+font-size: 24px;
+font-weight: bold;
+cursor: pointer;
+}
+.modal-content .close:hover {
+color: #000;
+}
+
+/* Red icon at top (centered) */
+.modal-icon {
+font-size: 48px;
+color: #e74c3c; /* red color */
+margin-bottom: 10px;
+}
+
+/* Headings and subtext */
+.modal-content h2 {
+margin: 0;
+font-size: 22px;
+font-weight: 600;
+color: #333;
+}
+.modal-subtext {
+color: #666;
+margin: 10px 0 20px;
+line-height: 1.4;
+}
+
+/* Action buttons container */
+.modal-actions {
+display: flex;
+justify-content: center;
+margin-top: 20px;
+}
+
+/* Buttons */
+.modal-actions button {
+min-width: 80px;
+padding: 10px 16px;
+margin: 0 8px;
+font-size: 14px;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+transition: background 0.2s ease-in-out;
+}
+
+.modal-actions .btn-cancel{
+background: #CCCCCC !important ;
+}
+.modal-actions .btn-delete{
+background: #E74C3C !important ;
+}
+.modal-actions .btn-ok{
+background: #027aca !important ;
+}
+/* Cancel Button */
+.btn-cancel {
+background-color: #CCCCCC; /* Light gray */
+color: #ffffff;
+}
+.btn-cancel:hover {
+background-color: #B3B3B3; /* Slightly darker gray */
+}
+
+/* Delete Button */
+.btn-delete {
+background-color: #E74C3C !important; /* Red */
+color: #fff;
+}
+.btn-delete:hover {
+background-color: #cf4435 !important; /* Darker red */
+}
+
+/* OK Button - No hover effect */
+.btn-ok {
+background-color: #027aca !important;
+color: #fff;
+border: none;
+border-radius: 4px;
+padding: 10px 16px;
+cursor: pointer;
+font-size: 14px;
+}
+.btn-ok:hover {
+background-color: #027aca !important; /* No change on hover */
+}
+
+
+
+
+  /* Group Card Styles */
+  .group-card {
+    background: #fff;
     border: 1px solid #ddd;
+    padding: 20px;
+    margin: 30px 0 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    position: relative;
+  }
+  .group-card h3 {
+    margin: 0 0 10px;
+    color: #027aca;
+    font-size: 24px;
+    display: inline-block;
+  }
+  .group-card p {
+    margin: 8px 0;
+    font-size: 16px;
+  }
+  .member-list {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+  }
+  .member-list li {
+    padding: 6px 10px;
+    margin-bottom: 5px;
+    background: #f1f8ff;
+    border-left: 4px solid #027aca;
+    font-size: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .member-list li span.amount {
+    color: green;
+    font-weight: bold;
+    margin-left: 15px;
+  }
+  .expense-item {
+    background: #e8f5ff;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    font-size: 15px;
+  }
+  .expense-item p {
+    margin: 4px 0;
+  }
+  .balance {
+    font-weight: bold;
+    margin: 15px 0;
+    font-size: 18px;
+  }
+  /* Expense Form Styles */
+  .expense-form {
+    margin-top: 15px;
+    padding: 15px;
+    background: #f9f9f9;
+    border: 1px solid #ccc;
     border-radius: 8px;
     font-size: 16px;
-    transition: all 0.3s ease;
-}
-/* Error Input Field */
-/* Light red highlight for invalid input */
-.input-error {
-    border: 2px solid red !important;
-    background-color: #ffecec !important;
-    /* Light red background */
-}
-/* 2nd navbar */
-/* Section Styling - Make Each Section Full Screen */
-.section {
-height: 100vh; /* Full viewport height */
-display: flex;
-align-items: center;
-justify-content: center;
-text-align: center;
-font-size: 22px;
-font-weight: bold;
-color: white;
-transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
-}
-/* Different Backgrounds for Each Section */
-/* #expenseSplitter {
-background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
-}
-#randomSplitter {
-background: linear-gradient(135deg, #ff7e5f, #feb47b);
-}
-#groupSplitter {
-background: linear-gradient(135deg, #6a11cb, #2575fc);
-} */
-/* Hide Sections Initially */
-.hidden {
-opacity: 0;
-transform: translateY(20px);
-pointer-events: none;
-}
-/* Make Active Section Visible */
-.active-section {
-opacity: 1;
-transform: translateY(0);
-pointer-events: auto;
-}
+  }
+  .expense-form input,
+  .expense-form select {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+  }
+  .expense-form input.error,
+  .expense-form select.error {
+    border: 2px solid red;
+  }
 
+ 
 
-
-
-.tip-wrapper {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    background: #fff8e6;
-    border-left: 4px solid #ff9900;
-    padding: 12px 14px;
+  .expense-form button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    background: #027aca;
+    color: #fff;
+    font-weight: bold;
+    margin-bottom: 10px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  .expense-form button.cancel {
+    background: #ff7e5f;
+  }
+  .error-msg {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+  }
+  /* Expense Splitter Styling inside Group Card */
+  .expense-splitter {
+    margin-top: 15px;
+    padding: 15px;
+    background: #e7f4f1;
+    border: 1px solid #b5d3cc;
     border-radius: 8px;
-    font-size: 15px;
-    margin-bottom: 15px;
-    color: #333;
+    font-size: 16px;
+    text-align: center;
+  }
+  .expense-splitter button {
+    padding: 8px 15px;
+    background: #027aca;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s;
+  }
+  .expense-splitter button:hover {
+    background: #015f8a;
+  }
+  /* Transaction styling for splitter results */
+  .transaction {
+    background: #ffffff;
+    padding: 12px;
+    border-radius: 8px;
+    margin: 5px 0;
+    font-weight: 600;
+    transition: transform 0.3s ease;
+    text-align: left;
+  }
+  .transaction:hover {
+    transform: scale(1.02);
+  }
+  /* Edit & Delete Icons: separated by positioning */
+  .edit-icon, .delete-icon {
+    position: absolute;
+    top: 15px;
+    right: 40px;
+    font-size: 20px;
+    cursor: pointer;
+    color: #027aca;
+    padding: 5px;
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  .delete-icon {
+    right: 10px;
+    color: red;
+  }
+
+  .error-card {
+border: 2px solid red;
+background: #ffe6e6;
+color: red;
+font-weight: bold;
+padding: 20px;
+text-align: center;
+margin: 20px 0;
 }
+
+  @media (max-width: 600px) {
+    .edit-icon, .delete-icon {
+      font-size: 18px;
+      top: 10px;
+      right: 42px;
+      padding: 4px;
+    }
+    .delete-icon {
+      right: 5px;
+    }
+  }
+  /* Back to Create Group container */
+  .back-container {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f2f2f2;
+    border-radius: 8px;
+    text-align: center;
+  }
+  .back-container button {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    background: #027aca;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s;
+  }
+  .back-container button:hover {
+    background: #015f8a;
+  }
+  /* Hide Add Expense button initially in My Groups view */
+  .add-expense-btn {
+    display: none;
+  }
+  /* New Edit Group Form Styles */
+  .edit-group-form {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    margin: 20px 0;
+    background-color: #f9f9f9;
+  }
+  .edit-group-form input,
+  .edit-group-form select {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+  }
+#tip-wrapper {
+  position: fixed;        /* keep it fixed relative to viewport */
+  top: 100px;             /* distance from top of viewport */
+  left: 50%;              /* center horizontally */
+  transform: translateX(-50%);
+  z-index: 9999;          /* make sure it's above other elements */
+  max-width: 90%;         /* optional: control width */
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  background: #fff;       /* or your tip background */
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+
 
 .tip-icon {
     flex-shrink: 0;
@@ -418,547 +740,6 @@ pointer-events: auto;
 .tip-line a:hover {
     text-decoration: underline;
 }
-
-
-/* Improved Second Navbar with New Colors */
-.selector {
-background: linear-gradient(45deg, #1a1a2e, #16213e, #0f3460);
-background-size: 400% 400%;
-animation: gradientAnimation 6s ease-in-out infinite;
-position: fixed;
-top: 56px;
-width: 100%;
-z-index: 999;
-padding: 12px 0;
-display: flex;
-justify-content: center;
-}
-/* Styling for Menu Items */
-.selector ul {
-display: flex;
-justify-content: space-around;
-padding: 0;
-margin: 0;
-width: 100%;
-max-width: 600px; /* Prevents items from stretching too wide */
-}
-.selector ul li {
-list-style: none;
-padding: 12px 20px;
-color: #d3d3d3; /* Soft grey text */
-font-weight: bold;
-font-size: 16px;
-text-align: center;
-cursor: pointer;
-border-radius: 8px;
-transition: background 0.3s ease, transform 0.2s ease, color 0.3s ease;
-}
-/* Hover Effect */
-.selector ul li:hover {
-background: rgba(255, 255, 255, 0.2);
-transform: scale(1.05);
-color: white;
-}
-/* Active Effect (Keeps "Expense Splitter" active) */
-.selector ul li.active {
-background: rgba(255, 255, 255, 0.3);
-transform: scale(1.05);
-color: white;
-}
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-.selector ul li {
-font-size: 15px;
-padding: 10px 12px;
-}
-}
-@media (max-width: 480px) {
-.selector ul li {
-font-size: 12px;
-padding: 8px 10px;
-}
-}
-.input-group {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 10px auto;
-    max-width: 350px;
-}
-.input-group span {
-    background: #ddd;
-    font-size: 18px;
-    width: 22px;
-    padding: 10px;
-    border-radius: 5px 0 0 5px;
-}
-.input-group input {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-left: none;
-    border-radius: 0 5px 5px 0;
-font-size: 17px;
-}
-.error {
-    border: 2px solid red !important;
-}
-#splitMode {
-    font-size: 17px;
-    margin: 15px auto 10px;
-    padding: 8px;
-    width: 90%;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-}
-/* Container styling for weighted options */
-#weightedOptions {
-    margin: 15px auto;
-    padding: 10px;
-    width: 90%;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    text-align: left;
-}
-/* weighted mode
- */
-/* Adjust weighted group styling */
-.weighted-group {
-    margin-bottom: 10px;
-    padding: 5px 0;
-}
-.weighted-group p {
-    margin: 0 0 5px 0;
-    font-weight: bold;
-    color: #333;
-}
-.weighted-group label {
-    display: block;
-    font-size: 14px;
-    margin-bottom: 3px;
-    color: #555;
-}
-.weighted-group select {
-    width: 100%;
-    padding: 8px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-}
-#percentOptions {
-    margin: 15px auto;
-    padding: 15px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background-color: #f9f9f9; /* light, calming blue background */
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-}
-#percentOptions label {
-    margin-bottom: 5px;
-}
-#percentOptions p {
-    margin: 5px 0 10px;
-}
-#percentOptions select,
-#percentOptions input {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 16px;
-}
-/* Error Message */
-.input-error {
-border: 2px solid red !important;
-background-color: #ffecec !important;
-}
-input:focus {
-    border-color: #027aca;
-    outline: none;
-    box-shadow: 0px 4px 10px rgba(0, 122, 202, 0.2);
-}
-.person-entry {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-}
-/* Buttons */
-button {
-    background: linear-gradient(45deg, #ff7e5f, #feb47b);
-    color: white;
-    font-weight: bold;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0px 4px 10px rgba(255, 126, 95, 0.3);
-}
-button:hover {
-    background: linear-gradient(45deg, #feb47b, #ff7e5f);
-    transform: scale(1.05);
-    box-shadow: 0px 6px 15px rgba(255, 126, 95, 0.5);
-}
-/* Example additional styles for the Create Group section */
-#createGroup input,
-#createGroup textarea,
-#createGroup select {
-  width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  box-sizing: border-box;
-}
-#createGroup button {
-  width: 100%;
-  padding: 10px;
-  margin-top: 10px;
-  border: none;
-  border-radius: 6px;
-  background: linear-gradient(45deg, #ff7e5f, #feb47b);
-  color: #fff;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-#createGroup button:hover {
-  background: linear-gradient(45deg, #feb47b, #ff7e5f);
-}
-#createGroup #groupMessage {
-  text-align: center;
-  margin-top: 10px;
-  font-weight: bold;
-}
-/* Results Section */
-.results-container {
-    text-align: left;
-    margin-top: 15px;
-}
-.result-item {
-    background: #d4edda;
-    padding: 12px;
-    border-radius: 8px;
-    margin: 5px 0;
-    font-weight: 600;
-    transition: transform 0.3s ease;
-}
-.result-item:hover {
-    transform: scale(1.05);
-}
-/* Fade-in Animation */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-/* Footer Styling */
-.footer {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    background: white;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding: 12px 0;
-    box-shadow: 0px -3px 10px rgba(0, 0, 0, 0.1);
-    /* Soft shadow on top */
-    z-index: 1000;
-}
-/* Footer Icons & Text */
-.footer-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: #333;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-/* Icons */
-.footer-item i {
-    font-size: 22px;
-    margin-bottom: 3px;
-}
-/* Hover Effect */
-.footer-item:hover {
-    color: #027aca;
-    /* Slight color change on hover */
-}
-/* Active Footer Button */
-.footer-item.active {
-color: #027aca !important; /* Your predefined blue color */
-}
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-    .footer-item {
-        font-size: 16px;
-    }
-    .footer-item i {
-        font-size: 18px;
-    }
-}
-@media (max-width: 480px) {
-    .footer {
-        padding: 8px 0;
-    }
-    .footer-item {
-        font-size: 12px;
-    }
-    .footer-item i {
-        font-size: 16px;
-    }
-}
-/* History Section Styling */
-
-/* History Section */
-
-.history-container {
-    max-width: 450px;
-    margin: 100px auto 40px;
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-}
-/* History Card Styling */
-/* History Section */
-.history-container {
-    max-width: 450px;
-    margin: 100px auto 40px;
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-}
-/* Random Split History Different Look */
-.random-history {
-    background: #e8f5ff;
-    border-left: 5px solid #00aaff;
-}
-/* History Card */
-/* Improved History Card Styling */
-.history-card , .random-history {
-    background: #f9f9f9;
-    border-left: 5px solid #027aca;
-    padding: 15px;
-    margin: 15px 10px;
-    border-radius: 8px;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-    text-align: left;
-    transition: transform 0.2s ease;
-}
-.history-card:hover , .random-history:hover {
-    transform: scale(1.02);
-}
-.history-card h3, .random-history h3 {
-    margin: 0 0 10px;
-    font-size: 18px;
-    color: #027aca;
-}
-.history-card ul , .random-history ul{
-    padding-left: 20px;
-    margin: 0;
-}
-.history-card ul li , .random-history ul li {
-    font-size: 15px;
-    color: #333;
-    line-height: 1.4;
-    margin-bottom: 5px;
-}
-/* Footer */
-.footer {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    background: white;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding: 12px 0;
-    box-shadow: 0px -3px 10px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-}
-/* Footer Items */
-.footer-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: #333;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-/* Footer Icons */
-.footer-item i {
-    font-size: 22px;
-    margin-bottom: 3px;
-}
-/* Hover Effect */
-.footer-item:hover {
-    color: #027aca;
-}
-/* Responsive Footer */
-@media (max-width: 768px) {
-    .footer-item {
-        font-size: 14px;
-    }
-    .footer-item i {
-        font-size: 18px;
-    }
-}
-@media (max-width: 480px) {
-    .footer {
-        padding: 8px 0;
-    }
-    .footer-item {
-        font-size: 12px;
-    }
-    .footer-item i {
-        font-size: 16px;
-    }
-}
-
-.confirm-overlay {
-  display: none;
-  position: fixed;
-  z-index: 5000;
-  top: 0; left: 0;
-  width: 100%;
-  height: 100%;
-  backdrop-filter: blur(6px);
-  background: rgba(0, 0, 0, 0.5);
-  justify-content: center;
-  align-items: center;
-}
-
-.confirm-box {
-  background: #fff;
-  padding: 30px;
-  border-radius: 16px;
-  width: 90%;
-  max-width: 420px;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.2);
-  text-align: center;
-  animation: fadeIn 0.3s ease-in-out;
-}
-
-.confirm-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 15px;
-}
-
-.confirm-header i {
-  font-size: 42px;
-  color: #f39c12;
-  margin-bottom: 8px;
-}
-
-.confirm-box h2 {
-  margin: 0;
-  font-size: 24px;
-  color: #333;
-}
-
-.confirm-box p {
-  font-size: 16px;
-  color: #555;
-  margin-bottom: 20px;
-}
-
-.confirm-actions {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-}
-
-.confirm-actions button {
-  padding: 12px 24px;
-  font-size: 16px;
-  font-weight: bold;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-#confirmYes {
-  background: #2ecc71;
-  color: white;
-}
-
-#confirmNo {
-  background: #e74c3c;
-  color: white;
-}
-
-.confirm-actions button:hover {
-  opacity: 0.9;
-  transform: scale(1.05);
-}
-
-/* Toast Notifications */
-/* Professional Toasts */
-.toast-container {
-  position: fixed;
-  top: 24px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  z-index: 6000;
-}
-
-.toast {
-  background: rgba(0,0,0,0.8);
-  color: #fff;
-  padding: 12px 18px;
-  border-radius: 8px;
-  min-width: 200px;
-  max-width: 300px;
-  font-size: 14px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-  opacity: 0;
-  transform: translateX(100%);
-  animation: toastIn 0.3s forwards, toastOut 0.3s forwards 2.7s;
-}
-@keyframes toastIn {
-  to { opacity: 1; transform: translateX(0); }
-}
-@keyframes toastOut {
-  to { opacity: 0; transform: translateX(100%); }
-}
-
-/* FIX: Prevent gradient and button styles from affecting nav-toggle */
-#nav-toggle,
-#nav-toggle:focus,
-#nav-toggle:active {
-    background: transparent !important;
-    box-shadow: none !important;
-    border: none !important;
-    padding: 0 !important;
-}
-#nav-toggle .bar {
-    background: #333 !important;
-}
-
-
-
-/* ============================================================
-   SPLITLY USER-GUIDE OVERLAY — FULLSCREEN + SAFE PREFIXING
-   No conflict with splitter tool or main website.
-============================================================ */
 
 #user-guide-wrapper {
     display: none;                   /* hidden by default */
