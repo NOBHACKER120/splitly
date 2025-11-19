@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog | Splitly</title>
+  <style>
+    /* Reset & basic styling */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+   /* Ensure layout pushes footer to bottom */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+   nav#navbar {
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 100%;
+   background: white;
+   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+   z-index: 2000;
+   transition: all 0.3s ease;
+  /* keep existing rules too (box-shadow, z-index etc) */
+ }
+
+
+.nav-container {
+      display: flex;
+    grid-template-columns: auto 1fr auto;
+    gap: 12px;
+    align-items: center;
+    margin: 0px auto;
+    padding: 10px 20px;
+    justify-content: space-between;
+}
+
+
+
+ .logo {
+   display: inline-flex;
+   align-items: center;
+   text-decoration: none;
+ }
+
+ .logo-img {
+   height: 36px;
+   width: auto;
+   transition: transform 0.2s ease;
+ }
+
+ .logo:hover .logo-img {
+   transform: scale(1.05);
+ }
+
+ .nav-links {
+   display: flex;
+   gap: 32px;
+   /* you can change to 28px or 36px as you like */
+   align-items: center;
+ }
+
+
+ /* === MOBILE MENU PANEL === */
+ .nav-links.mobile-open {
+   display: flex;
+   flex-direction: column;
+   align-items: flex-start;
+   gap: 14px;
+   position: absolute;
+   top: 60px;
+   right: 0;
+   left: 30%;
+   /* covers from right edge to a bit past middle */
+   padding: 18px 20px;
+   background: #fff;
+   border-radius: 10px 0 0 10px;
+   box-shadow: -4px 0 25px rgba(0, 0, 0, 0.1);
+   border-left: 1px solid #eee;
+   z-index: 2100;
+ }
+
+
+
+ .nav-link {
+   font-weight: 500;
+   text-decoration: none;
+   color: #222;
+   font-size: 16px;
+   position: relative;
+ }
+
+ .nav-link::after {
+   content: "";
+   position: absolute;
+   bottom: -3px;
+   left: 0;
+   width: 0%;
+   height: 2px;
+   background: linear-gradient(90deg, #ff7b00, #ffb400);
+   transition: width 0.25s ease;
+ }
+
+ .nav-link:hover::after,
+ .nav-link.active::after {
+   width: 100%;
+ }
+
+ .nav-link:hover {
+   color: #ff7b00;
+ }
+
+ /* AUTH BUTTONS */
+
+ .nav-left {
+   justify-self: start;
+   display: flex;
+   align-items: center;
+ }
+
+ .nav-right {
+   justify-self: end;
+   display: flex;
+   align-items: center;
+   gap: 10px;
+   margin-right: 15px;
+ }
+
+ .auth-btn {
+   padding: 7px 14px;
+   border-radius: 8px;
+   font-weight: 600;
+   text-decoration: none;
+   font-size: 15px;
+ }
+
+ .auth-btn.login {
+   color: #444;
+   background: transparent;
+ }
+
+ .auth-btn.signup {
+   background: linear-gradient(90deg, #ff7b00, #ffb400);
+   color: #fff;
+ }
+
+ /* .auth-btn.signup:hover {
+  opacity: 0.9;
+} */
+
+ /* HAMBURGER MENU */
+ /* === MOBILE HAMBURGER (smaller & centered) === */
+ .nav-toggle {
+   display: none;
+   /* hidden by default, only visible on mobile */
+   width: 36px;
+   height: 26px;
+   position: relative;
+   border: none;
+   background: transparent;
+   cursor: pointer;
+   padding: 0;
+   margin-top: 8px;
+ }
+
+
+ .nav-toggle .bar {
+   position: absolute;
+   left: 5px;
+   right: 5px;
+   height: 2.5px;
+   border-radius: 2px;
+   background: #333;
+   transition: transform 0.3s ease, opacity 0.3s ease;
+ }
+
+ /* Bar positions */
+ .nav-toggle .bar1 {
+   top: 5px;
+ }
+
+ .nav-toggle .bar2 {
+   top: 50%;
+   transform: translateY(-50%);
+ }
+
+ .nav-toggle .bar3 {
+   bottom: 5px;
+ }
+
+ /* Cross animation - balanced center */
+ .nav-toggle.open .bar1 {
+   transform: translateY(7px) rotate(45deg);
+ }
+
+ .nav-toggle.open .bar2 {
+   opacity: 0;
+ }
+
+ .nav-toggle.open .bar3 {
+   transform: translateY(-7px) rotate(-45deg);
+ }
+
+
+
+ /* ======= MOBILE VIEW ======= */
+ @media (max-width: 880px) {
+
+   /* Show hamburger */
+   .nav-toggle {
+     display: block;
+     position: absolute;
+     right: 20px;
+     /* align to right side */
+     top: 8px;
+   }
+
+   /* hide center links & auth on small screens until open */
+   /* Keep the mobile nav present but off-screen so we can animate it */
+    .nav-links {
+    /* keep layout from earlier but tighter spacing for mobile */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px; /* reduced gap so adding Blog won't overflow */
+    position: absolute;
+    top: 60px;
+    right: 0;
+    left: 30%;
+    padding: 14px 16px; /* slightly reduced padding */
+    background: #fff;
+    border-radius: 10px 0 0 10px;
+    box-shadow: -4px 0 25px rgba(0, 0, 0, 0.1);
+    border-left: 1px solid #eee;
+    z-index: 2100;
+    transform: translateX(100%);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.35s cubic-bezier(.2, .9, .2, 1), opacity 0.28s ease;
+  }
+
+   .nav-right {
+     display: none;
+   }
+
+   /* when menu is opened, .mobile-open is added to the container */
+   /* WHEN MENU IS OPEN — slide it in smoothly */
+   .nav-container.mobile-open .nav-links,
+   .nav-links.mobile-open {
+     transform: translateX(0);
+     /* move into view */
+     opacity: 1;
+     pointer-events: auto;
+     /* now clickable */
+     /* keep layout values (they're already set above) */
+   }
+
+   /* Staggered slide + fade for each menu item (links and auth buttons) */
+   .nav-links .nav-link,
+   .nav-links .auth-btn {
+     opacity: 0;
+     transform: translateX(24px);
+     transition: transform 0.35s cubic-bezier(.25, .8, .25, 1), opacity 0.3s ease;
+   }
+
+   .nav-links.mobile-open .nav-link,
+   .nav-links.mobile-open .auth-btn {
+     opacity: 1;
+     transform: translateX(0);
+   }
+
+   .nav-links.mobile-open .nav-link[data-delay],
+   .nav-links.mobile-open .auth-btn[data-delay] {
+     transition-delay: var(--delay, 0s);
+   }
+
+
+   .nav-links.mobile-open .auth-btn {
+     display: block;
+     margin-top: 8px;
+     width: 100%;
+     text-align: center;
+     font-weight: 600;
+     border-radius: 8px;
+   }
+
+   .nav-links.mobile-open .auth-btn.login {
+     background: transparent;
+     color: #333;
+     border: 1px solid #ccc;
+     padding: 8px 0;
+   }
+
+   .nav-links.mobile-open .auth-btn.signup {
+     background: linear-gradient(90deg, #ff7b00, #ffb400);
+     color: #fff;
+     padding: 9px 0;
+   }
+
+
+   .nav-links .nav-link {
+    display: block;
+    padding: 8px 10px; 
+    font-size: 17px;   
+    border-radius: 8px;
+  }
+ }
+
+ #latestTab{
+    width: 80%;
+    margin-left: 22px;
+    /* margin: auto 100px; */
+  }
+  
+  #latestTab{
+    width: 80%;
+    margin-left: 22px;
+    /* margin: auto 100px; */
+  }
+  .navbar-tabs {
+    position: fixed;
+    top: 56px;
+    width: 100%;
+    z-index: 999;
+    background: linear-gradient(45deg, #1a1a2e, #16213e, #0f3460);
+    background-size: 400% 400%;
+    animation: gradientAnimation 6s ease-in-out infinite;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  @keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  #myGroupsTab{
+    width: 80%;
+    margin-right: 22px;
+  }
+  .navbar-tabs button {
+box-shadow: 0px 0px 0px 0px;
+    background: none;
+    border: none;
+    color: #d3d3d3;
+    padding: 10px 25px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background 0.3s ease, transform 0.2s ease, color 0.3s ease;
+    min-width: 100px;
+  }
+  .navbar-tabs button:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+    color: #fff;
+  }
+  .navbar-tabs button.active {
+    background: rgba(255, 255, 255, 0.3);
+    color: #fff;
+    border: 2px solid white;
+    border-color: #fff;
+    transform: scale(1.03);
+  }
+
+   /* ===============================
+   BLOG PAGE IMPROVED UI
+================================*/
+.blog-header {
+  margin-top: 140px; 
+  text-align: center;
+  padding: 20px 20px 10px;
+}
+
+.blog-header h1 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #111827;
+}
+
+.blog-header p {
+  font-size: 1rem;
+  color: #6b7280;
+  margin-top: 6px;
+}
+
+/* Empty State Card */
+.blog-empty {
+  background: #ffffff;
+  margin: 20px auto;
+  max-width: 550px;
+  padding: 40px 30px;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  text-align: center;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.blog-empty h2 {
+  color: #1f2937;
+  font-size: 1.5rem;
+  margin-top: 12px;
+}
+
+.blog-empty p {
+  color: #6b7280;
+  font-size: 1rem;
+  margin-top: 8px;
+}
+
+.empty-img {
+  width: 120px;
+  opacity: 0.9;
+}
+
+/* Smooth fade animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Mobile Improvements */
+@media (max-width: 600px) {
+  .blog-empty {
+    width: 90%;
+    padding: 30px 20px;
+  }
+
+  .blog-header h1 {
+    font-size: 1.7rem;
+  }
+
+  .empty-img {
+    width: 90px;
+  }
+}
+
+
+    footer {
+      background-color: #1f2937;
+      color: #fff;
+      text-align: center;
+      padding: 12px 20px;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+ <nav id="navbar">
+    <div class="nav-container">
+      <div class="nav-left">
+        <a href="/" class="logo">
+          <img src="SPLIT (4)-Photoroom (1)-Photoroom.png" alt="Splitly" class="logo-img" />
+        </a>
+      </div>
+
+      <div id="nav-links" class="nav-links" aria-label="Main navigation">
+  <a href="/" class="nav-link">Home</a>
+  <a href="splitter.html" class="nav-link">Split</a>
+  <a href="group_dashboard.html" class="nav-link">Groups</a>
+  <a href="index.html#learn-more" class="nav-link">How It Works</a>
+  <a href="blogs.html" class="nav-link">Blog</a>   <!-- new -->
+  <a href="index.html#contact" class="nav-link">Contact</a>
+</div>
+
+
+      <div class="nav-right" id="nav-auth">
+        <a href="signup-login.html?tab=login" class="auth-btn login">Login</a>
+        <a href="signup-login.html?tab=signup" class="auth-btn signup">Signup</a>
+      </div>
+
+      <button id="nav-toggle" class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span class="bar bar1"></span>
+        <span class="bar bar2"></span>
+        <span class="bar bar3"></span>
+      </button>
+    </div>
+  </nav>
+
+<main>
+  <section class="blog-header">
+    <h1>Splitly Blog</h1>
+    <p>Your go-to hub for money-saving tips, smarter splitting, and group expense hacks.</p>
+  </section>
+
+  <section class="blog-empty">
+    <img src="https://cdn-icons-png.flaticon.com/512/4076/4076549.png" alt="No Content" class="empty-img">
+    <h2>No Articles Yet</h2>
+    <p>We're working on helpful guides and tips. Stay tuned!</p>
+  </section>
+</main>
+
+
+  <footer>
+    &copy; 2025 Splitly. All rights reserved.
+  </footer>
+
+  <script>
+    
+  (function () {
+  const toggle = document.getElementById("nav-toggle");
+  const links = document.getElementById("nav-links");
+  const auth = document.getElementById("nav-auth");
+  const navContainer = document.querySelector(".nav-container");
+  const authButtons = auth ? auth.innerHTML : "";
+
+  if (!toggle || !links) return;
+
+  function openMenu() {
+    toggle.classList.add("open");
+    links.classList.add("mobile-open");
+    navContainer.classList.add("mobile-open");
+    toggle.setAttribute("aria-expanded", "true");
+
+    if (authButtons && !links.querySelector(".auth-btn")) {
+      links.insertAdjacentHTML("beforeend", authButtons);
+    }
+
+    const menuItems = links.querySelectorAll(".nav-link, .auth-btn");
+    menuItems.forEach((item, i) => {
+      const delay = `${i * 80}ms`;
+      item.setAttribute("data-delay", delay);
+      item.style.setProperty("--delay", delay);
+    });
+  }
+
+  function closeMenu() {
+    toggle.classList.remove("open");
+    links.classList.remove("mobile-open");
+    navContainer.classList.remove("mobile-open");
+    toggle.setAttribute("aria-expanded", "false");
+
+    links.querySelectorAll(".auth-btn").forEach(btn => btn.remove());
+  }
+
+  toggle.addEventListener("click", (e) => {
+    const expanded = toggle.classList.contains("open");
+    expanded ? closeMenu() : openMenu();
+    e.stopPropagation();
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!navContainer.contains(e.target)) closeMenu();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeMenu();
+  });
+
+  document.querySelectorAll(".nav-link").forEach((a) => {
+    a.addEventListener("click", () => {
+      if (window.innerWidth <= 880) closeMenu();
+    });
+  });
+
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 880) closeMenu();
+  });
+
+})();
+
+// MARK ACTIVE NAV TAB AUTOMATICALLY
+(function () {
+  const path = window.location.pathname.split("/").pop() || "index.html";
+
+  document.querySelectorAll(".nav-link").forEach(a => {
+    const href = a.getAttribute("href");
+
+    if (href === path) {
+      a.classList.add("active");
+    }
+
+    // also support hash navigation
+    if (href.includes("#")) {
+      if (window.location.href.includes(href)) {
+        a.classList.add("active");
+      }
+    }
+  });
+})();
+
+  </script>
+
+</body>
+</html>
