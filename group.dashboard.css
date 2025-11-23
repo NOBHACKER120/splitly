@@ -484,60 +484,186 @@ background-color: #027aca !important; /* No change on hover */
 
 
   /* Group Card Styles */
-  .group-card {
-    background: #fff;
-    border: 1px solid #ddd;
+.group-card {
+    background: #ffffff;
     padding: 20px;
-    margin: 30px 0 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    position: relative;
-  }
-  .group-card h3 {
-    margin: 0 0 10px;
-    color: #027aca;
-    font-size: 24px;
-    display: inline-block;
-  }
-  .group-card p {
-    margin: 8px 0;
-    font-size: 16px;
-  }
-  .member-list {
+    margin: 20px 0;
+    border-radius: 14px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+    border: 1px solid #f0f0f0;
+}
+
+.group-card h3 {
+    margin-bottom: 6px;
+    font-size: 20px;
+    font-weight: 700;
+    color: #222;
+}
+
+.group-card p {
+    margin: 4px 0;
+    font-size: 14.5px;
+    color: #444;
+}
+
+
+.group-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+.member-list {
     list-style: none;
-    padding: 0;
-    margin: 10px 0;
-  }
-  .member-list li {
-    padding: 6px 10px;
-    margin-bottom: 5px;
-    background: #f1f8ff;
-    border-left: 4px solid #027aca;
-    font-size: 16px;
+    padding-left: 0;
+    padding-top: 8px;
+}
+
+.member-list li {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-  }
-  .member-list li span.amount {
+    padding: 8px 12px;
+    background: #fafafa;
+    margin-bottom: 6px;
+    border-radius: 8px;
+    border: 1px solid #eee;
+}
+.balance {
+    background: #f4faff;
+    padding: 10px 12px;
+    margin-top: 12px;
+    border-radius: 8px;
+    border: 1px solid #d9ecff;
+}
+
+
+.amount {
+    font-weight: 600;
     color: green;
-    font-weight: bold;
-    margin-left: 15px;
-  }
-  .expense-item {
-    background: #e8f5ff;
-    padding: 10px;
-    margin-bottom: 10px;
+}
+
+/* ------------------------
+   EXPENSE LIST DESIGN
+------------------------- */
+/* /* ===========================
+   FINAL BEAUTIFUL EXPENSE CARD
+=========================== */
+
+.expense-item {
+    background: #ffffff;
+    padding: 16px 18px;
+    margin: 12px 0;
+    border-radius: 14px;
+    border: 1px solid #e6e6e6;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+
+
+/* Thumbnail */
+.expense-thumb {
+    width: 60px;
+    height: 45px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid #ddd;
+}
+
+/* Title: Category + Amount */
+.exp-title {
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: #222;
+}
+
+/* Description text */
+/* -------------------------
+   FIXED: Paid By + Desc UI
+-------------------------- */
+
+/* Better description */
+.exp-desc {
+    font-size: 14px;
+    color: #555;
+    margin-top: 4px;
+    line-height: 1.4;
+}
+
+/* Ensure perfect alignment */
+.expense-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+
+
+
+
+/* Paid by section */
+.paid-by {
+    font-size: 13.8px;
+    color: #555;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Small icon for 'paid by' */
+.paid-by i {
+    font-size: 14px;
+    color: #777;
+}
+
+/* Make footer spacing balanced */
+.expense-footer {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #f1f1f1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    align-items: center;
+}
+
+
+/* Payment method tag */
+.payment-tag {
+    background: #eff6ff;
+    color: #1e40af;
+    padding: 3px 8px;
     border-radius: 6px;
-    font-size: 15px;
-  }
-  .expense-item p {
-    margin: 4px 0;
-  }
-  .balance {
-    font-weight: bold;
-    margin: 15px 0;
-    font-size: 18px;
-  }
+    border: 1px solid #dbeafe;
+    font-size: 12px;
+}
+
+/* Time tag */
+.time-tag {
+    background: #fff7e6;
+    color: #7a5b22;
+    padding: 3px 8px;
+    border-radius: 6px;
+    border: 1px solid #ffe5b3;
+    font-size: 12px;
+}
+ */
+
+.expense-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+
+.expense-splitter {
+    margin-top: 16px;
+    padding: 12px;
+    background: #f1f5f9;
+    border-radius: 10px;
+}
+
+
   /* Expense Form Styles */
   .expense-form {
     margin-top: 15px;
@@ -557,6 +683,8 @@ background-color: #027aca !important; /* No change on hover */
     box-sizing: border-box;
     font-size: 16px;
   }
+
+  
   .expense-form input.error,
   .expense-form select.error {
     border: 2px solid red;
@@ -665,7 +793,7 @@ margin: 20px 0;
     background: #f2f2f2;
     border-radius: 8px;
     text-align: center;
-     margin-bottom:24px;
+    margin-bottom: 24px;
   }
   .back-container button {
     padding: 12px 25px;
@@ -703,7 +831,7 @@ margin: 20px 0;
     box-sizing: border-box;
     font-size: 16px;
   }
-#tip-wrapper {
+.tip-wrapper {
     display: flex;
     align-items: flex-start;
     gap: 8px;
@@ -714,9 +842,34 @@ margin: 20px 0;
     font-size: 15px;
     margin-bottom: 15px;
     color: #333;
-    margin-top: 24px;
+    margin-top:24px;
 }
 
+/* ------------------------
+   BUTTON STYLING
+------------------------- */
+button,
+.add-expense-btn {
+    background: #ff7b00;
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+button:hover,
+.add-expense-btn:hover {
+    opacity: 0.85;
+    transform: scale(1.03);
+}
+
+button.cancel {
+    background: #e8e8e8;
+    color: #333;
+}
 
 
 .tip-icon {
@@ -1007,4 +1160,86 @@ font-size: 15px;
     color: #111215;
 }
 
+.include-members-section {
+  background: #f4f7ff;
+  padding: 12px;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.include-members-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.member-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #fff;
+  border: 1px solid #d6dfff;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.member-toggle:hover {
+  border-color: #027aca;
+}
+
+.member-toggle input {
+  transform: scale(1.1);
+}
+/* ===============================
+   TOP SECTION : GROUP NAME, TYPE,
+   MEMBERS, CURRENCY
+=============================== */
+
+/* Group title */
+.group-card h3 {
+    font-size: 22px;
+    font-weight: 800;
+    color: #1f1f1f;
+    margin-bottom: 8px;
+    letter-spacing: -0.3px;
+}
+
+/* Sub-labels like Type, Currency, Members */
+.group-card p strong {
+    color: #444;
+    font-weight: 600;
+}
+
+/* Improve small labels */
+.group-card p {
+    margin: 3px 0;
+    font-size: 14.2px;
+    color: #555;
+}
+
+/* Currency line highlight */
+.group-card p:nth-of-type(3),
+.group-card p:nth-of-type(4) {
+    background: #f5f8ff;
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid #e4ebff;
+    width: fit-content;
+    margin: 6px 0;
+}
+
+/* Members count row */
+.group-card p:nth-of-type(5) {
+    background: #fff7ec;
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid #ffe1b3;
+    width: fit-content;
+    margin: 6px 0;
+    font-weight: 500;
+    color: #55462e;
+}
 
