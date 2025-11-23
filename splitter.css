@@ -357,17 +357,7 @@ font-weight: bold;
 color: white;
 transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
 }
-/* Different Backgrounds for Each Section */
-/* #expenseSplitter {
-background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
-}
-#randomSplitter {
-background: linear-gradient(135deg, #ff7e5f, #feb47b);
-}
-#groupSplitter {
-background: linear-gradient(135deg, #6a11cb, #2575fc);
-} */
-/* Hide Sections Initially */
+
 .hidden {
 opacity: 0;
 transform: translateY(20px);
@@ -379,6 +369,45 @@ opacity: 1;
 transform: translateY(0);
 pointer-events: auto;
 }
+
+
+.currency-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.05);
+    padding: 6px 10px;
+    border-radius: 8px;
+    width: fit-content;
+    margin: 10px auto 20px auto;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+.cur-icon {
+    font-size: 16px;
+}
+
+#currencySelect {
+    background: transparent;
+    border: none;
+    color: #333;
+    font-size: 15px;
+    outline: none;
+    cursor: pointer;
+      max-height: 120px;
+    overflow-y: scroll;
+}
+
+#currencySelect option {
+    color: #000;
+}
+
+.currency-select {
+    max-height: 160px;
+    overflow-y: auto;
+}
+
+
 
 
 
@@ -417,6 +446,192 @@ pointer-events: auto;
 
 .tip-line a:hover {
     text-decoration: underline;
+}
+
+/* ---------- Modern Input With Icons ---------- */
+.input-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+/* --- Fix input overflow in person-entry --- */
+.person-entry {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+
+.person-entry .input-with-icon input {
+    width: 100%;
+    box-sizing: border-box; /* IMPORTANT */
+}
+
+/* container spacing fix */
+#peopleContainer {
+    width: 100%;
+}
+
+
+/* --- Input with left icon and subtle gray background (compact) --- */
+.input-with-icon {
+    display: flex;
+    align-items: center;
+    background: #f1f3f6;
+    padding: 1px 3px;                   /* reduced padding */
+    border-radius: 8px;
+    border: 1px solid #e2e4e7;
+    width: 100%;
+    box-sizing: border-box;
+    gap: 6px;                           /* ensures spacing without crowding */
+}
+
+.input-with-icon .icon,
+.input-with-icon .currency-symbol {
+    min-width: 28px;                    /* smaller icon width */
+    max-width: 28px;
+    height: 28px;                       /* smaller height */
+    background: #e6e9ee;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;                     /* prevents icon growing */
+    font-size: 14px;                    /* slightly smaller */
+}
+
+.input-with-icon input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-size: 15px;
+    padding: 4px 0px;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.input-with-icon input::placeholder {
+    color: #6e7685;
+    opacity: 1;
+}
+
+
+
+
+/* ---------- Currency selector with flags ---------- */
+.currency-box {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  background: rgba(255,255,255,0.05);
+  padding: 6px 10px;
+  border-radius: 8px;
+  margin: 10px auto 20px;
+  width: fit-content;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+
+.currency-box img {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+}
+
+/* --- Fix: Currency selector scrollable half-height + flags visible --- */
+/* --- Currency Select Scrollable + Half Height --- */
+#currencySelect {
+    width: 160px;
+    max-height: 120px;      /* half height */
+    overflow-y: auto;       /* scroll enabled */
+    padding: 6px 10px;
+    border-radius: 8px;
+    background: #fff;
+    border: 1px solid #ccc;
+}
+
+/* fix flag spacing */
+#currencySelect option {
+    padding: 8px;
+    font-size: 15px;
+}
+
+
+/* Show flag icons properly */
+.currency-flag {
+    width: 20px;
+    height: 20px;
+    margin-right: 6px;
+    vertical-align: middle;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+/* --- Fix: Add Person button hidden until Next is pressed --- */
+.add-person-btn {
+    display: none;
+    width: 100%;
+    padding: 12px 0px;
+    margin: 14px 0;
+    background: #0b6ef6;
+    color: #fff;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+.add-person-btn.visible {
+    display: block;
+}
+
+
+
+
+/* --- Fix: Clean results design + remove “A even/B even” look --- */
+.results-container {
+    margin-top: 18px;
+    padding: 14px;
+    background: #f8fbff;
+    border-radius: 10px;
+    border: 1px solid #e2ecff;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.result-total {
+    font-size: 18px;
+    font-weight: 700;
+    color: #0b3db8;
+    margin-bottom: 4px;
+}
+
+.result-item {
+    background: #eef7ff;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    color: #083e8c;
+}
+
+.settlement-list {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.settlement-item {
+    background: #fff;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-weight: 600;
+    color: #333;
 }
 
 
@@ -1192,7 +1407,7 @@ font-size: 15px;
     background: #94a3b8;
 }
 
-
+/* FIX: user-guide close button reset */
 #ug-close, #guide-close-btn {
     all: unset !important;
     font-size: 32px !important;
@@ -1206,13 +1421,14 @@ font-size: 15px;
     box-shadow: none !important;
 }
 
-
+/* Remove built-in header inside loaded guide */
 #user-guide-wrapper header,
 #user-guide-wrapper .logo,
 #user-guide-wrapper .nav {
     display: none !important;
 }
 
+/* Force left alignment for guide content */
 #user-guide-wrapper,
 #user-guide-wrapper * {
     text-align: left !important;
@@ -1223,3 +1439,39 @@ font-size: 15px;
     font-weight: 600;
     color: #111215;
 }
+
+.results-container:empty {
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+}
+#randomResults:empty {
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+}
+.calc-section {
+    display: none;
+}
+
+label[for="splitMode"] {
+    display: none !important;
+}
+
+/* Style for the random splitter input container */
+#randomInputs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* space between input rows */
+  max-width: 400px; /* limit width of the input container (you can adjust) */
+  margin: 0 auto; /* center align if needed */
+}
+
+/* Style for each input inside randomInputs */
+#randomInputs .person-entry input {
+  width: 100%; /* input takes full width of its parent .person-entry */
+  box-sizing: border-box; /* include padding/border in width */
+  padding: 8px; /* adjust padding as needed */
+  min-width: 0; /* allows the input to shrink if needed in flex or grid layout */  
+}
+
