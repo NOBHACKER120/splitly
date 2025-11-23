@@ -92,6 +92,7 @@
 
 
 
+
     <div id="expenseSplitter" class="container">
       
       <div class="tip-wrapper">
@@ -103,43 +104,86 @@
 </div>
 
         <h2>Bill Splitter</h2>
+       <div class="currency-box">
+    <span id="flagIcon" class="currency-flag">🇮🇳</span>
+
+    <select id="currencySelect" class="currency-select" onchange="updateCurrency()">
+        <option value="INR" data-flag="🇮🇳">INR — ₹</option>
+        <option value="USD" data-flag="🇺🇸">USD — $</option>
+        <option value="EUR" data-flag="🇪🇺">EUR — €</option>
+        <option value="GBP" data-flag="🇬🇧">GBP — £</option>
+        <option value="AED" data-flag="🇦🇪">AED — د.إ</option>
+        <option value="AUD" data-flag="🇦🇺">AUD — A$</option>
+        <option value="CAD" data-flag="🇨🇦">CAD — C$</option>
+        <option value="JPY" data-flag="🇯🇵">JPY — ¥</option>
+        <option value="CNY" data-flag="🇨🇳">CNY — ¥</option>
+        <option value="SGD" data-flag="🇸🇬">SGD — S$</option>
+        <option value="CHF" data-flag="🇨🇭">CHF — CHF</option>
+        <option value="ZAR" data-flag="🇿🇦">ZAR — R</option>
+        <option value="BRL" data-flag="🇧🇷">BRL — R$</option>
+        <option value="MXN" data-flag="🇲🇽">MXN — $</option>
+    </select>
+</div>
+
+
+
         <label>Number of People:</label>
         <input type="number" id="numPeople" min="2" value="2">
         <button onclick="createInputs()">Next</button>
-        <div id="inputs"></div>
+<div id="peopleContainer"></div>
+        <div class="add-person-btn" onclick="addPerson()">+ Add Person</div>
+
         <button id="calculateButton" onclick="calculateSplit()" style="display: none;">Calculate</button>
-        <h3>Total Expense Per Person:</h3>
-        <div id="totalExpense"></div>
-        <h3>Results</h3>
-        <div id="results" class="results-container"></div>
+        <div class="calc-section" style="display:none;">
+    <h3>Total Expense Per Person:</h3>
+    <div id="totalExpense"></div>
+
+    <h3>Results</h3>
+    <div id="results" class="results-container"></div>
+</div>
+
     </div>
     <!-- New Random Splitter Section -->
-    <div id="randomSplitter" class="container">
-         <div class="tip-wrapper">
-    <span class="tip-icon">💡 <strong>Tip:</strong></span>
-    <p class="tip-line">
-        For smooth use, take a minute to read the  
-        <a href="#user-guide" class="tip-link">User Guide</a>.
-    </p>
-</div>
+ <div id="randomSplitter" class="container">
+
+    <!-- SECTION: Visible before Next -->
+    <div id="randomInputSection">
+
+        <div class="tip-wrapper">
+            <span class="tip-icon">💡 <strong>Tip:</strong></span>
+            <p class="tip-line">
+                For smooth use, take a minute to read the  
+                <a href="#user-guide" class="tip-link">User Guide</a>.
+            </p>
+        </div>
+
         <h2>Random Splitter</h2>
+
         <div class="input-group">
-            <span>₹</span>
+            <span class="currency-symbol">₹</span>
             <input type="number" id="totalAmount" min="1" placeholder="Enter Total Amount">
         </div>
+
         <div class="input-group">
             <span>👥</span>
             <input type="number" id="numPeopleRandom" min="2" placeholder="Number of People">
         </div>
-        <button onclick="createRandomInputs()">Next</button>
+
+        <button id="nextRandomBtn" onclick="createRandomInputs()">Next</button>
+
         <div id="randomInputs"></div>
-        <label>Choose Split Mode:</label>
+        
+        <div class="add-person-btn" onclick="addRandomPerson()">+ Add Person</div>
+
+<label for="splitMode">Choose Split Mode:</label>
         <select id="splitMode" onchange="validateSplitSelection(); togglePercentageOptions();" style="display: none;">
             <option value="random">Completely Random</option>
             <option value="weighted">Weighted (High/Low Payers)</option>
             <option value="percent">Percentage Based</option>
         </select>
+
         <p id="splitModeError" style="color: red; display: none;">Enter amount & people first.</p>
+
         <!-- Weighted Split Section -->
         <div id="weightedOptions" style="display: none;">
             <label style="font-size: 16px; font-weight: bold;">Choose Weighting for High & Low Payers:</label>
@@ -157,38 +201,47 @@
                 <label>Who should pay less?</label>
                 <select id="lowPayers">
                     <option value="1">1 Person Pays Less</option>
-                    <option value="2">2 People Pay Less</option>
+                    <option value="2">2 People Pays Less</option>
                 </select>
             </div>
         </div>
+
+        <!-- Custom Split -->
         <div id="customOptions" style="display: none;">
             <label>Assign Amounts Manually:</label>
             <div id="customSplitInputs"></div>
         </div>
+
+        <!-- Percentage Split -->
         <div id="percentOptions" style="display: none;">
             <label style="font-size: 16px; font-weight: bold;">Select Fairness Range:</label>
             <p style="font-size: 14px; color: gray;">
-                (This mode lets you set how much more the highest share can be compared to the lowest share.
-                For example, choosing 20-40 means the highest amount will be between 20% and 40% more than the lowest,
-                ensuring the payments are nearly equal.)
+                (This mode lets you set how much more the highest share can be compared to the lowest share.)
             </p>
             <select id="fixedPercent">
                 <option value="20-40">20-40%</option>
                 <option value="40-60">40-60%</option>
                 <option value="60-90">60-90%</option>
-                <!-- <option value="custom">Custom %</option> -->
             </select>
             <input type="text" id="customPercent" placeholder="Enter % range (e.g., 20-40)" style="display: none;">
         </div>
+
         <button id="randomCalculateButton" onclick="calculateRandomSplit()" style="display: none;">Split Now</button>
+    </div>
+
+    <!-- SECTION: Only visible after Calculate -->
+    <div id="randomResultsSection" style="display: none;">
         <h3>Results</h3>
         <div id="randomResults" class="results-container"></div>
     </div>
+</div>
+
+    <!-- New Create Group Section -->
      
 <div id="createGroup" class="container" style="display: none;">
      
     <button id="saveGroupButton" onclick="saveGroup()">Save Group</button>
-    
+    <!-- The group creation form will be injected here by createGroupInputs() -->
 </div>
     <footer class="footer">
         <div class="footer-item active" id="homeButton" onclick="showHome()">
@@ -223,7 +276,7 @@
 </div>
 
 
-
+<!-- No History Modal -->
 <div id="noHistoryModal" class="confirm-overlay">
   <div class="confirm-box">
     <div class="confirm-header">
@@ -238,18 +291,25 @@
 </div>
 
 
+
+
+<!-- ===============================================
+     USER GUIDE FULL SCREEN OVERLAY (NO CONFLICT)
+================================================== -->
 <div id="user-guide-wrapper">
 
-    
+    <!-- NAV BAR -->
     <nav id="ug-nav">
         <img src="/SPLIT (4)-Photoroom (1)-Photoroom.png" id="ug-logo" alt="Splitly Logo">
         <button id="ug-close">✕</button>
     </nav>
 
-  
+    <!-- CONTENT -->
     <div id="ug-content">
 
-       
+        <!-- =====================
+             HEADER (converted)
+        ====================== -->
         <header class="ug-header">
             <div class="ug-wrap ug-nav">
                 <div class="ug-logo">
@@ -276,7 +336,7 @@
 
             <div class="ug-grid">
 
-                
+                <!-- LEFT SIDE -->
                 <section>
 
                     <div class="ug-card">
@@ -353,7 +413,7 @@
 
                 </section>
 
-                
+                <!-- RIGHT SIDE -->
                 <aside>
                     <div class="ug-card">
                         <h3 class="ug-h3">Live example — see rounding & transactions</h3>
@@ -406,6 +466,9 @@
   
 </script>
 
+
+
+    <!-- FontAwesome for Icons -->
      <script src="splitter.js"></script>
 
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
@@ -417,4 +480,3 @@
     
 </body>
 </html>
-
