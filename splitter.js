@@ -64,7 +64,14 @@ async function syncHistoryToServer() {
 
 // syncBtn.style.display = auth.currentUser ? "inline-block" : "none";
 
-  
+  function unbiasedShuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
 
 // Global variable to store the last active section.
 let lastActiveSection = "expenseSplitter";
@@ -128,32 +135,44 @@ function roundToNearest5(value) {
 }
 
 function createInputs() {
-    let num = document.getElementById("numPeople").value;
-    let inputsDiv = document.getElementById("inputs");
-    inputsDiv.innerHTML = ""; // Clear previous inputs
+    const num = parseInt(document.getElementById("numPeople").value);
+    const container = document.getElementById("peopleContainer");
 
-    if (num < 1) {
-        alert("Please enter a valid number of people.");
-        return;
+    container.innerHTML = ""; // reset ONCE only when pressing Next
+
+    // 🔥 HIDE RESULTS when user presses Next
+    document.querySelectorAll('.calc-section').forEach(el => {
+        el.style.display = "none";
+    });
+    if (document.getElementById("totalExpense")) {
+        document.getElementById("totalExpense").innerHTML = "";
     }
+    document.getElementById("results").innerHTML = "";
 
     for (let i = 0; i < num; i++) {
-        let div = document.createElement("div");
-        div.classList.add("person-entry");
-        div.innerHTML = `
-            <input type="text" placeholder="Name" id="name${i}">
-            <input type="number" placeholder="Amount Paid" id="paid${i}" min="0">
+        const row = document.createElement("div");
+        row.className = "input-row";
+
+        row.innerHTML = `
+            <div class="input-with-icon">
+                <span class="icon" style="color:#0b6ef6;">👤</span>
+                <input type="text" id="name${i}" placeholder="Name">
+            </div>
+
+            <div class="input-with-icon">
+                <span class="icon currency-symbol">${currencySymbol}</span>
+                <input type="number" id="paid${i}" placeholder="Amount Paid">
+            </div>
         `;
-        inputsDiv.appendChild(div);
-      // expense splitter: after inputsDiv.appendChild(div) loop completes
 
-
+        container.appendChild(row);
     }
-    document.getElementById("calculateButton").style.display = "block";
-    // --- Expense: Enter-to-next ---
+
+// --- Expense: Enter-to-next ---
 const expenseInputs = Array.from(
-  document.querySelectorAll("#inputs input")
+  document.querySelectorAll("#peopleContainer input")
 );
+
 expenseInputs.forEach((input, idx) => {
   input.addEventListener("keydown", e => {
     if (e.key === "Enter") {
@@ -167,74 +186,270 @@ expenseInputs.forEach((input, idx) => {
   });
 });
 
-    // Scroll to the name inputs
-    inputsDiv.scrollIntoView({ behavior: "smooth", block: "start" });
+// Smooth scroll
+document.getElementById("peopleContainer")
+  .scrollIntoView({ behavior: "smooth", block: "start" });
+
+
+    document.getElementById("calculateButton").style.display = "block";
+    document.querySelector(".add-person-btn").classList.add("visible");
+    setupEnterNavigation();   // run again for new inputs
+
 }
+
+function addRandomPerson() {
+    // get the current number of inputs already created
+    let inputsDiv = document.getElementById("randomInputs");
+    let currentCount = inputsDiv.querySelectorAll("input").length;
+
+    // create the new input
+    let div = document.createElement("div");
+    div.classList.add("person-entry");
+    div.innerHTML = `<input type="text" placeholder="Name" id="randomName${currentCount}" oninput="checkNamesEntered()">`;
+
+    // add to container
+    inputsDiv.appendChild(div);
+
+    // update the count in the number input
+    document.getElementById("numPeopleRandom").value = currentCount + 1;
+
+    // re-check if all names filled so calculate button can appear
+    checkNamesEntered();
+}
+
+
+
+function addPerson() {
+    const container = document.getElementById("peopleContainer");
+
+    const i = container.querySelectorAll(".input-row").length;
+
+    const row = document.createElement("div");
+    row.className = "input-row";
+
+    row.innerHTML = `
+        <div class="input-with-icon">
+            <span class="icon" style="color:#0b6ef6;">👤</span>
+            <input type="text" id="name${i}" placeholder="Name">
+        </div>
+
+        <div class="input-with-icon">
+            <span class="icon currency-symbol">${currencySymbol}</span>
+            <input type="number" id="paid${i}" placeholder="Amount Paid">
+        </div>
+    `;
+
+    container.appendChild(row);
+
+    document.getElementById("numPeople").value = container.children.length;
+    setupEnterNavigation();   // run again for new inputs
+
+}
+
+function setupEnterNavigation() {
+    const expenseInputs = Array.from(
+        document.querySelectorAll("#peopleContainer input, #startInputs input")
+    );
+
+    expenseInputs.forEach((input, idx) => {
+        input.onkeydown = (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                if (idx < expenseInputs.length - 1) {
+                    expenseInputs[idx + 1].focus();
+                } else {
+                    calculateSplit();
+                }
+            }
+        };
+    });
+}
+
+
+
 
 
 
 function calculateSplit() {
-    let num = document.getElementById("numPeople").value;
+    // read people rows from peopleContainer (safer than relying only on numPeople)
+    const container = document.getElementById("peopleContainer") || document.getElementById("inputs");
+    if (!container) return;
+
+    const rows = Array.from(container.querySelectorAll(".input-row"));
+    const num = rows.length;
+    if (num === 0) {
+document.querySelectorAll('.calc-section').forEach(el => {
+    el.style.display = "block";
+});
+
+        document.getElementById("results").innerHTML = "";
+        if (document.getElementById("totalExpense")) document.getElementById("totalExpense").textContent = "";
+        return;
+    }
+
+    // read names & paid
     let people = [];
     let totalPaid = 0;
-    let validInput = true;
+    let hasError = false;
 
-    for (let i = 0; i < num; i++) {
-        let nameField = document.getElementById(`name${i}`);
-        let paidField = document.getElementById(`paid${i}`);
-        let name = nameField.value.trim();
-        let paid = parseFloat(paidField.value) || 0;
+    rows.forEach((row, i) => {
+        const nameEl = row.querySelector(`input[type="text"]`) || document.getElementById(`name${i}`);
+        const paidEl = row.querySelector(`input[type="number"]`) || document.getElementById(`paid${i}`);
+        const name = nameEl ? (nameEl.value || `Person ${i+1}`) : `Person ${i+1}`;
+        const paid = paidEl ? parseFloat(paidEl.value || 0) : 0;
 
-        nameField.classList.remove("input-error");
-        paidField.classList.remove("input-error");
+        if (nameEl) nameEl.classList.remove("input-error");
+        if (paidEl) paidEl.classList.remove("input-error");
 
-        if (name === "") {
-            nameField.classList.add("input-error");
-            validInput = false;
+        if (!name || name.trim() === "") {
+            if (nameEl) nameEl.classList.add("input-error");
+            hasError = true;
         }
-        if (paidField.value === "") {
-            paidField.classList.add("input-error");
-            validInput = false;
+        if (!paidEl || paidEl.value === "") {
+            if (paidEl) paidEl.classList.add("input-error");
+            hasError = true;
         }
-        if (validInput) {
-            people.push({ name, paid });
-            totalPaid += paid;
+
+        people.push({
+            name: name.trim(),
+            paid: Number(paid)
+        });
+        totalPaid += Number(paid);
+    });
+
+    if (hasError) {
+        // abort and keep highlight
+        return;
+    }
+
+    // compute per-user exact and approx (rounded to nearest 5)
+    const perExact = totalPaid / num;
+    const perApprox = roundToNearest5(perExact);
+
+    // clear previous results cleanly
+    const resultsDiv = document.getElementById("results");
+    resultsDiv.innerHTML = "";
+
+    // show total into #totalExpense: both exact and approx
+    const totalEl = document.getElementById("totalExpense");
+    if (totalEl) {
+        totalEl.innerHTML = `
+            <div style="font-weight:700; margin-bottom:6px;">
+                Per person (exact): ${currencySymbol}${perExact.toFixed(2)}
+            </div>
+            <div style="color:#0b3db8; font-weight:600;">
+                Approx (cash-friendly): ${currencySymbol}${perApprox.toFixed(2)}
+            </div>
+        `;
+    }
+
+    // compute balances (positive => should receive, negative => owes)
+    people.forEach(p => p.balance = +(p.paid - perExact).toFixed(2));
+
+    // Show who owes / should receive (omit "even")
+    people.forEach(p => {
+        if (Math.abs(p.balance) < 0.005) return; // treat as even, skip
+        const el = document.createElement("div");
+        el.className = "result-item";
+        if (p.balance > 0) {
+            el.textContent = `${p.name} should receive ${currencySymbol}${p.balance.toFixed(2)}`;
+            el.style.color = "#0a7f3f";
+        } else {
+            el.textContent = `${p.name} owes ${currencySymbol}${Math.abs(p.balance).toFixed(2)}`;
+            el.style.color = "#c62828";
+        }
+        resultsDiv.appendChild(el);
+    });
+
+    // Prepare lists for settlement
+    let creditors = people.filter(p => p.balance > 0).map(p => ({...p}));
+    let debtors = people.filter(p => p.balance < 0).map(p => ({...p, balance: Math.abs(p.balance)}));
+
+    // sort creditors descending (largest receive first), debtors descending (largest owe first)
+    creditors.sort((a,b) => b.balance - a.balance);
+    debtors.sort((a,b) => b.balance - a.balance);
+
+    // Preferred heuristic: try to assign each debtor to a single creditor if possible
+    const transactions = [];
+    const epsilon = 0.01;
+
+    // 1) Try single-creditor assignment for each debtor
+    for (let d = 0; d < debtors.length; d++) {
+        if (debtors[d].balance <= epsilon) continue;
+        // try to find a creditor who can fully accept this debtor's balance
+        let idx = creditors.findIndex(c => c.balance >= debtors[d].balance - epsilon);
+        if (idx !== -1) {
+            const amount = debtors[d].balance;
+            transactions.push({ from: debtors[d].name, to: creditors[idx].name, amount });
+            creditors[idx].balance = +(creditors[idx].balance - amount).toFixed(2);
+            debtors[d].balance = 0;
         }
     }
-    if (!validInput) return;
 
-    let perPerson = totalPaid / num;
-    let resultsDiv = document.getElementById("results");
-    resultsDiv.innerHTML = `<h3>Total Per Person: ₹${perPerson.toFixed(2)}</h3>`;
+    // Remove zeroed entries
+    creditors = creditors.filter(c => c.balance > epsilon);
+    debtors = debtors.filter(d => d.balance > epsilon);
 
-    let transactions = [];
-    people.forEach(p => p.balance = p.paid - perPerson);
-    people.sort((a, b) => a.balance - b.balance);
+    // 2) Fallback greedy: allow splitting a debtor across multiple creditors
+    let ci = 0;
+    for (let di = 0; di < debtors.length && ci < creditors.length; ) {
+        const debtor = debtors[di];
+        const creditor = creditors[ci];
+        const amount = Math.min(debtor.balance, creditor.balance);
 
-    let i = 0, j = people.length - 1;
-    while (i < j) {
-        let owe = -people[i].balance;
-        let receive = people[j].balance;
-        let amount = Math.min(owe, receive);
-        let transaction = `<b>${people[i].name}</b> pays ₹${amount.toFixed(2)} to <b>${people[j].name}</b>`;
-        transactions.push(transaction);
-        resultsDiv.innerHTML += `<div class='result-item'>${transaction}</div>`;
-        people[i].balance += amount;
-        people[j].balance -= amount;
-        if (people[i].balance === 0) i++;
-        if (people[j].balance === 0) j--;
+        transactions.push({ from: debtor.name, to: creditor.name, amount });
+
+        debtor.balance = +(debtor.balance - amount).toFixed(2);
+        creditor.balance = +(creditor.balance - amount).toFixed(2);
+
+        if (debtor.balance <= epsilon) di++;
+        if (creditor.balance <= epsilon) ci++;
     }
-    setTimeout(() => { resultsDiv.scrollIntoView({ behavior: "smooth" }); }, 200);
 
-    let history = JSON.parse(localStorage.getItem("splitHistory")) || [];
-    history.push({
+    // Render settlements
+    if (transactions.length === 0) {
+        const el = document.createElement("div");
+        el.className = "result-item";
+        el.style.background = "#fff7e6";
+        el.textContent = "No settlement needed — everyone paid equal shares.";
+        resultsDiv.appendChild(el);
+    } else {
+        const settleHeader = document.createElement("div");
+        settleHeader.className = "result-total";
+        settleHeader.textContent = "Settlements";
+        resultsDiv.appendChild(settleHeader);
+
+        transactions.forEach(tx => {
+            const txEl = document.createElement("div");
+            txEl.className = "result-item";
+            txEl.style.background = "#ffffff";
+            txEl.style.color = "#1f2937";
+            txEl.innerHTML = `${tx.from} → ${tx.to}: <strong>${currencySymbol}${Number(tx.amount).toFixed(2)}</strong>`;
+            resultsDiv.appendChild(txEl);
+        });
+    }
+
+     document.querySelectorAll('.calc-section').forEach(el => { el.style.display = 'block'; });
+    const calcSectionEl = document.querySelector('.calc-section');
+    if (calcSectionEl) calcSectionEl.style.display = 'block';
+
+    // add to local history
+    const hist = JSON.parse(localStorage.getItem("splitHistory") || "[]");
+    hist.push({
         id: Date.now(),
         date: new Date().toLocaleString(),
-        perPerson: perPerson.toFixed(2),
-        transactions
+        type: "expense",
+        total: totalPaid,
+        perExact: perExact,
+        perApprox: perApprox,
+        transactions: transactions.map(t => `${t.from} pays ${currencySymbol}${t.amount.toFixed(2)} to ${t.to}`)
     });
-    localStorage.setItem("splitHistory", JSON.stringify(history));
+    localStorage.setItem("splitHistory", JSON.stringify(hist));
+
+    // scroll results into view
+    setTimeout(()=> resultsDiv.scrollIntoView({behavior:"smooth", block:"start"}), 120);
 }
+
 
 function calculateCustomSplit() {
     let num = parseInt(document.getElementById("numPeopleRandom").value);
@@ -513,6 +728,7 @@ function updateLowPayersOptions() {
     }
 }
 
+/* === REPLACE createRandomInputs === */
 function createRandomInputs() {
     let numInput = document.getElementById("numPeopleRandom");
     let amountInput = document.getElementById("totalAmount");
@@ -539,63 +755,100 @@ function createRandomInputs() {
     for (let i = 0; i < num; i++) {
         let div = document.createElement("div");
         div.classList.add("person-entry");
+        // make sure each input notifies oninput -> checkNamesEntered()
         div.innerHTML = `<input type="text" placeholder="Name" id="randomName${i}" oninput="checkNamesEntered()">`;
         inputsDiv.appendChild(div);
     }
+
+    // show split-mode selector, hide results section and reset button text
     document.getElementById("splitMode").style.display = "block";
-    document.getElementById("randomCalculateButton").style.display = "none";
+    const randBtn = document.getElementById("randomCalculateButton");
+    if (randBtn) {
+        randBtn.style.display = "none";       // visible only after names are filled
+        randBtn.textContent = "Split Now";    // reset text (fix for 'Split Again' showing prematurely)
+    }
+    // hide previous results area until calculate is pressed
+    const resultsSection = document.getElementById("randomResultsSection");
+    if (resultsSection) resultsSection.style.display = "none";
+
     populateWeightedOptions();
     inputsDiv.scrollIntoView({ behavior: "smooth", block: "start" });
-    // --- Random: Enter-to-next ---
-const randomInputs = Array.from(
-  document.querySelectorAll("#randomInputs input")
-);
-const randomBtn = document.getElementById("randomCalculateButton");
-randomInputs.forEach((input, idx) => {
-  input.addEventListener("keydown", e => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      if (idx < randomInputs.length - 1) {
-        randomInputs[idx + 1].focus();
-      } else if (randomBtn.style.display !== "none") {
-        calculateRandomSplit();
-      }
-    }
-  });
-});
 
+    // --- Random: Enter-to-next (re-bind after creating inputs) ---
+    const randomInputs = Array.from(document.querySelectorAll("#randomInputs input"));
+    randomInputs.forEach((input, idx) => {
+      input.addEventListener("keydown", e => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          if (idx < randomInputs.length - 1) {
+            randomInputs[idx + 1].focus();
+          } else {
+            // call calculate only if button is visible (i.e., all names filled)
+            const randomBtn = document.getElementById("randomCalculateButton");
+            if (randomBtn && randomBtn.style.display !== "none") calculateRandomSplit();
+          }
+        }
+      });
+    });
 }
 
+/* === REPLACE checkNamesEntered === */
 function checkNamesEntered() {
-    let num = document.getElementById("numPeopleRandom").value;
+    const num = parseInt(document.getElementById("numPeopleRandom").value) || 0;
     let allFilled = true;
     for (let i = 0; i < num; i++) {
-        let name = document.getElementById(`randomName${i}`).value.trim();
-        if (name === "") { allFilled = false; break; }
+        const el = document.getElementById(`randomName${i}`);
+        if (!el || el.value.trim() === "") { allFilled = false; break; }
     }
-    document.getElementById("randomCalculateButton").style.display = allFilled ? "block" : "none";
+    const btn = document.getElementById("randomCalculateButton");
+    if (!btn) return;
+    if (allFilled) {
+        btn.style.display = "block";
+        btn.textContent = "Split Now"; // ensure correct label when names filled
+    } else {
+        btn.style.display = "none";
+    }
 }
 
-// Main function for random split.
+/* === REPLACE calculateRandomSplit === */
 function calculateRandomSplit() {
     let num = parseInt(document.getElementById("numPeopleRandom").value);
     let totalAmount = parseFloat(document.getElementById("totalAmount").value);
-    let splitMode = document.getElementById("splitMode").value;
+    // fallback if splitMode selector hidden/unset
+    const splitModeEl = document.getElementById("splitMode");
+    let splitMode = splitModeEl && splitModeEl.value ? splitModeEl.value : "random";
     
     if (isNaN(num) || num < 2 || isNaN(totalAmount) || totalAmount <= 0) {
         return;
     }
-    document.getElementById("randomResults").innerHTML = "";
-    document.getElementById("randomCalculateButton").textContent = "Split Now";
+    const resultsDiv = document.getElementById("randomResults");
+    resultsDiv.innerHTML = "";
+    const randBtn = document.getElementById("randomCalculateButton");
+    if (randBtn) randBtn.textContent = "Split Now";
+
     totalAmount = roundToNearest5(totalAmount);
     
     let people = [];
     for (let i = 0; i < num; i++) {
-        let name = document.getElementById(`randomName${i}`).value.trim();
+        let nameEl = document.getElementById(`randomName${i}`);
+        let name = nameEl ? nameEl.value.trim() : (`Person ${i+1}`);
         if (name === "") return;
         people.push({ name });
     }
-    
+
+    // helper to render assignedAmounts using current currencySymbol
+    function renderAssigned(assignedAmounts) {
+        resultsDiv.innerHTML = `<h3>Total Amount: ${currencySymbol}${totalAmount.toFixed(2)}</h3>`;
+        people.forEach((person, index) => {
+            resultsDiv.innerHTML += `<div class='result-item'><b>${person.name}</b> pays ${currencySymbol}${Number(assignedAmounts[index]).toFixed(2)}</div>`;
+        });
+        // show results section (unhide)
+        const resultsSection = document.getElementById("randomResultsSection");
+        if (resultsSection) resultsSection.style.display = "block";
+        // scroll into view
+        resultsDiv.scrollIntoView({ behavior: "smooth" });
+    }
+
     // ---- Percentage Based Split ----
     if (splitMode === "percent") {
         let percentValue = document.getElementById("fixedPercent").value;
@@ -613,7 +866,6 @@ function calculateRandomSplit() {
             lowerBound = parseFloat(parts[0]);
             upperBound = parseFloat(parts[1]);
         }
-        // Random multiplier between (1 + lowerBound/100) and (1 + upperBound/100)
         let r = Math.random() * ((1 + upperBound/100) - (1 + lowerBound/100)) + (1 + lowerBound/100);
         let n = num;
         let m = totalAmount / ( n * (1 + (r - 1) / 2) );
@@ -622,14 +874,11 @@ function calculateRandomSplit() {
             let amount = m + (m * (r - 1)) * (i / (n - 1));
             assignedAmounts.push(amount);
         }
-        // Optional: shuffle amounts for randomness
         for (let i = assignedAmounts.length - 1; i > 0; i--) {
             let j = Math.floor(Math.random() * (i + 1));
             [assignedAmounts[i], assignedAmounts[j]] = [assignedAmounts[j], assignedAmounts[i]];
         }
-        // Round each amount to the nearest 5 rupees
         assignedAmounts = assignedAmounts.map(a => roundToNearest5(a));
-        // Adjust discrepancy in increments of 5
         let sumAssigned = assignedAmounts.reduce((sum, val) => sum + val, 0);
         let diff = totalAmount - sumAssigned;
         while (Math.abs(diff) >= 5) {
@@ -643,18 +892,14 @@ function calculateRandomSplit() {
                 }
             }
         }
-        let resultsDiv = document.getElementById("randomResults");
-        resultsDiv.innerHTML = `<h3>Total Amount: ₹${totalAmount.toFixed(2)}</h3>`;
-        people.forEach((person, index) => {
-            resultsDiv.innerHTML += `<div class='result-item'><b>${person.name}</b> pays ₹${assignedAmounts[index]}</div>`;
-        });
-        // Save history and change button text
+        assignedAmounts = unbiasedShuffle(assignedAmounts);
+
+        renderAssigned(assignedAmounts);
         saveRandomSplitHistory(people, assignedAmounts);
-        document.getElementById("randomCalculateButton").textContent = "Split Again";
-        resultsDiv.scrollIntoView({ behavior: "smooth" });
+        if (randBtn) randBtn.textContent = "Split Again";
         return;
     }
-    
+
     // ---- Completely Random Split ----
     if (splitMode === "random") {
         let assignedAmounts = new Array(num).fill(0);
@@ -677,40 +922,29 @@ function calculateRandomSplit() {
                 else if (diff < 0 && assignedAmounts[i] >= 5) { assignedAmounts[i] -= 5; diff += 5; }
             }
         }
-        let resultsDiv = document.getElementById("randomResults");
-        resultsDiv.innerHTML = `<h3>Total Amount: ₹${totalAmount.toFixed(2)}</h3>`;
-        people.forEach((person, index) => {
-            resultsDiv.innerHTML += `<div class='result-item'><b>${person.name}</b> pays ₹${assignedAmounts[index]}</div>`;
-        });
+        assignedAmounts = unbiasedShuffle(assignedAmounts);
+
+        renderAssigned(assignedAmounts);
         saveRandomSplitHistory(people, assignedAmounts);
-        document.getElementById("randomCalculateButton").textContent = "Split Again";
-        resultsDiv.scrollIntoView({ behavior: "smooth" });
+        if (randBtn) randBtn.textContent = "Split Again";
         return;
     }
-    
+
     // ---- Weighted Split ----
     if (splitMode === "weighted") {
         let highPayersCount = parseInt(document.getElementById("highPayers").value);
         let lowPayersCount = parseInt(document.getElementById("lowPayers").value);
-        let numNormal = num - (highPayersCount + lowPayersCount);
-        let indices = [...Array(num).keys()];
+        // create randomized groups
+        let indices = Array.from(Array(num).keys());
         indices.sort(() => Math.random() - 0.5);
         let group = new Array(num).fill("normal");
-        for (let i = 0; i < highPayersCount; i++) {
-            group[indices[i]] = "high";
-        }
-        for (let i = highPayersCount; i < highPayersCount + lowPayersCount; i++) {
-            group[indices[i]] = "low";
-        }
+        for (let i = 0; i < highPayersCount; i++) group[indices[i]] = "high";
+        for (let i = highPayersCount; i < highPayersCount + lowPayersCount; i++) group[indices[i]] = "low";
         let weights = [];
         for (let i = 0; i < num; i++) {
-            if (group[i] === "high") {
-                weights.push(1.8 + Math.random() * 0.4);
-            } else if (group[i] === "low") {
-                weights.push(0.4 + Math.random() * 0.2);
-            } else {
-                weights.push(0.8 + Math.random() * 0.4);
-            }
+            if (group[i] === "high") weights.push(1.8 + Math.random() * 0.4);
+            else if (group[i] === "low") weights.push(0.4 + Math.random() * 0.2);
+            else weights.push(0.8 + Math.random() * 0.4);
         }
         let totalWeight = weights.reduce((sum, w) => sum + w, 0);
         let assignedAmounts = [];
@@ -718,30 +952,28 @@ function calculateRandomSplit() {
             let share = (weights[i] / totalWeight) * totalAmount;
             assignedAmounts.push(roundToNearest5(share));
         }
-        let sumAssigned = assignedAmounts.reduce((sum, val) => sum + val, 0);
-        let diff = totalAmount - sumAssigned;
-        while (diff !== 0) {
-            for (let i = 0; i < num && diff !== 0; i++) {
-                if (diff > 0) { assignedAmounts[i] += 5; diff -= 5; }
-                else if (diff < 0 && assignedAmounts[i] >= 5) { assignedAmounts[i] -= 5; diff += 5; }
+        let sumAssigned2 = assignedAmounts.reduce((sum, val) => sum + val, 0);
+        let diff2 = totalAmount - sumAssigned2;
+        while (diff2 !== 0) {
+            for (let i = 0; i < num && diff2 !== 0; i++) {
+                if (diff2 > 0) { assignedAmounts[i] += 5; diff2 -= 5; }
+                else if (diff2 < 0 && assignedAmounts[i] >= 5) { assignedAmounts[i] -= 5; diff2 += 5; }
             }
         }
-        let resultsDiv = document.getElementById("randomResults");
-        resultsDiv.innerHTML = `<h3>Total Amount: ₹${totalAmount.toFixed(2)}</h3>`;
-        people.forEach((person, index) => {
-            resultsDiv.innerHTML += `<div class='result-item'><b>${person.name}</b> pays ₹${assignedAmounts[index]}</div>`;
-        });
+        assignedAmounts = unbiasedShuffle(assignedAmounts);
+
+        renderAssigned(assignedAmounts);
         saveRandomSplitHistory(people, assignedAmounts);
-        document.getElementById("randomCalculateButton").textContent = "Split Again";
-        resultsDiv.scrollIntoView({ behavior: "smooth" });
+        if (randBtn) randBtn.textContent = "Split Again";
         return;
     }
 }
 
+/* === REPLACE saveRandomSplitHistory === */
 function saveRandomSplitHistory(people, assignedAmounts) {
     let transactions = [];
     people.forEach((person, index) => {
-         transactions.push(`${person.name} pays ₹${assignedAmounts[index]}`);
+         transactions.push(`${person.name} pays ${currencySymbol}${Number(assignedAmounts[index]).toFixed(2)}`);
     });
     let history = JSON.parse(localStorage.getItem("splitHistory")) || [];
     history.push({
@@ -752,6 +984,7 @@ function saveRandomSplitHistory(people, assignedAmounts) {
     });
     localStorage.setItem("splitHistory", JSON.stringify(history));
 }
+
 
 function validateSplitSelection() {
     let numPeople = document.getElementById("numPeopleRandom").value.trim();
@@ -791,6 +1024,20 @@ function createGroupInputs() {
             <option value="family">Family</option>
             <option value="colleagues">Colleagues</option>
         </select>
+      <select id="groupCurrency" style="width:100%; padding:10px; margin:10px 0; border:1px solid #ccc; border-radius:8px;">
+    <option value="₹" data-code="INR">🇮🇳 INR — ₹</option>
+    <option value="$" data-code="USD">🇺🇸 USD — $</option>
+    <option value="€" data-code="EUR">🇪🇺 EUR — €</option>
+    <option value="£" data-code="GBP">🇬🇧 GBP — £</option>
+    <option value="A$" data-code="AUD">🇦🇺 AUD — A$</option>
+    <option value="C$" data-code="CAD">🇨🇦 CAD — C$</option>
+    <option value="¥" data-code="JPY">🇯🇵 JPY — ¥</option>
+    <option value="د.إ" data-code="AED">🇦🇪 AED — د.إ</option>
+    <option value="S$" data-code="SGD">🇸🇬 SGD — S$</option>
+    <option value="¥" data-code="CNY">🇨🇳 CNY — ¥</option>
+</select>
+
+
         <input type="number" id="groupMembersCount" placeholder="Number of Members" min="1" style="width:100%; padding:10px; margin:10px 0; border:1px solid #ccc; border-radius:6px;">
         <button onclick="generateGroupMemberInputs()" style="width:100%; padding:10px; margin-bottom:10px; border:none; border-radius:6px; background:#ff7e5f; color:#fff; font-weight:bold;">Next</button>
         <div id="groupMemberInputs"></div>
@@ -855,6 +1102,7 @@ function saveGroup() {
     document.getElementById("groupName").classList.remove("input-error");
     document.getElementById("groupType").classList.remove("input-error");
     document.getElementById("groupMembersCount").classList.remove("input-error");
+    
 
     let groupName = document.getElementById("groupName").value.trim();
     let groupType = document.getElementById("groupType").value;
@@ -908,6 +1156,7 @@ function saveGroup() {
     let group = {
         id: Date.now(),
         groupName: groupName,
+currency: document.getElementById("groupCurrency").value,
         groupType: groupType,
         members: members
     };
@@ -1362,4 +1611,71 @@ renderDemo();
   wireCloseButtons();
 
 })();
+
+let currencySymbol = "₹";
+
+const currencyList = {
+    "INR": "₹",
+    "USD": "$",
+    "EUR": "€",
+    "GBP": "£",
+    "AED": "د.إ",
+    "AUD": "A$",
+    "CAD": "C$",
+    "JPY": "¥",
+"CNY": "¥",
+"SGD": "S$",
+"CHF": "CHF",
+"ZAR": "R",
+"BRL": "R$",
+"MXN": "$"
+
+};
+
+// helper: convert ISO country code (e.g. "IN", "GB") to regional indicator emoji
+function countryCodeToEmoji(code) {
+    if (!code || typeof code !== 'string') return code || '';
+    // already emoji?
+    if (code.length > 2) return code;
+    const OFFSET = 0x1F1E6 - 'A'.charCodeAt(0);
+    const chars = code.toUpperCase().split('');
+    return chars.map(c => String.fromCodePoint(c.charCodeAt(0) + OFFSET)).join('');
+}
+
+function formatCurrencySimple(amount) {
+    // fallback simple formatter using symbol
+    return (currencySymbol || '') + Number(amount).toFixed(2);
+}
+
+function updateCurrency() {
+    const sel = document.getElementById("currencySelect");
+    if (!sel) return;
+    const selectedOption = sel.options[sel.selectedIndex];
+    const symbol = currencyList[sel.value] || currencySymbol || "₹";
+    currencySymbol = symbol;
+
+    // dataset.flag may be an emoji OR a 2-letter code — normalize to emoji
+    let rawFlag = selectedOption && selectedOption.dataset && selectedOption.dataset.flag;
+    if (!rawFlag) {
+        // fallback map for common codes if you had codes like "GB"
+        rawFlag = sel.value && sel.value.length === 2 ? countryCodeToEmoji(sel.value) : '';
+    }
+    const flagEmoji = countryCodeToEmoji(rawFlag);
+    const flagEl = document.getElementById("flagIcon");
+    if (flagEl) flagEl.textContent = flagEmoji || rawFlag || '';
+
+    // update currency symbol inside amount inputs
+    document.querySelectorAll(".currency-symbol").forEach(el => {
+        el.textContent = currencySymbol;
+    });
+
+    // re-calc to update displayed values
+    if (typeof calculateSplit === "function") calculateSplit();
+}
+document.addEventListener("DOMContentLoaded", () => {
+  const btn = document.getElementById("calculateButton");
+  if (btn && !btn.onclick) {
+    btn.addEventListener("click", calculateSplit);
+  }
+});
 
