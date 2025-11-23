@@ -35,60 +35,112 @@
   }
   
   // Render a group card; editable determines whether edit/delete icons appear
-  function renderGroupCard(group, index, editable) {
+ function renderGroupCard(group, index, editable) {
     let total = parseFloat(getTotalExpenses(group.expenses));
     let average = getAverage(group.expenses, group.members.length);
-    
-    let expensesHtml = group.expenses ? group.expenses.slice().reverse().map(exp => `
-<div class="expense-item">
-  <p><strong>${exp.category}</strong>: ₹${exp.amount} on ${exp.date} at ${exp.time} - ${exp.description}</p>
-  <p>Paid By: ${exp.paidBy} via ${exp.paymentMethod}</p>
-</div>
-`).join('') : '<p>No expenses added yet.</p>';
 
-    
+    // 🔥 FIXED: using map(exp => { return ... })
+    let expensesHtml = group.expenses
+        ? group.expenses.slice().reverse().map(exp => {
+
+            // define thumbnail
+            const thumb = exp.attachBase64
+                ? `<img src="${exp.attachBase64}" class="expense-thumb">`
+                : '';
+
+            return `
+<div class="expense-item">
+
+    <div class="expense-header">
+        ${thumb}
+      <div class="expense-text">
+    <p class="exp-title">
+        <strong>${exp.category}</strong> • ${group.currency}${exp.amount}
+        <span class="paid-by-inline">— paid by ${exp.paidBy}</span>
+    </p>
+
+    ${exp.description 
+        ? `<p class="exp-desc"><span class="desc-label">Description:</span> ${exp.description}</p>` 
+        : ""
+    }
+</div>
+
+    </div>
+
+    <div class="expense-footer">
+
+        <span class="payment-tag">${exp.paymentMethod}</span>
+        <span class="time-tag">${exp.date} • ${exp.time}</span>
+    </div>
+
+</div>
+            `;
+        }).join('')
+        : '<p>No expenses added yet.</p>';
+
     let membersHtml = group.members.map(member => {
-      let paid = group.payments && group.payments[member] ? group.payments[member] : 0;
-      return `<li>${member}<span class="amount">₹${paid}</span></li>`;
+        let paid = group.payments && group.payments[member] ? group.payments[member] : 0;
+        return `<li>${member}<span class="amount">${group.currency}${paid}</span></li>`;
     }).join('');
-    
-    let splitterHtml = `<div class="expense-splitter" id="splitter${index}">
-      <p><strong>Expense Splitter:</strong></p>
-      <button onclick="splitExpense(${index})" id="splitBtn${index}">Split Now</button>
-      <div id="splitResult${index}" style="margin-top:10px;"></div>
+
+    let splitterHtml = `
+    <div class="expense-splitter" id="splitter${index}">
+        <p><strong>Expense Splitter:</strong></p>
+        <button onclick="splitExpense(${index})" id="splitBtn${index}">Split Now</button>
+        <div id="splitResult${index}" style="margin-top:10px;"></div>
     </div>`;
-    
-    let editIcon = editable ? `<span class="edit-icon" onclick="editGroup(${index})" title="Edit Group">
-      <i class="fas fa-pen"></i>
-    </span>` : "";
-    let deleteIcon = editable ? `<span class="delete-icon" onclick="deleteGroup(${index})" title="Delete Group">
-      <i class="fas fa-trash"></i>
-    </span>` : "";
-    
-    let addExpenseBtn = editable ? `<button class="add-expense-btn" id="addExpenseBtn${index}" onclick="toggleExpenseForm(${index})">Add Expense</button>` : `<button onclick="toggleExpenseForm(${index})">Add Expense</button>`;
-    
+
+    let editIcon = editable ? `
+        <span class="edit-icon" onclick="editGroup(${index})" title="Edit Group">
+            <i class="fas fa-pen"></i>
+        </span>` : "";
+
+    let deleteIcon = editable ? `
+        <span class="delete-icon" onclick="deleteGroup(${index})" title="Delete Group">
+            <i class="fas fa-trash"></i>
+        </span>` : "";
+
+    let addExpenseBtn = editable
+        ? `<button class="add-expense-btn" id="addExpenseBtn${index}" onclick="toggleExpenseForm(${index})">Add Expense</button>`
+        : `<button onclick="toggleExpenseForm(${index})">Add Expense</button>`;
+
     return `
       <div class="group-card" id="groupCard${index}">
         ${editIcon} ${deleteIcon}
         <h3>${group.groupName}</h3>
+
         <p><strong>Type:</strong> ${group.groupType}</p>
+        <p><strong>Currency:</strong> ${group.currency}</p>
+
         <p><strong>Members (${group.members.length}):</strong></p>
         <ul class="member-list">${membersHtml}</ul>
-        <p class="balance"><strong>Total Expenses:</strong> ₹${total} | <strong>Per Person:</strong> ₹${average}</p>
+
+        <p class="balance">
+            <strong>Total Expenses:</strong> ${group.currency}${total}
+            |
+            <strong>Per Person:</strong> ${group.currency}${average}
+        </p>
+
         <div class="expense-list">${expensesHtml}</div>
+
         ${addExpenseBtn}
+
         <div id="expenseForm${index}" class="expense-form" style="display:none;">
+          
           <input type="number" id="expenseAmount${index}" placeholder="Expense Amount (e.g., 500)" required>
-           <select id="expensePaidBy${index}" required>
+
+          <select id="expensePaidBy${index}" required>
             <option value="">Select Payer</option>
             ${group.members.map(member => `<option value="${member}">${member}</option>`).join('')}
           </select>
+
           <select id="paymentMethod${index}" required>
             <option value="">Select Payment Method</option>
             <option value="Cash">Cash</option>
             <option value="Card">Card</option>
             <option value="Online">Online</option>
           </select>
+
           <select id="expenseCategory${index}" onchange="toggleCustomCategory(${index})" required>
             <option value="">Select Category</option>
             <option value="Food">Food</option>
@@ -96,17 +148,34 @@
             <option value="Entertainment">Entertainment</option>
             <option value="Custom">Custom</option>
           </select>
+
           <input type="text" id="customCategory${index}" placeholder="E.g., Stationery" style="display:none;">
-          <input type="text" id="expenseDesc${index}" placeholder="Description">
-         
+          <input type="text" id="expenseDesc${index}" placeholder="Description (Optional)">
+
           <div id="errorMsg${index}" class="error-msg"></div>
+
+          <div class="include-members-section">
+              <label><strong>Split Between:</strong></label>
+              <div class="include-members-list">
+                ${group.members.map(member => `
+                  <label class="member-toggle">
+                    <input type="checkbox" class="includeMember${index}" value="${member}" checked>
+                    <span>${member}</span>
+                  </label>
+                `).join('')}
+              </div>
+          </div>
+
           <button onclick="saveExpense(${index})">Save Expense</button>
           <button class="cancel" onclick="cancelExpense(${index})">Cancel</button>
+
         </div>
+
         ${splitterHtml}
       </div>
     `;
-  }
+}
+
   
   function toggleExpenseForm(index) {
     const formDiv = document.getElementById(`expenseForm${index}`);
@@ -143,6 +212,17 @@
     const customCategory = document.getElementById(`customCategory${index}`).value;
     const paidBy = document.getElementById(`expensePaidBy${index}`).value;
     const paymentMethod = document.getElementById(`paymentMethod${index}`).value;
+    // Collect included members
+let included = [];
+document.querySelectorAll(`.includeMember${index}`).forEach(chk => {
+  if (chk.checked) included.push(chk.value);
+});
+
+if (included.length === 0) {
+  errorMsg.innerText = "Select at least one member for this expense.";
+  return;
+}
+
     const errorMsg = document.getElementById(`errorMsg${index}`);
     errorMsg.innerText = "";
     
@@ -185,7 +265,8 @@
       date: date,
       time: time,
       paidBy: paidBy,
-      paymentMethod: paymentMethod
+      paymentMethod: paymentMethod,
+        includedMembers: included 
     });
     
     updateMemberPayment(group, paidBy, amount);
@@ -220,11 +301,18 @@
     }
     
     let average = total / group.members.length;
-    let net = {};
-    group.members.forEach(member => {
-      let paid = group.payments && group.payments[member] ? group.payments[member] : 0;
-      net[member] = paid - average;
-    });
+   let net = {};
+group.members.forEach(m => net[m] = 0);
+
+// Calculate share per expense
+group.expenses.forEach(exp => {
+  const included = exp.includedMembers || group.members;  
+  const share = exp.amount / included.length;
+
+  included.forEach(m => net[m] -= share);  // they owe
+  net[exp.paidBy] += exp.amount;           // payer gets credit
+});
+
     
     let creditors = [];
     let debtors = [];
@@ -245,15 +333,16 @@
       let debtor = debtors[i];
       let creditor = creditors[j];
       let minAmount = Math.min(debtor.amount, creditor.amount);
-      transactions.push(`${debtor.member} pays ₹${minAmount.toFixed(2)} to ${creditor.member}`);
+      transactions.push(`${debtor.member} pays ${group.currency}${minAmount.toFixed(2)} to ${creditor.member}`);
+
       debtor.amount -= minAmount;
       creditor.amount -= minAmount;
       if(debtor.amount < 0.01) i++;
       if(creditor.amount < 0.01) j++;
     }
     
-    let resultHtml = `<p><strong>Total Expense:</strong> ₹${total.toFixed(2)}</p>`;
-    resultHtml += `<p><strong>Average Expense per Person:</strong> ₹${average.toFixed(2)}</p>`;
+    let resultHtml = `<p><strong>Total Expense:</strong> ${group.currency}${total.toFixed(2)}</p>`;
+    resultHtml += `<p><strong>Average Expense per Person:</strong> ${group.currency}${average.toFixed(2)}</p>`;
     if(transactions.length === 0) {
       resultHtml += `<p>All accounts are settled.</p>`;
     } else {
@@ -375,6 +464,7 @@ showDeleteModal(index);
     alert("Group updated!");
     refreshViews();
   }
+  
   
   // function deleteGroup(index) {
   //   if (confirm("Are you sure you want to delete this group?")) {
