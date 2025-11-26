@@ -208,7 +208,7 @@ nav#navbar {
      position: absolute;
      right: 20px;
      /* align to right side */
-     top: 8px;
+     top: 6px;
    }
 
    /* hide center links & auth on small screens until open */
@@ -1474,4 +1474,5 @@ label[for="splitMode"] {
   padding: 8px; /* adjust padding as needed */
   min-width: 0; /* allows the input to shrink if needed in flex or grid layout */  
 }
+
 
