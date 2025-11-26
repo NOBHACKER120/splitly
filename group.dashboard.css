@@ -198,7 +198,7 @@ nav#navbar {
      position: absolute;
      right: 20px;
      /* align to right side */
-     top: 8px;
+     top: 6px;
    }
 
    /* hide center links & auth on small screens until open */
@@ -1242,4 +1242,5 @@ font-size: 15px;
     font-weight: 500;
     color: #55462e;
 }
+
 
