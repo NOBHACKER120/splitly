@@ -1,163 +1,926 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Splitly - Login &amp; Sign Up</title>
-<meta name="description" content="Create a new account or sign in to Splitly and start splitting group expenses easily.">'
-  <link rel="icon" href="https://splitly.fun/favicon.ico" type="image/x-icon">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sign up / Login — Splitly</title>
+  <meta name="description" content="Sign up or log in to Splitly — secure, quick and professional." />
+  <link rel="stylesheet" href="/mnt/data/splitter.css" />
+    <script type="module" src="firebaseauth.js"></script>
 
-<link rel="icon" type="image/png" href="favicon.png">
-<link rel="apple-touch-icon" href="favicon.png">
+  <style>
+    :root{
+      --muted:#6b7280;
+      --accent:#0b6ef6;
+      --card-radius:14px;
+      --card-shadow: 0 14px 36px rgba(9,20,40,0.06);
+      --bg: linear-gradient(180deg,#f6f9ff 0%, #ffffff 50%);
+      --surface:#ffffff;
+    }
+    html,body{height:100%;margin:0;font-family:'Inter', sans-serif;background:var(--bg);color:#091224; padding-bottom: env(safe-area-inset-bottom);
+  padding-top: env(safe-area-inset-top);}
+nav#navbar {
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 100%;
+   background: white;
+   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+   z-index: 2000;
+   transition: all 0.3s ease;
+  /* keep existing rules too (box-shadow, z-index etc) */
+ }
 
-<link rel="canonical" href="https://splitly.fun/signup-login.html" />
+
+.nav-container {
+      display: flex;
+    grid-template-columns: auto 1fr auto;
+    gap: 12px;
+    align-items: center;
+    margin: 0px auto;
+    padding: 10px 20px;
+    justify-content: space-between;
+}
 
 
-<!-- Open Graph -->
-<meta property="og:title" content="Login or Sign Up - Splitly">
-<meta property="og:description" content="Join Splitly to manage and split group expenses with ease. Simple, secure login and signup.">
-<meta property="og:image" content="https://splitly.fun/favicon.png">
-<meta property="og:url" content="https://splitly.fun/signup-login.html">
-<meta property="og:type" content="website">
+
+ .logo {
+   display: inline-flex;
+   align-items: center;
+   text-decoration: none;
+ }
+
+ .logo-img {
+   height: 36px;
+   width: auto;
+   transition: transform 0.2s ease;
+ }
+
+ .logo:hover .logo-img {
+   transform: scale(1.05);
+ }
+
+ .nav-links {
+   display: flex;
+   gap: 32px;
+   /* you can change to 28px or 36px as you like */
+   align-items: center;
+ }
 
 
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-835JXN9029"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+ /* === MOBILE MENU PANEL === */
+ .nav-links.mobile-open {
+   display: flex;
+   flex-direction: column;
+   align-items: flex-start;
+   gap: 14px;
+   position: absolute;
+   top: 60px;
+   right: 0;
+   left: 30%;
+   /* covers from right edge to a bit past middle */
+   padding: 18px 20px;
+   background: #fff;
+   border-radius: 10px 0 0 10px;
+   box-shadow: -4px 0 25px rgba(0, 0, 0, 0.1);
+   border-left: 1px solid #eee;
+   z-index: 2100;
+ }
 
-  gtag('config', 'G-835JXN9029');
-</script>
-  <link rel="stylesheet" href="signup-login.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-  <script type="module" src="firebaseauth.js"></script>
+
+
+ .nav-link {
+   font-weight: 500;
+   text-decoration: none;
+   color: #222;
+   font-size: 16px;
+   position: relative;
+ }
+
+ .nav-link::after {
+   content: "";
+   position: absolute;
+   bottom: -3px;
+   left: 0;
+   width: 0%;
+   height: 2px;
+   background: linear-gradient(90deg, #ff7b00, #ffb400);
+   transition: width 0.25s ease;
+ }
+
+ .nav-link:hover::after,
+ .nav-link.active::after {
+   width: 100%;
+ }
+
+ .nav-link:hover {
+   color: #ff7b00;
+ }
+
+ /* AUTH BUTTONS */
+
+ .nav-left {
+   justify-self: start;
+   display: flex;
+   align-items: center;
+ }
+
+ .nav-right {
+   justify-self: end;
+   display: flex;
+   align-items: center;
+   gap: 10px;
+   margin-right: 15px;
+ }
+
+ .auth-btn {
+   padding: 7px 14px;
+   border-radius: 8px;
+   font-weight: 600;
+   text-decoration: none;
+   font-size: 15px;
+ }
+
+ .auth-btn.login {
+   color: #444;
+   background: transparent;
+ }
+
+ .auth-btn.signup {
+   background: linear-gradient(90deg, #ff7b00, #ffb400);
+   color: #fff;
+ }
+
+ /* .auth-btn.signup:hover {
+  opacity: 0.9;
+} */
+
+ /* HAMBURGER MENU */
+ /* === MOBILE HAMBURGER (smaller & centered) === */
+ .nav-toggle {
+   display: none;
+   /* hidden by default, only visible on mobile */
+   width: 36px;
+   height: 26px;
+   position: relative;
+   border: none;
+   background: transparent;
+   cursor: pointer;
+   padding: 0;
+ }
+
+
+ .nav-toggle .bar {
+   position: absolute;
+   left: 5px;
+   right: 5px;
+   height: 2.5px;
+   border-radius: 2px;
+   background: #333;
+   transition: transform 0.3s ease, opacity 0.3s ease;
+ }
+
+ /* Bar positions */
+ .nav-toggle .bar1 {
+   top: 5px;
+ }
+
+ .nav-toggle .bar2 {
+   top: 50%;
+   transform: translateY(-50%);
+ }
+
+ .nav-toggle .bar3 {
+   bottom: 5px;
+ }
+
+ /* Cross animation - balanced center */
+ .nav-toggle.open .bar1 {
+   transform: translateY(7px) rotate(45deg);
+ }
+
+ .nav-toggle.open .bar2 {
+   opacity: 0;
+ }
+
+ .nav-toggle.open .bar3 {
+   transform: translateY(-7px) rotate(-45deg);
+ }
+
+
+
+ /* ======= MOBILE VIEW ======= */
+ @media (max-width: 880px) {
+
+   /* Show hamburger */
+   .nav-toggle {
+     display: block;
+     position: absolute;
+     right: 20px;
+     /* align to right side */
+     top: 16px;
+   }
+
+   /* hide center links & auth on small screens until open */
+   /* Keep the mobile nav present but off-screen so we can animate it */
+    .nav-links {
+    /* keep layout from earlier but tighter spacing for mobile */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px; /* reduced gap so adding Blog won't overflow */
+    position: absolute;
+    top: 60px;
+    right: 0;
+    left: 30%;
+    padding: 14px 16px; /* slightly reduced padding */
+    background: #fff;
+    border-radius: 10px 0 0 10px;
+    box-shadow: -4px 0 25px rgba(0, 0, 0, 0.1);
+    border-left: 1px solid #eee;
+    z-index: 2100;
+    transform: translateX(100%);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.35s cubic-bezier(.2, .9, .2, 1), opacity 0.28s ease;
+  }
+
+   .nav-right {
+     display: none;
+   }
+
+   /* when menu is opened, .mobile-open is added to the container */
+   /* WHEN MENU IS OPEN — slide it in smoothly */
+   .nav-container.mobile-open .nav-links,
+   .nav-links.mobile-open {
+     transform: translateX(0);
+     /* move into view */
+     opacity: 1;
+     pointer-events: auto;
+     /* now clickable */
+     /* keep layout values (they're already set above) */
+   }
+
+   /* Staggered slide + fade for each menu item (links and auth buttons) */
+   .nav-links .nav-link,
+   .nav-links .auth-btn {
+     opacity: 0;
+     transform: translateX(24px);
+     transition: transform 0.35s cubic-bezier(.25, .8, .25, 1), opacity 0.3s ease;
+   }
+
+   .nav-links.mobile-open .nav-link,
+   .nav-links.mobile-open .auth-btn {
+     opacity: 1;
+     transform: translateX(0);
+   }
+
+   .nav-links.mobile-open .nav-link[data-delay],
+   .nav-links.mobile-open .auth-btn[data-delay] {
+     transition-delay: var(--delay, 0s);
+   }
+
+
+   .nav-links.mobile-open .auth-btn {
+     display: block;
+     margin-top: 8px;
+     width: 100%;
+     text-align: center;
+     font-weight: 600;
+     border-radius: 8px;
+   }
+
+   .nav-links.mobile-open .auth-btn.login {
+     background: transparent;
+     color: #333;
+     border: 1px solid #ccc;
+     padding: 8px 0;
+   }
+
+   .nav-links.mobile-open .auth-btn.signup {
+     background: linear-gradient(90deg, #ff7b00, #ffb400);
+     color: #fff;
+     padding: 9px 0;
+   }
+
+
+   .nav-links .nav-link {
+    display: block;
+    padding: 8px 10px; 
+    font-size: 17px;   
+    border-radius: 8px;
+  }
+ }
+  /* Hide auth buttons on desktop (above 880px) but keep HTML */
+@media (min-width: 881px) {
+  #nav-auth {
+    max-height: 0;      /* collapse the container */
+    overflow: hidden;   /* hide contents */
+    opacity: 0;         /* hide visually */
+    pointer-events: none; /* prevent interaction */
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+  }
+
+  .nav-links{
+    margin-left: 16px;
+  }
+
+  .nav-link{
+    font-size: 17px;
+  }
+}
+
+
+    /* Center */
+    .auth-page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px;}
+    .auth-wrap{width:100%;max-width:980px;display:grid;grid-template-columns:1fr 440px;gap:28px;align-items:stretch;}
+    /* Left panel (marketing) */
+    .auth-left{background:linear-gradient(135deg,var(--accent),#46a6ff);border-radius:var(--card-radius);padding:36px;color:#fff;box-shadow:var(--card-shadow);position:relative;overflow:hidden;padding-bottom: 50px; background: linear-gradient(135deg,#0b6ef6,#46a6ff, #5bb1ff);
+  background-size: 200% 200%;
+  animation: gradientMove 6s ease infinite;}
+  @keyframes gradientMove {
+  0% { background-position:0% 50%; }
+  50% { background-position:100% 50%; }
+  100% { background-position:0% 50%; }
+}
+
+    .auth-left .logo{display:flex;gap:12px;align-items:center;margin-bottom:16px}
+    .auth-left h1{margin:0;font-size:24px}
+    .auth-left p{margin:10px 0;color:rgba(255,255,255,0.92);line-height:1.55}
+    .feature-list{margin-top:18px;padding-left:16px}
+    .feature-list li{margin-bottom:10px;font-weight:700}
+    /* Right card */
+
+
+
+.hidden {
+  opacity:0 !important;
+  transform: translateY(6px);
+    display: none !important;
+
+}
+.small {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent) !important;
+}
+
+.small:hover {
+  text-decoration: underline;
+}
+
+.google-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.25s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.google-btn img {
+  width: 22px;
+  height: 22px;
+}
+
+.google-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(11,110,246,0.10);
+  border-color: #dce4ff;
+}
+
+    .auth-card{background:var(--surface);border-radius:var(--card-radius);padding:20px;box-shadow:var(--card-shadow);display:flex;flex-direction:column;min-height:420px}
+    .card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+    .card-title{font-weight:800;font-size:18px}
+    .card-sub{color:var(--muted);font-size:13px}
+    .tabs{display:flex;gap:10px;margin-bottom:10px}
+    .tab{flex:1;text-align:center;padding:9px 10px;border-radius:10px;cursor:pointer;font-weight:700;color:#0b1220;border:1px solid transparent;   transition: all 0.25s ease;}
+    .tab.active{color:#fff;background:linear-gradient(90deg,var(--accent),#46a6ff);box-shadow:0 8px 18px rgba(11,110,246,0.12);transform:translateY(-3px)}
+    .form{display:flex;flex-direction:column;gap:10px;margin-top:6px;  opacity:1;
+  transform: translateY(0);
+  transition: opacity .25s ease, transform .25s ease;}
+    .field{display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;border:1px solid #EEF3FF;background:transparent}
+.field svg {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  color: var(--muted);
+   opacity: 0;
+  transform: translateX(-6px);
+  animation: fadeSlide .4s ease forwards;
+}
+
+@keyframes fadeSlide {
+  to { opacity:1; transform:translateX(0); }
+}
+
+    .field input{border:0;outline:none;background:transparent;font-size:15px;color:#071028;width:100%}
+    .actions{display:flex;gap:8px;align-items:center;margin-top:8px}
+    .field:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(11,110,246,0.12);
+  transition: all .18s ease;
+}
+
+    .btn{padding:10px 14px;border-radius:10px;border:0;cursor:pointer;font-weight:800}
+    .btn-primary{background:linear-gradient(90deg,var(--accent),#46a6ff);color:#fff;box-shadow:0 10px 26px rgba(11,110,246,0.12)}
+    .btn-ghost{background:transparent;border:1px solid #e6eef8;color:#2746d8;font-weight:700}
+    .divider{display:flex;align-items:center;gap:12px;margin:12px 0}
+    .divider::before,.divider::after{content:"";flex:1;height:1px;background:#f1f5f9;border-radius:2px}
+    .or{font-size:13px;color:#93a0b7}
+    .btn-primary:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+  transition: 0.2s ease;
+}
+
+.btn-ghost:hover {
+  background:#f8faff;
+  border-color:#dce6ff;
+}
+
+    .socials{display:flex;gap:10px}
+    .social-btn{flex:1;padding:10px 12px;border-radius:10px;border:1px solid #eef3ff;background:#fff;color:#071028;display:inline-flex;align-items:center;gap:10px;justify-content:flex-start;font-weight:700}
+    .social-icon{width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center}
+    .social-btn:hover {
+  border-color:#dce6ff;
+  background:#f9fbff;
+  transform: translateY(-1px);
+  transition:0.2s ease;
+}
+.social-btn:active {
+  transform: scale(.96);
+}
+@media (max-width: 768px) {
+  .auth-left {
+    display: none !important;
+  }
+  .auth-wrap {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+
+    .helper{font-size:13px;color:var(--muted);margin-top:8px}
+    .error{color:#ef4444;font-size:13px;margin-top:6px;display:none}
+    .auth-foot{margin-top:auto;font-size:13px;color:var(--muted);text-align:center;padding-top:12px}
+    /* Toast */
+    #toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#061325;color:white;padding:10px 14px;border-radius:10px;opacity:0;transition:all .26s ease;z-index:4000;display:flex;gap:8px;align-items:center}
+    #toast.show{opacity:1}
+    /* Responsive */
+    @media(max-width:920px){.auth-wrap{grid-template-columns:1fr}.auth-left{order:2}.auth-card{order:1}}
+    @media(max-width:480px){.auth-left{padding:18px}.auth-card{padding:14px}}
+  </style>
 </head>
-<body>
-  <div class="navbar">
-    <a href="index.html">&#8592; Home</a>
-  </div>
-  <div class="auth-container" id="authContainer">
-    <img src="SPLIT (4)-Photoroom (1)-Photoroom.png" alt="Splitly Logo" class="logo">
-    <div class="tab-buttons">
-      <button id="btn-login" class="active" onclick="switchTab('login')">Login</button>
-      <button id="btn-signup" onclick="switchTab('signup')">Sign Up</button>
-    </div>
-    <div class="forms-wrapper">
-      <!-- LOGIN FORM -->
-      <div id="login" class="form-container active">
-        <h2>Welcome Back!</h2>
-        <div class="input-group">
-          <i class="fa-solid fa-envelope"></i>
-          <input id="login-email" type="email" placeholder="Email" required>
-        </div>
-        <div class="input-group">
-          <i class="fa-solid fa-lock"></i>
-          <input id="login-password" type="password" placeholder="Password" required>
-<i class="fa-solid fa-eye toggle-password" data-target="login-password"></i>
-        </div>
-        <button class="auth-btn">Login</button>
-        <div class="form-text">
-          <p>Don't have an account? <a href="javascript:void(0)" onclick="switchTab('signup')">Sign Up</a></p>
-          <p><a href="forget.html">Forgot Password?</a></p>
-        </div>
+<body class="signup-login">
+
+
+  <nav id="navbar">
+    <div class="nav-container">
+      <div class="nav-left">
+        <a href="/" class="logo">
+          <img src="SPLIT (4)-Photoroom (1)-Photoroom.png" alt="Splitly" class="logo-img" />
+        </a>
       </div>
-      
-      <!-- SIGNUP FORM -->
-      <div id="signup" class="form-container">
-        <h2>Create Your Account</h2>
-        <div class="input-group">
-          <i class="fa-solid fa-user"></i>
-          <input id="signup-name" type="text" placeholder="Full Name" required>
-        </div>
-        <div class="input-group">
-          <i class="fa-solid fa-envelope"></i>
-          <input id="signup-email" type="email" placeholder="Email" required>
-        </div>
-        <div class="input-group">
-          <i class="fa-solid fa-lock"></i>
-          <input id="signup-password" type="password" placeholder="Password" required>
-          <i class="fa-solid fa-eye toggle-password" data-target="signup-password"></i>          
-        </div>
-        <button class="auth-btn">Sign Up</button>
-        <div class="form-text">
-          <p>Already have an account? <a href="javascript:void(0)" onclick="switchTab('login')">Login</a></p>
-        </div>
+
+      <div id="nav-links" class="nav-links" aria-label="Main navigation">
+        <a href="/" class="nav-link">Home</a>
+        <a href="splitter.html" class="nav-link">Split</a>
+        <a href="group_dashboard.html" class="nav-link">Groups</a>
+        <a href="index.html#learn-more" class="nav-link">How It Works</a>
+        <a href="blogs.html" class="nav-link">Blog</a>
+        <a href="index.html#contact" class="nav-link">Contact</a>
       </div>
+
+      <div class="nav-right" id="nav-auth">
+        <!-- HIDDEN on signup/login page -->
+        <a href="signup-login.html?tab=login" class="auth-btn login">Login</a>
+        <a href="signup-login.html?tab=signup" class="auth-btn signup">Signup</a>
+      </div>
+
+      <button id="nav-toggle" class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span class="bar bar1"></span>
+        <span class="bar bar2"></span>
+        <span class="bar bar3"></span>
+      </button>
     </div>
-  </div>
-  <div class="footer">
-    <a href="Learn-more.html">Learn More</a> | 
-    <a href="contact.html">Contact Us</a>
+  </nav>  <div class="auth-page">
+    <div class="auth-wrap" role="main" aria-live="polite">
+      <!-- Left marketing -->
+      <aside class="auth-left" aria-hidden="false">
+        <div class="logo">
+          <img src="SPLIT (4)-Photoroom (1)-Photoroom.png" alt="Splitly" style="height:44px;border-radius:6px;background:rgba(255,255,255,0.06);padding:6px">
+          <div>
+            <div style="font-weight:800;font-size:18px">Splitly</div>
+            <div style="font-size:13px;opacity:0.95">Split bills. Save friendships.</div>
+          </div>
+        </div>
+
+        <h1>Split bills — fast and fair</h1>
+        <p>Choose equal split or playful random splits. Save groups and keep things friendly.</p>
+
+        <ul class="feature-list" aria-hidden="true">
+          <li>Secure authentication with Firebase</li>
+          <li>Easy group management</li>
+          <li>Share groups & invites</li>
+        </ul>
+      </aside>
+
+      <!-- Right auth card -->
+      <section class="auth-card" aria-labelledby="auth-title">
+        <div class="card-head">
+          <div>
+            <div class="card-title" id="auth-title">Welcome back</div>
+            <div class="card-sub" id="card-sub">Sign in or create an account</div>
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs" role="tablist" aria-label="Login or signup">
+          <div class="tab active" id="tab-login" role="tab" aria-selected="true" tabindex="0">Login</div>
+          <div class="tab" id="tab-signup" role="tab" aria-selected="false" tabindex="0">Sign up</div>
+        </div>
+
+        <!-- LOGIN form -->
+        <form id="loginForm" class="form" role="tabpanel" aria-hidden="false" onsubmit="return false;">
+          <div class="field">
+            <!-- monochrome SVG icon (uses currentColor) -->
+            <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M3 8.5c0-1.38 1.12-2.5 2.5-2.5h13c1.38 0 2.5 1.12 2.5 2.5v6c0 1.38-1.12 2.5-2.5 2.5h-13A2.5 2.5 0 0 1 3 14.5v-6z"></path><path stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M7 10.5l5 3 5-3"/></svg>
+            <input id="loginEmail" type="email" placeholder="Email" autocomplete="email" />
+          </div>
+
+          <div class="field">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="11" width="18" height="10" rx="2" stroke="currentColor" stroke-width="1.6" /><path d="M7 11V8a5 5 0 0 1 10 0v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <input id="loginPassword" type="password" placeholder="Password" autocomplete="current-password" />
+            <button id="loginToggle" class="small" aria-label="Show password" style="background:none;border:0;cursor:pointer;color:var(--muted)">Show</button>
+          </div>
+
+          <div id="loginError" class="error" role="alert"></div>
+
+          <div class="actions">
+            <button class="btn btn-primary" id="loginBtn">Log in</button>
+            <button class="btn btn-ghost" id="forgotBtn" type="button">Forgot?</button>
+          </div>
+
+          <div class="divider"><span class="or">or</span></div>
+
+<button id="googleLoginBtn" class="google-btn">
+  <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" />
+  <span>Continue with Google</span>
+</button>
+
+
+
+          <div class="auth-foot">Don't have an account? <a href="#" id="switchToSignup">Sign up</a></div>
+        </form>
+
+        <!-- SIGNUP form -->
+        <form id="signupForm" class="form hidden" role="tabpanel" aria-hidden="true" onsubmit="return false;">
+          <div class="field">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="8" r="3" stroke="currentColor" stroke-width="1.6"/><path d="M4 20c0-3 4-5 8-5s8 2 8 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            <input id="signupName" type="text" placeholder="Full name" autocomplete="name" />
+          </div>
+
+          <div class="field">
+<svg class="icon" viewBox="0 0 24 24" fill="none"
+xmlns="http://www.w3.org/2000/svg">
+  <path stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+    stroke-linejoin="round" 
+    d="M3 8.5c0-1.38 1.12-2.5 2.5-2.5h13c1.38 0 2.5 1.12 2.5 2.5v6c0 1.38-1.12 2.5-2.5 2.5h-13A2.5 2.5 0 0 1 3 14.5v-6z"/>
+  <path stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+    stroke-linejoin="round" 
+    d="M7 10.5l5 3 5-3"/>
+</svg>
+            <input id="signupEmail" type="email" placeholder="Email" autocomplete="email" />
+          </div>
+
+          <div class="field">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="11" width="18" height="10" rx="2" stroke="currentColor" stroke-width="1.6" /><path d="M7 11V8a5 5 0 0 1 10 0v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <input id="signupPassword" type="password" placeholder="Create a password" autocomplete="new-password" />
+            <button id="signupToggle" class="small" aria-label="Show password" style="background:none;border:0;cursor:pointer;color:var(--muted)">Show</button>
+          </div>
+
+          <div id="signupError" class="error" role="alert"></div>
+
+          <div class="actions" style="display:flex;gap:8px;margin-top:8px;">
+            <button class="btn btn-primary" id="signupBtn">Create account</button>
+            <!-- demo removed -->
+          </div>
+
+          <div class="divider"><span class="or">or</span></div>
+
+<button id="googleSignupBtn" class="google-btn">
+  <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" />
+  <span>Continue with Google</span>
+</button>
+
+
+          
+
+          <div class="auth-foot">Already registered? <a href="#" id="switchToLogin">Log in</a></div>
+        </form>
+
+        <div id="afterAuth" class="hidden" style="margin-top:10px;">
+          <div style="font-weight:700;font-size:16px">You're logged in</div>
+          <div class="helper">Redirecting to Splitly…</div>
+        </div>
+      </section>
+    </div>
   </div>
 
-  <!-- Toast Popup -->
-  <div id="toast" class="toast">
-    <span class="icon">&#10004;</span><span id="toast-message"></span>
+  <!-- toast -->
+  <div id="toast" role="status" aria-live="polite" style="display:none;">
+    <span id="toast-message"></span>
   </div>
 
-  <script src="script.js"></script>
-  <script>
-    // Toast message and form validation code
-    document.addEventListener("DOMContentLoaded", function () {
-      // Function to show a toast message
-      window.showToast = function(message, isError = false) {
-        const toast = document.getElementById("toast");
-        const toastMsg = document.getElementById("toast-message");
-        toastMsg.innerText = message;
-        if (isError) {
-          toast.classList.add("error");
-          toast.querySelector(".icon").innerHTML = "&#10006;";
-        } else {
-          toast.classList.remove("error");
-          toast.querySelector(".icon").innerHTML = "&#10004;";
-        }
-        toast.style.display = "flex";
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // Default: show login form
+    document.getElementById("loginForm").classList.remove("hidden");
+    document.getElementById("signupForm").classList.add("hidden");
+
+    document.getElementById("tab-login").classList.add("active");
+    document.getElementById("tab-signup").classList.remove("active");
+
+    document.getElementById("loginForm").setAttribute("aria-hidden", "false");
+    document.getElementById("signupForm").setAttribute("aria-hidden", "true");
+  });
+</script>
+
+<script>
+(function () {
+  // Tabs
+  const tabLogin = document.getElementById("tab-login");
+  const tabSignup = document.getElementById("tab-signup");
+  const loginForm = document.getElementById("loginForm");
+  const signupForm = document.getElementById("signupForm");
+  const switchToSignup = document.getElementById("switchToSignup");
+  const switchToLogin = document.getElementById("switchToLogin");
+
+function showLogin() {
+  tabLogin.classList.add("active");
+  tabLogin.setAttribute("aria-selected", "true");
+  tabSignup.classList.remove("active");
+  tabSignup.setAttribute("aria-selected", "false");
+
+  loginForm.classList.remove("hidden");
+  loginForm.setAttribute("aria-hidden", "false");
+  signupForm.classList.add("hidden");
+  signupForm.setAttribute("aria-hidden", "true");
+}
+
+
+function showSignup() {
+  tabSignup.classList.add("active");
+  tabSignup.setAttribute("aria-selected", "true");
+  tabLogin.classList.remove("active");
+  tabLogin.setAttribute("aria-selected", "false");
+
+  signupForm.classList.remove("hidden");
+  signupForm.setAttribute("aria-hidden", "false");
+  loginForm.classList.add("hidden");
+  loginForm.setAttribute("aria-hidden", "true");
+}
+window.showLogin = showLogin;
+window.showSignup = showSignup;
+
+
+  tabLogin.addEventListener("click", showLogin);
+  tabSignup.addEventListener("click", showSignup);
+
+  switchToSignup.addEventListener("click", (e) => {
+    e.preventDefault();
+    showSignup();
+    document.getElementById("signupName").focus();
+  });
+
+  switchToLogin.addEventListener("click", (e) => {
+    e.preventDefault();
+    showLogin();
+    document.getElementById("loginEmail").focus();
+  });
+
+  // Password show/hide
+  function togglePass(id, btn) {
+    const el = document.getElementById(id);
+    if (el.type === "password") {
+      el.type = "text";
+      btn.textContent = "Hide";
+    } else {
+      el.type = "password";
+      btn.textContent = "Show";
+    }
+  }
+  document
+    .getElementById("loginToggle")
+    .addEventListener("click", () => togglePass("loginPassword", document.getElementById("loginToggle")));
+  document
+    .getElementById("signupToggle")
+    .addEventListener("click", () => togglePass("signupPassword", document.getElementById("signupToggle")));
+
+  // Toast
+  function showToast(msg, time = 1600) {
+    const t = document.getElementById("toast");
+    document.getElementById("toast-message").textContent = msg;
+    t.style.display = "flex";
+    t.classList.add("show");
+    setTimeout(() => {
+      t.classList.remove("show");
+      t.style.display = "none";
+    }, time);
+  }
+
+  // -------------------------------
+  // ✅ Email Login (Correct Working)
+  // -------------------------------
+  document.getElementById("loginBtn").addEventListener("click", () => {
+    const email = document.getElementById("loginEmail").value.trim();
+    const password = document.getElementById("loginPassword").value;
+    const errEl = document.getElementById("loginError");
+    errEl.style.display = "none";
+    errEl.textContent = "";
+
+    if (!email) {
+      errEl.textContent = "Enter an email";
+      errEl.style.display = "block";
+      return;
+    }
+    if (!password) {
+      errEl.textContent = "Enter a password";
+      errEl.style.display = "block";
+      return;
+    }
+
+    window.auth
+      .signInWithEmail(email, password)
+      .then(() => {
+        showToast("Logged in!");
         setTimeout(() => {
-          toast.style.display = "none";
-        }, 3000);
-      };
-
-      // Validate active form inputs
-      window.validateActiveForm = function() {
-        const activeForm = document.querySelector(".form-container.active");
-        const inputs = activeForm.querySelectorAll("input");
-        let isValid = true;
-        inputs.forEach(input => {
-          if (!input.value.trim()) {
-            input.classList.add("error");
-            isValid = false;
-          } else {
-            if (input.type === "email" && !input.checkValidity()) {
-              input.classList.add("error");
-              isValid = false;
-            } else {
-              input.classList.remove("error");
-            }
-          }
-        });
-        // Additional check for password length on signup
-        if(activeForm.id === "signup"){
-          const pwd = document.getElementById("signup-password").value;
-          if(pwd.length < 8){
-            document.getElementById("signup-password").classList.add("error");
-            isValid = false;
-            showToast("Password must be at least 8 characters long.", true);
-          }
-        }
-        return isValid;
-      };
-
-      // Remove error class on user input
-      document.querySelectorAll(".input-group input").forEach(input => {
-        input.addEventListener("input", function () {
-          if (this.value.trim() && (this.type !== "email" || this.checkValidity())) {
-            this.classList.remove("error");
-          }
-        });
+          window.location.href = "group_dashboard.html";
+        }, 700);
+      })
+      .catch((e) => {
+        errEl.textContent = e.message;
+        errEl.style.display = "block";
       });
+  });
+
+  // -------------------------------
+  // ✅ Signup (Email)
+  // -------------------------------
+  document.getElementById("signupBtn").addEventListener("click", () => {
+    const name = document.getElementById("signupName").value.trim();
+    const email = document.getElementById("signupEmail").value.trim();
+    const password = document.getElementById("signupPassword").value;
+    const errEl = document.getElementById("signupError");
+    errEl.style.display = "none";
+    errEl.textContent = "";
+
+    if (!name) {
+      errEl.textContent = "Enter your name";
+      errEl.style.display = "block";
+      return;
+    }
+    if (!email.includes("@")) {
+      errEl.textContent = "Enter a valid email";
+      errEl.style.display = "block";
+      return;
+    }
+    if (password.length < 8) {
+      errEl.textContent = "Password must be at least 8 characters";
+      errEl.style.display = "block";
+      return;
+    }
+
+    window.auth
+      .createUserWithEmail(name, email, password)
+      .then(() => {
+        showToast("Verification email sent!");
+      })
+      .catch((e) => {
+        errEl.textContent = e.message;
+        errEl.style.display = "block";
+      });
+  });
+
+  // -------------------------------
+  // ✅ Google Login / Signup
+  // -------------------------------
+  async function handleGoogleLogin() {
+    try {
+      const result = await window.auth.signInWithGoogle();
+
+      showToast("Logged in with Google!");
+      setTimeout(() => {
+        window.location.href = "splitter.html";
+      }, 900);
+    } catch (err) {
+      alert(err.message);
+    }
+  }
+
+  googleLoginBtn?.addEventListener("click", handleGoogleLogin);
+  googleSignupBtn?.addEventListener("click", handleGoogleLogin);
+})();
+</script>
+<script>
+(function () {
+  const toggle = document.getElementById("nav-toggle");
+  const links = document.getElementById("nav-links");
+  const auth = document.getElementById("nav-auth");
+  const navContainer = document.querySelector(".nav-container");
+
+  if (!toggle || !links || !navContainer) return;
+
+  // If this page should hide auth area (like signup-login page)
+  const hideAuthOnThisPage = document.body.classList.contains('signup-login');
+
+  // Save auth HTML (if present) for other pages — but we will only insert when allowed
+  const authButtons = auth ? auth.innerHTML.trim() : "";
+
+  function openMenu() {
+    toggle.classList.add("open");
+    links.classList.add("mobile-open");
+    navContainer.classList.add("mobile-open");
+    toggle.setAttribute("aria-expanded", "true");
+
+    // Insert login/signup inside menu only if this page allows it
+   // Insert login/signup inside menu ONLY if NOT on signup-login page
+if (!location.pathname.includes("signup-login") && authButtons && !links.querySelector(".auth-btn")) {
+  links.insertAdjacentHTML("beforeend", authButtons);
+}
+
+
+    // Add staggered animation delays dynamically
+    const menuItems = links.querySelectorAll(".nav-link, .auth-btn");
+    menuItems.forEach((item, i) => {
+      const delay = `${i * 80}ms`;
+      item.setAttribute("data-delay", delay);
+      item.style.setProperty("--delay", delay);
     });
-  </script>
+  }
+
+  function closeMenu() {
+    toggle.classList.remove("open");
+    links.classList.remove("mobile-open");
+    navContainer.classList.remove("mobile-open");
+    toggle.setAttribute("aria-expanded", "false");
+    // Remove auth buttons from the live nav-links (if any were inserted)
+    links.querySelectorAll(".auth-btn").forEach(btn => btn.remove());
+  }
+
+  toggle.addEventListener("click", (e) => {
+    const expanded = toggle.classList.contains("open");
+    if (expanded) closeMenu();
+    else openMenu();
+    e.stopPropagation();
+  });
+
+  // Close when clicking outside
+  document.addEventListener("click", (e) => {
+    if (!navContainer.contains(e.target)) closeMenu();
+  });
+
+  // Close on Escape
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeMenu();
+  });
+
+  // Close when clicking any nav link (mobile)
+  document.querySelectorAll(".nav-link").forEach((a) => {
+    a.addEventListener("click", () => {
+      if (window.innerWidth <= 880) closeMenu();
+    });
+  });
+
+  // Reset on resize (desktop -> close menu & cleanup)
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 880) {
+      closeMenu();
+    }
+  });
+})();
+
+// --- Auto-select tab from URL ---
+document.addEventListener("DOMContentLoaded", () => {
+  const params = new URLSearchParams(window.location.search);
+  const tab = params.get("tab");
+
+  if (tab === "signup") {
+    showSignup();
+  } else {
+    showLogin(); // default
+  }
+});
+
+</script>
+
 </body>
 </html>
