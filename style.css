@@ -1354,7 +1354,7 @@ section:not(.hero) {
   z-index: 1;
 }
 
-.hero-content {
+.hero-content-about {
   position: relative;
   z-index: 2;
   max-width: 720px;
@@ -2301,3 +2301,4 @@ section:not(.hero) {
   background: #c7d2fe;
   cursor: not-allowed;
 }
+
