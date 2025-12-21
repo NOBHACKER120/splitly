@@ -1,107 +1,458 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Terms of Service | Splitly</title>
+  <!-- Basic Meta -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <meta name="description" content="Read Splitly’s Terms of Service to understand the rules for using our expense management platform." />
-<link rel="icon" href="https://splitly.fun/favicon.ico" type="image/x-icon">
-<link rel="icon" type="image/png" href="https://splitly.fun/favicon.png">
+  <!-- Page Title -->
+  <title>Terms of Service – Splitly</title>
 
-  
-    <link rel="canonical" href="https://splitly.fun/terms-of-service.html" />
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f9f9f9;
-      color: #333;
-    }
-    header {
-      background-color: #6741d9;
-      color: white;
-      padding: 20px 30px;
-    }
-   h1 {
-  margin: 0;
-  font-size: 26px;
-  text-align: center;
-}
+  <!-- SEO Description -->
+  <meta name="description"
+        content="Read Splitly’s Terms of Service to understand user responsibilities, acceptable use, limitations, and conditions for using our bill splitting and expense tracking services.">
 
-@media (max-width: 600px) {
-  h1 {
-    font-size: 22px;
-  }
+  <!-- Canonical -->
+  <link rel="canonical" href="https://splitly.fun/terms-of-service">
 
-  .container {
-    padding: 0 15px;
-  }
-}
+  <!-- Robots -->
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="Splitly Team">
 
-    .container {
-      max-width: 800px;
-      margin: 30px auto;
-      padding: 0 20px;
-    }
-    h2 {
-      color: #6741d9;
-      margin-top: 30px;
-    }
-    footer {
-      text-align: center;
-      padding: 20px;
-      color: #aaa;
-      font-size: 14px;
-    }
-  </style>
+  <!-- Google Search Console Verification -->
+  <meta name="google-site-verification"
+        content="ZFR69SkxJe0fkKGDsAnx-KeCa7htlARYQF77lAAB1T8" />
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-835JXN9029"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-835JXN9029');
+  </script>
+
+  <!-- Google AdSense -->
+  <script async
+    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7625345342761688"
+    crossorigin="anonymous">
+  </script>
+
+  <!-- Ahrefs Analytics -->
+  <script async
+    src="https://analytics.ahrefs.com/analytics.js"
+    data-key="okRTY8yBhq9zk7xfXzETbA">
+  </script>
+
+  <!-- Fonts (Optimized) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+  <!-- Icons -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Main Styles -->
+  <link rel="stylesheet" href="try.css">
+
+  <!-- Favicons -->
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Terms of Service – Splitly">
+  <meta property="og:description"
+        content="Understand the rules, responsibilities, and conditions for using Splitly’s services.">
+  <meta property="og:url" content="https://splitly.fun/terms-of-service">
 </head>
+
 <body>
+    <header class="navbar">
+  <div class="nav-container">
 
-<header>
-  <h1>Terms of Service</h1>
-  <p style="text-align:center; max-width:700px; margin: 10px auto;">
-Please read Splitly’s Terms of Service carefully. These terms govern your access to our expense splitting platform and help ensure a fair, safe, and secure experience for all users.
-</p>
+    <a href="/" class="logo">
+      <img src="Splitly-logo.png" alt="Splitly" />
+    </a>
 
+    <nav class="nav-links">
+      <a href="/splitter">Splitter</a>
+      <a href="/group_dashboard">Create Group</a>
+      <a href="/#how-it-works">How it works</a>
+      <a href="/#faq">FAQ</a>
+      <a href="/about">About</a>
+    </nav>
+
+    <div class="nav-auth">
+      <a href="/signup-login#login" class="login-btn">Login</a>
+      <a href="/signup-login#signup" class="signup-btn">Sign up</a>
+    </div>
+
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
 </header>
 
-<div class="container">
-  <p><strong>Effective Date:</strong> June 15, 2025</p>
+<div class="nav-overlay" id="navOverlay"></div>
 
-  <p>These Terms govern how you use Splitly (https://splitly.fun). By using the site, you agree to these terms.</p>
+<aside class="mobile-drawer" id="mobileDrawer">
+  <nav class="mobile-nav">
+    <a href="/splitter">Splitter</a>
+    <a href="/group_dashboard">Create Group</a>
+    <a href="/#how-it-works">How it works</a>
+    <a href="/blogs">Blog</a>
+    <a href="/contact">Contact</a>
+    <a href="/#faq">FAQ</a>
+    <a href="/about">About</a>
+  </nav>
 
-  <h2>1. What Splitly Does</h2>
-  <p>Splitly helps you manage and split group expenses in a simple and fair way.</p>
+  <div class="mobile-auth">
+    <a href="/signup-login#login" class="login-btn">Login</a>
+    <a href="/signup-login#signup" class="signup-btn">Sign up</a>
+  </div>
+</aside>
 
-  <h2>2. Usage Rules</h2>
-  <ul>
-    <li>Use the tool legally</li>
-    <li>Don't upload illegal or harmful content</li>
-    <li>Don’t try to hack or misuse the system</li>
-  </ul>
+<section class="tos-header">
+  <div class="tos-header-inner">
+    <h1>Terms of Service</h1>
+    <p class="tos-updated">
+      Last updated: <time datetime="2025-12-20">20 December 2025</time>
+    </p>
+  </div>
+</section>
 
-  <h2>3. Accounts (Optional)</h2>
-  <ul>
-    <li>Keep your login info safe</li>
-    <li>Don’t share your account</li>
-    <li>We may remove inactive/abusive accounts</li>
-  </ul>
+<section class="tos-intro">
+  <div class="tos-intro-inner">
+    <p>
+      Welcome to <strong>Splitly</strong>! These Terms of Service explain how you can use
+      our website, apps, and services. By accessing or using Splitly, you agree
+      to follow these rules and guidelines.
+    </p>
 
-  <h2>4. No Guarantees</h2>
-  <p>We try to provide a stable, safe experience, but Splitly is a personal project and comes with no official warranty.</p>
+    <p>
+      Please read them carefully. If you do not agree, you should not use our services.
+      Using Splitly means you accept these Terms.
+    </p>
+  </div>
+</section>
 
-  <h2>5. Updates</h2>
-  <p>We may change these terms. You’ll always find the latest version on this page.</p>
+<section class="tos-section">
+  <div class="tos-section-inner">
 
-  <h2>6. Contact</h2>
-  <p>For questions, email: splitlyofficial@gmail.com or <a href="contact.html">contact us</a></p>
-</div>
+    <h2>Eligibility</h2>
+    <p class="tos-section-text">
+      Splitly is intended for users who are at least 13 years old. By using our
+      services, you confirm that you meet this age requirement.
+    </p>
 
-<footer>
-  &copy; 2025 Splitly. All rights reserved.
+    <p class="tos-section-text">
+      You must provide accurate and up-to-date information when creating an account.
+      You are responsible for all activity that occurs under your account, so please
+      keep your login details secure.
+    </p>
+
+  </div>
+</section>
+<section class="tos-section">
+  <div class="tos-section-inner">
+
+    <h2>Account & Usage Rules</h2>
+    <p class="tos-section-text">
+      When using Splitly, please use the platform responsibly and respect other users.
+      Misusing the service, trying to hack features, or using Splitly for illegal activities
+      is not allowed.
+    </p>
+
+    <p class="tos-section-text">
+      Each person should only have one account. Keeping your account secure and using it
+      properly helps us maintain a safe and fair experience for everyone.
+    </p>
+
+  </div>
+</section>
+<section class="tos-section">
+  <div class="tos-section-inner">
+
+    <h2>Features & Service Description</h2>
+    <p class="tos-section-text">
+      Splitly provides tools to help friends, roommates, and travelers manage shared expenses
+      easily. Some of the features include:
+    </p>
+
+    <ul class="tos-list">
+      <li>Bill splitting tools for accurate expense division</li>
+      <li>Group expense tracking to monitor shared costs</li>
+      <li>Balance calculation features to see who owes what</li>
+    </ul>
+
+    <p class="tos-section-text">
+      We are always improving and updating Splitly. Features may change over time
+      to provide a better experience for our users.
+    </p>
+
+  </div>
+</section>
+<section class="tos-section">
+  <div class="tos-section-inner">
+
+    <h2>Payments & Premium Features</h2>
+    <p class="tos-section-text">
+      Splitly is free to use, and all core features, such as bill splitting, group expense tracking, 
+      and balance calculations, are available at no cost. We may introduce premium features in 
+      the future to provide advanced functionality or additional convenience. Any premium services 
+      will have clear pricing, and users can choose whether to subscribe or purchase them.
+    </p>
+
+    <p class="tos-section-text">
+      Pricing and plans for premium features may change over time, as we continuously improve 
+      the app and add new tools. If you subscribe to a paid service, you are responsible for 
+      keeping your payment information up to date. Please note that, unless explicitly stated, 
+      we do not offer refunds for payments already made.
+    </p>
+
+    <p class="tos-section-text">
+      Including this section now helps us future-proof Splitly. Even if you only offer free features 
+      today, it sets clear expectations for users if we introduce paid services later, reducing confusion 
+      and protecting both your platform and your users.
+    </p>
+
+  </div>
+</section>
+<section class="tos-section">
+  <div class="tos-section-inner">
+
+    <h2>User Content & Data</h2>
+    <p class="tos-section-text">
+      Any information you provide while using Splitly, such as group names, expenses, balances, 
+      or notes, remains your property. You retain full ownership of your data and can request 
+      access, updates, or deletion at any time, in line with our Privacy Policy.
+    </p>
+
+    <p class="tos-section-text">
+      Splitly stores your data solely to provide and improve our services. We use this information 
+      to calculate balances, manage groups, and display accurate records, but we do not claim 
+      ownership of your content. Your data is never sold, traded, or used for purposes beyond 
+      running the platform without your consent.
+    </p>
+
+    <p class="tos-section-text">
+      By using Splitly, you grant us a limited license to store and process your information 
+      as needed to deliver the services you’ve requested. This license does not transfer 
+      ownership; it simply allows Splitly to operate effectively while respecting your rights.
+    </p>
+
+  </div>
+</section>
+<section class="tos-section">
+  <div class="tos-section-inner">
+
+    <h2>Service Availability & Limitations</h2>
+    <p class="tos-section-text">
+      While we strive to keep Splitly running smoothly, there may be times when the service is 
+      unavailable due to maintenance, technical issues, or other unforeseen circumstances. 
+      Please keep the following in mind:
+    </p>
+
+    <ul class="tos-list">
+      <li>Splitly may be temporarily unavailable for maintenance or upgrades.</li>
+      <li>Technical problems, network issues, or other disruptions may occasionally affect access.</li>
+      <li>We do not guarantee uninterrupted or error-free use of the platform at all times.</li>
+      <li>Users should not rely on Splitly as the sole source for critical financial decisions.</li>
+    </ul>
+
+    <p class="tos-section-text">
+      Including these limitations helps set realistic expectations and protects both the platform 
+      and users from complaints arising from temporary service disruptions.
+    </p>
+
+  </div>
+</section>
+<section class="tos-section">
+  <div class="tos-section-inner">
+
+    <h2>Termination of Use</h2>
+    <p class="tos-section-text">
+      Splitly may suspend or terminate your access if these Terms are violated or if any 
+      misuse, abuse, or suspicious activity is detected. We strive to be fair and reasonable 
+      when taking such actions.
+    </p>
+
+    <ul class="tos-list">
+      <li>Violation of these Terms of Service.</li>
+      <li>Misuse, hacking, or attempting to disrupt the platform.</li>
+      <li>Illegal activities or activities that harm other users.</li>
+      <li>Repeated failure to comply with platform rules or requests.</li>
+    </ul>
+
+    <p class="tos-section-text">
+      You are also free to stop using Splitly at any time. If you choose to delete your account, 
+      please follow the account deletion process. Termination by either party does not remove 
+      obligations that may have arisen prior to termination.
+    </p>
+
+  </div>
+</section>
+<section class="tos-section">
+  <div class="tos-section-inner">
+
+    <h2>Disclaimer of Warranties</h2>
+    <p class="tos-section-text">
+      Splitly is provided on an “as is” and “as available” basis. We make every effort to 
+      ensure the platform works correctly, but we do not guarantee that it will always be 
+      error-free, accurate, or uninterrupted.
+    </p>
+
+    <ul class="tos-list">
+      <li>The information and calculations provided by Splitly are for convenience and general use.</li>
+      <li>We do not guarantee that all features will be available at all times.</li>
+      <li>Use the service responsibly and understand that you are responsible for any actions or decisions based on it.</li>
+    </ul>
+
+    <p class="tos-section-text">
+      Our goal is to provide a helpful and reliable platform, but like any online service, 
+      occasional issues or inaccuracies may occur. Thank you for using Splitly responsibly.
+    </p>
+
+  </div>
+</section>
+<section class="tos-section">
+  <div class="tos-section-inner">
+
+    <h2>Limitation of Liability</h2>
+    <p class="tos-section-text">
+      While we strive to provide accurate calculations and a reliable platform, Splitly 
+      cannot be held responsible for certain outcomes. By using the service, you acknowledge 
+      that some risks are outside our control.
+    </p>
+
+    <ul class="tos-list">
+      <li>We are not responsible for financial losses arising from incorrect data entries or miscalculations.</li>
+      <li>We do not mediate disputes between users or groups; users are responsible for resolving disagreements themselves.</li>
+      <li>We are not liable for failures of external payment systems or services used in conjunction with Splitly.</li>
+      <li>Any reliance on Splitly’s features is at your own risk.</li>
+    </ul>
+
+    <p class="tos-section-text">
+      Including these limitations helps protect both the platform and users by setting clear expectations 
+      and clarifying where responsibility lies.
+    </p>
+
+  </div>
+</section>
+<section class="tos-section">
+  <div class="tos-section-inner">
+
+    <h2>Changes to These Terms</h2>
+    <p class="tos-section-text">
+      Splitly may update these Terms of Service from time to time to reflect changes 
+      in features, legal requirements, or platform improvements. Any updates will be 
+      posted on this page with the revised “Last updated” date.
+    </p>
+
+    <p class="tos-section-text">
+      By continuing to use Splitly after changes are posted, you agree to be bound by 
+      the updated terms. We encourage you to review this page periodically to stay informed.
+    </p>
+
+  </div>
+</section>
+<section class="tos-section">
+  <div class="tos-section-inner">
+
+    <h2>Governing Law</h2>
+    <p class="tos-section-text">
+      These Terms of Service are governed by and interpreted in accordance with the laws of 
+      <strong>India</strong>, without regard to its conflict of law principles. By using Splitly, 
+      you agree that any disputes arising from these Terms will be subject to the exclusive 
+      jurisdiction of the courts in India.
+    </p>
+
+  </div>
+</section>
+<section class="tos-section">
+  <div class="tos-section-inner">
+
+    <h2>Contact Information</h2>
+    <p class="tos-section-text">
+      If you have any questions, concerns, or feedback about these Terms of Service, 
+      please feel free to reach out to us:
+    </p>
+
+    <p class="tos-section-text">
+      <strong>Email:</strong> 
+      <a href="mailto:splitlyofficial@gmail.com">splitlyofficial@gmail.com</a>
+    </p>
+
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-container">
+
+    <!-- Brand -->
+    <div class="footer-brand">
+      <img src="Splitly-logo.png" alt="Splitly logo">
+      <p>
+        Splitly helps friends, roommates, and travelers split bills fairly,
+        track shared expenses, and settle instantly.
+      </p>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer-links">
+      <h4>Product</h4>
+      <a href="/splitter">Bill Splitter</a>
+      <a href="/group_dashboard">Create Group</a>
+      <a href="/blogs">Blog</a>
+      <a href="/#faq">FAQ</a>
+    </div>
+
+    <div class="footer-links">
+      <h4>Company</h4>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+      <a href="/privacy-policy">Privacy Policy</a>
+      <a href="/terms-of-service">Terms of Service</a>
+    </div>
+
+    <!-- Social -->
+    <div class="footer-social">
+      <h4>Follow Splitly</h4>
+      <div class="social-icons">
+        <a href="https://instagram.com/splitlyofficial" aria-label="Splitly on Instagram" target="_blank" rel="noopener">
+          <i class="fa-brands fa-instagram"></i>
+        </a>
+        <a href="https://twitter.com/splitlyofficial" aria-label="Splitly on Twitter" target="_blank" rel="noopener">
+          <i class="fa-brands fa-x-twitter"></i>
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    © 2025 Splitly. All rights reserved.
+  </div>
 </footer>
+<script> const hamburger = document.getElementById('hamburger');
+  const drawer = document.getElementById('mobileDrawer');
+  const overlay = document.getElementById('navOverlay');
 
+  function toggleMenu() {
+    hamburger.classList.toggle('active');
+    drawer.classList.toggle('open');
+    overlay.classList.toggle('open');
+    document.body.style.overflow =
+      drawer.classList.contains('open') ? 'hidden' : '';
+  }
+
+  hamburger.addEventListener('click', toggleMenu);
+  overlay.addEventListener('click', toggleMenu);</script>
 </body>
 </html>
