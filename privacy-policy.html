@@ -1,115 +1,411 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Privacy Policy | Splitly</title>
+  <!-- Basic Meta -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <meta name="description" content="Review Splitly's privacy policy to understand how we collect, store, and use your data. Your privacy and security are important to us." />
+  <!-- Page Title -->
+  <title>Privacy Policy – Splitly</title>
 
-  
-<link rel="icon" href="https://splitly.fun/favicon.ico" type="image/x-icon">
-<link rel="icon" type="image/png" href="https://splitly.fun/favicon.png">
+  <!-- SEO Description -->
+  <meta name="description"
+        content="Learn how Splitly collects, uses, and protects your personal data. Our Privacy Policy explains cookies, analytics, security practices, and your rights.">
 
-  
-    <link rel="canonical" href="https://splitly.fun/privacy-policy.html" />
- 
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f9f9f9;
-      color: #333;
-    }
-    header {
-      background-color: #6741d9;
-      color: white;
-      padding: 20px 30px;
-    }
-    h1 {
-  margin: 0;
-  font-size: 26px;
-  text-align: center;
-}
+  <!-- Canonical -->
+  <link rel="canonical" href="https://splitly.fun/privacy-policy">
 
-@media (max-width: 600px) {
-  h1 {
-    font-size: 22px;
-  }
+  <!-- Robots -->
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="Splitly Team">
 
-  .container {
-    padding: 0 15px;
-  }
-}
+  <!-- Google Search Console (domain-wide, safe to keep) -->
+  <meta name="google-site-verification"
+        content="ZFR69SkxJe0fkKGDsAnx-KeCa7htlARYQF77lAAB1T8" />
 
-    .container {
-      max-width: 800px;
-      margin: 30px auto;
-      padding: 0 20px;
-    }
-    h2 {
-      color: #6741d9;
-      margin-top: 30px;
-    }
-    footer {
-      text-align: center;
-      padding: 20px;
-      color: #aaa;
-      font-size: 14px;
-    }
-  </style>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-835JXN9029"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-835JXN9029');
+  </script>
+
+  <!-- Google AdSense -->
+  <script async
+    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7625345342761688"
+    crossorigin="anonymous">
+  </script>
+
+  <!-- Ahrefs Analytics -->
+  <script async
+    src="https://analytics.ahrefs.com/analytics.js"
+    data-key="okRTY8yBhq9zk7xfXzETbA">
+  </script>
+
+  <!-- Fonts (Performance Optimized) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+  <!-- Icons -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Main Styles -->
+  <link rel="stylesheet" href="try.css">
+
+  <!-- Favicons -->
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+  <!-- Open Graph (optional but clean) -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Privacy Policy – Splitly">
+  <meta property="og:description"
+        content="Understand how Splitly protects your data, uses cookies, and respects your privacy.">
+  <meta property="og:url" content="https://splitly.fun/privacy-policy">
+
 </head>
+
 <body>
+  <header class="navbar">
+  <div class="nav-container">
 
-<header>
-  <h1>Privacy Policy</h1>
-  <p style="text-align:center; max-width:700px; margin: 10px auto;">
-This Privacy Policy outlines how Splitly handles and protects your information. We value transparency and respect your digital privacy.
-</p>
+    <a href="/" class="logo">
+      <img src="Splitly-logo.png" alt="Splitly" />
+    </a>
 
+    <nav class="nav-links">
+      <a href="/splitter">Splitter</a>
+      <a href="/group_dashboard">Create Group</a>
+      <a href="/#how-it-works">How it works</a>
+      <a href="/#faq">FAQ</a>
+      <a href="/about">About</a>
+    </nav>
+
+    <div class="nav-auth">
+      <a href="/signup-login#login" class="login-btn">Login</a>
+      <a href="/signup-login#signup" class="signup-btn">Sign up</a>
+    </div>
+
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
 </header>
 
-<div class="container">
-  <p><strong>Effective Date:</strong> June 15, 2025</p>
+<div class="nav-overlay" id="navOverlay"></div>
 
-  <p>Welcome to Splitly (https://splitly.fun). Your privacy is important. This policy explains how we handle your data.</p>
+<aside class="mobile-drawer" id="mobileDrawer">
+  <nav class="mobile-nav">
+    <a href="/splitter">Splitter</a>
+    <a href="/group_dashboard">Create Group</a>
+    <a href="#how-it-works">How it works</a>
+    <a href="/blogs">Blog</a>
+    <a href="/contact">Contact</a>
+    <a href="#faq">FAQ</a>
+    <a href="/about">About</a>
+  </nav>
 
-  <h2>1. What We Collect</h2>
-  <ul>
-    <li>Email address (if you sign up)</li>
-    <li>Basic usage stats via analytics tools</li>
-    <li>Group or expense info you manually enter</li>
-  </ul>
+  <div class="mobile-auth">
+    <a href="/signup-login#login" class="login-btn">Login</a>
+    <a href="/signup-login#signup" class="signup-btn">Sign up</a>
+  </div>
+</aside>
 
-  <p><strong>We do NOT collect:</strong> sensitive personal data, financial/banking data, or location data.</p>
+  <section class="policy-header">
+  <div class="policy-header-inner">
+    <h1>Privacy Policy</h1>
+    <p class="policy-updated">
+      Last updated: <time datetime="2025-12-20">20 December 2025</time>
+    </p>
+  </div>
+</section>
+<section class="policy-intro">
+  <div class="policy-intro-inner">
+    <p>
+      This Privacy Policy explains how <strong>Splitly</strong> collects, uses,
+      and protects your information when you use our website, applications,
+      and related services.
+    </p>
 
-  <h2>2. How We Use It</h2>
-  <ul>
-    <li>To run the Splitly features you use</li>
-    <li>To understand and improve our site</li>
-    <li>To contact you (only if you’ve opted in)</li>
-  </ul>
+    <p>
+      By accessing or using Splitly, you agree to the practices described in
+      this policy. This policy applies to all visitors, registered users,
+      and anyone who interacts with our services.
+    </p>
+  </div>
+</section>
+<section class="policy-section">
+  <div class="policy-section-inner">
 
-  <h2>3. Data Storage</h2>
-  <p>We use Firebase (by Google) to securely store login and group data. Data is encrypted and only accessible to you.</p>
+    <h2>Information We Collect</h2>
+    <p class="policy-section-text">
+      We collect certain information to provide, improve, and secure our services.
+      This information may be provided directly by you or collected automatically
+      when you use Splitly.
+    </p>
 
-  <h2>4. Cookies</h2>
-  <p>We use basic cookies for app preferences. You can block these in your browser.</p>
+    <h3>Information You Provide</h3>
+    <ul class="policy-list">
+      <li>Your name</li>
+      <li>Email address</li>
+      <li>Group names and participant details</li>
+      <li>Expense details, amounts, and descriptions</li>
+      <li>Any information you submit through forms or inputs on our platform</li>
+    </ul>
 
-  <h2>5. Your Choices</h2>
-  <ul>
-    <li>You can use Splitly without signing in</li>
-    <li>You can request data deletion anytime (email: splitlyofficial@gmail.com)</li>
-  </ul>
+    <h3>Automatically Collected Information</h3>
+    <ul class="policy-list">
+      <li>Device type and operating system</li>
+      <li>Browser type and version</li>
+      <li>IP address and approximate location</li>
+      <li>Usage data such as pages visited and actions taken</li>
+      <li>Cookies and similar tracking technologies</li>
+    </ul>
 
-  <h2>6. Changes</h2>
-  <p>We may update this policy. If it’s a major change, we’ll notify you here.</p>
-</div>
+  </div>
+</section>
+<section class="policy-section">
+  <div class="policy-section-inner">
 
-<footer>
-  &copy; 2025 Splitly. All rights reserved.
+    <h2>How We Use Your Information</h2>
+    <p class="policy-section-text">
+      We use the information we collect only to provide and improve Splitly.
+      Your data helps us deliver core features, keep the platform secure,
+      and communicate important updates.
+    </p>
+
+    <ul class="policy-list">
+      <li>To create and manage groups and shared expenses</li>
+      <li>To calculate, split, and display expenses accurately</li>
+      <li>To save your activity and preferences across devices</li>
+      <li>To improve app performance, usability, and reliability</li>
+      <li>To communicate important updates, changes, or support messages</li>
+      <li>To detect misuse, prevent fraud, and maintain platform security</li>
+    </ul>
+
+  </div>
+</section>
+<section class="policy-section">
+  <div class="policy-section-inner">
+
+    <h2>Cookies & Tracking Technologies</h2>
+    <p class="policy-section-text">
+      Cookies are small text files stored on your device when you visit a website.
+      They help websites function properly and provide a better user experience.
+    </p>
+
+    <ul class="policy-list">
+      <li>To keep you logged in and maintain session security</li>
+      <li>To remember your preferences and settings</li>
+      <li>To understand how users interact with Splitly and improve performance</li>
+      <li>To support analytics and future features such as ads or integrations</li>
+    </ul>
+
+    <p class="policy-section-text">
+      You can choose to disable cookies through your browser settings.
+      Please note that disabling cookies may affect certain features
+      and limit how well Splitly works for you.
+    </p>
+
+  </div>
+</section>
+<section class="policy-section">
+  <div class="policy-section-inner">
+
+    <h2>Data Sharing & Third-Party Services</h2>
+    <p class="policy-section-text">
+      We respect your privacy and are committed to keeping your data safe.
+      Splitly does <strong>not</strong> sell, rent, or trade your personal
+      information to third parties.
+    </p>
+
+    <p class="policy-section-text">
+      We may share limited information only with trusted third-party services
+      that help us operate and improve Splitly. These services are required
+      to handle your data securely and only for necessary purposes.
+    </p>
+
+    <ul class="policy-list">
+      <li>Hosting and infrastructure providers that store and deliver our services</li>
+      <li>Analytics tools that help us understand usage and improve performance</li>
+      <li>Security services used to protect against fraud and abuse</li>
+    </ul>
+
+  </div>
+</section>
+<section class="policy-section">
+  <div class="policy-section-inner">
+
+    <h2>Data Security</h2>
+    <p class="policy-section-text">
+      We take reasonable measures to protect your information and keep it secure.
+      Splitly uses modern security practices designed to safeguard your data
+      from unauthorized access, misuse, or loss.
+    </p>
+
+    <ul class="policy-list">
+      <li>Data is stored on secure servers with controlled access</li>
+      <li>Encryption is used where appropriate to protect sensitive information</li>
+      <li>Access to user data is limited to authorized personnel only</li>
+      <li>Regular monitoring helps us detect and prevent potential security issues</li>
+    </ul>
+
+    <p class="policy-section-text">
+      While we work hard to protect your data, no system can be guaranteed
+      to be completely secure. We encourage users to take basic precautions
+      such as keeping login details private.
+    </p>
+
+  </div>
+</section>
+
+<section class="policy-section">
+  <div class="policy-section-inner">
+
+    <h2>Your Rights & Choices</h2>
+    <p class="policy-section-text">
+      You have control over your personal information. Splitly respects your
+      rights and provides ways for you to access, update, or remove your data.
+    </p>
+
+    <ul class="policy-list">
+      <li>Access the personal information associated with your account</li>
+      <li>Edit or update your profile and group information</li>
+      <li>Request deletion of your account and related data</li>
+      <li>Opt out of non-essential emails or notifications</li>
+      <li>Request a copy of your data for personal use</li>
+    </ul>
+
+    <p class="policy-section-text">
+      Some requests may need to be handled manually. If you need help with
+      accessing or deleting your data, you can contact us at
+      <a href="mailto:splitlyofficial@gmail.com">splitlyofficial@gmail.com</a>.
+    </p>
+
+  </div>
+</section>
+<section class="policy-section">
+  <div class="policy-section-inner">
+
+    <h2>Children’s Privacy</h2>
+    <p class="policy-section-text">
+      Splitly is not intended for use by children under the age of 13.
+      We do not knowingly collect personal information from children.
+    </p>
+
+    <p class="policy-section-text">
+      If you believe that a child has provided personal information
+      on Splitly, please contact us and we will take steps to remove
+      such information from our systems.
+    </p>
+
+  </div>
+</section>
+<section class="policy-section">
+  <div class="policy-section-inner">
+
+    <h2>Changes to This Privacy Policy</h2>
+    <p class="policy-section-text">
+      We may update this Privacy Policy from time to time to reflect
+      changes in our practices, features, or legal requirements.
+    </p>
+
+    <p class="policy-section-text">
+      Any updates will be posted on this page, and the
+      “Last updated” date at the top will be revised accordingly.
+      We encourage you to review this policy periodically.
+    </p>
+
+  </div>
+</section>
+<section class="policy-section">
+  <div class="policy-section-inner">
+
+    <h2>Contact Information</h2>
+    <p class="policy-section-text">
+      If you have any questions, concerns, or requests regarding this
+      Privacy Policy or how your data is handled, you can contact us
+      using the details below.
+    </p>
+
+    <p class="policy-section-text">
+      <strong>Email:</strong>
+      <a href="mailto:splitlyofficial@gmail.com">
+        splitlyofficial@gmail.com
+      </a>
+    </p>
+
+  </div>
+</section>
+<footer class="footer">
+  <div class="footer-container">
+
+    <!-- Brand -->
+    <div class="footer-brand">
+      <img src="Splitly-logo.png" alt="Splitly logo">
+      <p>
+        Splitly helps friends, roommates, and travelers split bills fairly,
+        track shared expenses, and settle instantly.
+      </p>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer-links">
+      <h4>Product</h4>
+      <a href="/splitter">Bill Splitter</a>
+      <a href="/group_dashboard">Create Group</a>
+      <a href="/blogs">Blog</a>
+      <a href="/#faq">FAQ</a>
+    </div>
+
+    <div class="footer-links">
+      <h4>Company</h4>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+      <a href="/privacy-policy">Privacy Policy</a>
+      <a href="/terms-of-service">Terms of Service</a>
+    </div>
+
+    <!-- Social -->
+    <div class="footer-social">
+      <h4>Follow Splitly</h4>
+      <div class="social-icons">
+        <a href="https://instagram.com/splitlyofficial" aria-label="Splitly on Instagram" target="_blank" rel="noopener">
+          <i class="fa-brands fa-instagram"></i>
+        </a>
+        <a href="https://twitter.com/splitlyofficial" aria-label="Splitly on Twitter" target="_blank" rel="noopener">
+          <i class="fa-brands fa-x-twitter"></i>
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    © 2025 Splitly. All rights reserved.
+  </div>
 </footer>
+<script> const hamburger = document.getElementById('hamburger');
+  const drawer = document.getElementById('mobileDrawer');
+  const overlay = document.getElementById('navOverlay');
 
+  function toggleMenu() {
+    hamburger.classList.toggle('active');
+    drawer.classList.toggle('open');
+    overlay.classList.toggle('open');
+    document.body.style.overflow =
+      drawer.classList.contains('open') ? 'hidden' : '';
+  }
+
+  hamburger.addEventListener('click', toggleMenu);
+  overlay.addEventListener('click', toggleMenu);</script>
 </body>
 </html>
